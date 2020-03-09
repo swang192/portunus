@@ -1,0 +1,24 @@
+services:
+  backend:
+    build: backend
+    depends_on:
+    - db
+    ports:
+    - 3001:3001
+    volumes:
+    - ./backend:/code
+  db:
+    environment:
+    - POSTGRES_PASSWORD=postgres
+    image: postgres:11
+    ports:
+    - 5432:5432
+  frontend:
+    build: frontend
+    ports:
+    - 3000:3000
+    volumes:
+    - ./frontend:/code
+    - /code/node_modules
+    - /code/.next
+version: '3'

@@ -20,7 +20,7 @@ def register(request):
 @require_POST
 def login(request):
     user = authenticate(
-        username=request.POST.get("username"), password=request.POST.get("password")
+        username=request.POST.get("email"), password=request.POST.get("password")
     )
 
     login_user(request, user)

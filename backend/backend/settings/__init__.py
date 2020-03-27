@@ -4,6 +4,7 @@ AUTH_USER_MODEL = "authentication.User"
 
 INSTALLED_APPS = [
     *INSTALLED_APPS,
+    "rest_framework",
     "authentication",
 ]
 

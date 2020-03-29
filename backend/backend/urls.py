@@ -21,6 +21,7 @@ from . import views
 api_patterns = [
     path("auth/", include("authentication.urls")),
     path("is_authenticated/", views.is_authenticated, name="is_authenticated"),
+    path("set_csrf/", views.set_csrf, name="set_csrf_cookie"),
 ]
 
 urlpatterns = [

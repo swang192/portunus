@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import authenticate, logout as logout_user
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
@@ -10,18 +12,16 @@ from .utils import login_user, REFRESH_TOKEN_SESSION_KEY
 
 @require_POST
 def register(request):
-    user = User.objects.create_user(
-        email=request.POST.get("email"), password=request.POST.get("password"),
-    )
+    data = json.loads(request.body)
+    user = User.objects.create_user(email=data["email"], password=data["password"],)
     login_user(request, user)
     return HttpResponse("success", status=status.HTTP_200_OK)
 
 
 @require_POST
 def login(request):
-    user = authenticate(
-        username=request.POST.get("email"), password=request.POST.get("password")
-    )
+    data = json.loads(request.body)
+    user = authenticate(email=data["email"], password=data["password"],)
 
     login_user(request, user)
     return HttpResponse("success", status=status.HTTP_200_OK)

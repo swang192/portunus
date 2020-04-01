@@ -1,46 +1,45 @@
 import json
 
-from django.contrib.auth import authenticate, logout as logout_user
+from django.contrib.auth import logout as logout_user
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes, api_view
 
+from .serializers import RegistrationSerializer, LoginSerializer
 from .models import User
 from .utils import (
     login_user,
     REFRESH_TOKEN_SESSION_KEY,
-    is_password_valid,
     send_password_reset,
     check_and_change_password,
     check_onetime_token,
     make_response,
     blacklist_user_tokens,
 )
-from .errors import INVALID_PASSWORD, AUTH_FAILURE, INVALID_TOKEN
+from .errors import AUTH_FAILURE, INVALID_TOKEN
 
 
-@require_POST
-def register(request):
-    data = json.loads(request.body)
-    if not is_password_valid(data.get("password")):
-        return make_response(False, INVALID_PASSWORD)
+def make_auth_view(serializer_class):
+    @require_POST
+    def view(request):
+        data = json.loads(request.body)
+        serializer = serializer_class(data=data)
 
-    user = User.objects.create_user(email=data["email"], password=data["password"],)
-    login_user(request, user)
-    return make_response(True)
+        if not serializer.is_valid():
+            first_errors = {k: v[0] for k, v in serializer.errors.items()}
+            return make_response(False, first_errors)
+
+        user = serializer.save()
+        login_user(request, user)
+        return make_response(True)
+
+    return view
 
 
-@require_POST
-def login(request):
-    data = json.loads(request.body)
-    user = authenticate(email=data["email"], password=data["password"],)
-    if not user:
-        return make_response(False, AUTH_FAILURE)
-
-    login_user(request, user)
-    return make_response(True)
+register = make_auth_view(RegistrationSerializer)
+login = make_auth_view(LoginSerializer)
 
 
 @api_view(["POST"])

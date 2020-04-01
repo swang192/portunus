@@ -7,8 +7,12 @@ const API = axios.create({
   headers: {
     'X-REQUESTED-WITH': 'XMLHttpRequest',
     'Content-Type': 'application/json',
-    'X-CSRFToken': Cookies.get('csrftoken'),
   },
+});
+
+API.interceptors.request.use(config => {
+  config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
+  return config;
 });
 
 const setupCsrf = () => API.get('set_csrf/');

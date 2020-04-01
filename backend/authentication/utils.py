@@ -1,3 +1,4 @@
+import json
 from urllib import parse
 
 from anymail.exceptions import AnymailError
@@ -9,6 +10,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth import user_logged_in
 from django.contrib.auth.password_validation import validate_password
 from django.middleware.csrf import rotate_token
+from django.utils.cache import patch_cache_control
 from rest_framework import status as status_codes
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
@@ -25,12 +27,17 @@ REFRESH_TOKEN_SESSION_KEY = "refresh_token"
 FROM_EMAIL = "Willing <hello@willing.com>"
 
 
-def make_response(success, error_msg=None, status=None):
+def make_response(success, data=None, status=None):
     if not status:
         status = status_codes.HTTP_200_OK if success else status_codes.HTTP_400_BAD_REQUEST
 
-    msg = "success" if success else error_msg or "failure"
-    return HttpResponse(msg, status=status)
+    response_data = {"success": success}
+    if data:
+        response_data.update(data)
+
+    response = HttpResponse(json.dumps(response_data), status=status)
+    patch_cache_control(response, no_cache=True, no_store=True)
+    return response
 
 
 def login_user(request, user):

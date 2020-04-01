@@ -14,7 +14,6 @@ const Login = () => {
   const [email, onChangeEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
   const [inputErrors, setInputErrors] = useState({});
-  const [validationError, setValidationError] = useState(null);
 
   const validateForm = () => {
     const errors = {};
@@ -42,16 +41,15 @@ const Login = () => {
         email: email.toLowerCase(),
         password,
       });
-      setValidationError(null);
     } catch (error) {
-      setValidationError('ERROR');
+      setInputErrors(error.response.data || {});
     }
   };
 
   return (
     <div>
       <Typography variant="h4">Login</Typography>
-      <Form error={validationError} onSubmit={handleSubmit} noMargin>
+      <Form error={inputErrors.non_field_errors} onSubmit={handleSubmit} noMargin>
         <Textbox
           name="email"
           type="email"

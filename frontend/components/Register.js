@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import Form from '@wui/layout/form';
 import Button from '@wui/input/button';
@@ -14,6 +15,9 @@ const Register = () => {
   const [email, onChangeEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
   const [inputErrors, setInputErrors] = useState({});
+  const {
+    query: { next },
+  } = useRouter();
 
   const validateForm = () => {
     const errors = {};
@@ -37,14 +41,18 @@ const Register = () => {
       return;
     }
 
+    let response;
     try {
-      await register({
+      response = await register({
         email: email.toLowerCase(),
         password,
+        next,
       });
     } catch (error) {
       setInputErrors(error.response.data || {});
+      return;
     }
+    window.location.href = response.data.next;
   };
 
   return (

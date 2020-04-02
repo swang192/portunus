@@ -1,8 +1,10 @@
 import json
 from urllib import parse
+from urllib.parse import urlparse
 
 from anymail.exceptions import AnymailError
 from django.conf import settings
+from django.core.validators import URLValidator
 from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import ValidationError
@@ -45,6 +47,20 @@ def login_user(request, user):
     request.session[REFRESH_TOKEN_SESSION_KEY] = str(refresh)
     rotate_token(request)
     user_logged_in.send(sender=user.__class__, request=request, user=user)
+
+
+def get_valid_redirect_url(url):
+    if url is None:
+        return settings.DEFAULT_REDIRECT_URL
+
+    is_valid = URLValidator()
+    try:
+        is_valid(url)
+        if urlparse(url).hostname not in settings.VALID_REDIRECT_HOSTNAMES:
+            raise ValidationError("Invalid host")
+        return url
+    except ValidationError:
+        return settings.DEFAULT_REDIRECT_URL
 
 
 def blacklist_token(token_str):

@@ -1,5 +1,13 @@
 from .zygoat_settings import *  # noqa
 
+
+def prod_required_env(key, default):
+    """Throw an exception if PRODUCTION is true and key is not provided"""
+    if PRODUCTION:
+        default = environ.Env.NOTSET
+    return env.str(key, default)
+
+
 AUTH_USER_MODEL = "authentication.User"
 
 INSTALLED_APPS = [
@@ -44,18 +52,12 @@ jKd35ukUxFBFRAGcI57firbAkFII6zPIiWAENGMqtjX57hk9EjAZ27XvQ4SQACvD
 xQlyJdlvbLmNCAf6uwIDAQAB
 -----END PUBLIC KEY-----"""
 
-# In production, we throw an exception if these are not included in the
-# environment variables.
-if PRODUCTION:
-    DEFAULT_SIGNING_KEY = environ.Env.NOTSET
-    DEFAULT_VERIFYING_KEY = environ.Env.NOTSET
-
 SIMPLE_JWT = {
     "USER_ID_FIELD": "portunus_uuid",
     "NEW_USER_CALLBACK": "backend.utils.create_user",
     "ALGORITHM": "RS512",
-    "SIGNING_KEY": env.str("DJANGO_JWT_SIGNING_KEY", DEFAULT_SIGNING_KEY),
-    "VERIFYING_KEY": env.str("DJANGO_JWT_VEFIFYING_KEY", DEFAULT_VERIFYING_KEY),
+    "SIGNING_KEY": prod_required_env("DJANGO_JWT_SIGNING_KEY", DEFAULT_SIGNING_KEY),
+    "VERIFYING_KEY": prod_required_env("DJANGO_JWT_VEFIFYING_KEY", DEFAULT_VERIFYING_KEY),
 }
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
@@ -79,3 +81,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
     {"NAME": "authentication.password_validators.AlphaNumericPasswordValidator",},
 ]
+
+DEFAULT_REDIRECT_URL = prod_required_env(
+    "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:4000"
+)
+VALID_REDIRECT_HOSTNAMES = ["localhost"]

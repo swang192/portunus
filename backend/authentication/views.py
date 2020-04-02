@@ -17,6 +17,7 @@ from .utils import (
     check_onetime_token,
     make_response,
     blacklist_user_tokens,
+    get_valid_redirect_url,
 )
 from .errors import AUTH_FAILURE, INVALID_TOKEN
 
@@ -33,7 +34,8 @@ def make_auth_view(serializer_class):
 
         user = serializer.save()
         login_user(request, user)
-        return make_response(True)
+        next_url = get_valid_redirect_url(data.get("next"))
+        return make_response(True, {"next": next_url})
 
     return view
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 import Grid from '@wui/layout/grid';
@@ -15,13 +16,15 @@ const Layout = ({ children }) => {
           <img width={200} src="/metlife_logo.png" alt="metlife logo" />
         </Link>
         <Spacer v={32} />
-        <Panel>
-          {children}
-        </Panel>
+        <Panel>{children}</Panel>
         <Spacer v={92} />
       </Grid>
     </div>
   );
-}
+};
+
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default Layout;

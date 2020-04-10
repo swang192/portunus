@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import useInputFieldState from '../utils/hooks';
 import Link from 'next/link';
-import { register } from '../utils/API';
 
 import Form from '@wui/layout/form';
 import Button from '@wui/input/button';
@@ -9,6 +7,8 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
+import useInputFieldState from '../utils/hooks';
+import { register } from '../utils/API';
 
 const Register = () => {
   const [email, onChangeEmail] = useInputFieldState('');
@@ -46,9 +46,8 @@ const Register = () => {
       setValidationError(null);
     } catch (response) {
       setValidationError('ERROR');
-      return;
     }
-  }
+  };
 
   return (
     <div>

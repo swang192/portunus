@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import useInputFieldState from '../utils/hooks';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { login } from '../utils/API';
 
 import Form from '@wui/layout/form';
 import Button from '@wui/input/button';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
+
+import useInputFieldState from '../utils/hooks';
+import { login } from '../utils/API';
 
 const Login = () => {
   const [email, onChangeEmail] = useInputFieldState('');
@@ -42,10 +43,8 @@ const Login = () => {
         password,
       });
       setValidationError(null);
-    }
-    catch (error) {
+    } catch (error) {
       setValidationError('ERROR');
-      return;
     }
   };
 
@@ -85,7 +84,7 @@ const Login = () => {
       </Typography>
       <Typography>
         Forgot your password?&nbsp;
-        <Link href="">
+        <Link href="/password-reset">
           <a>Reset Password</a>
         </Link>
       </Typography>

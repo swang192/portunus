@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Layout from '../components/Layout';
+import Layout from '@@/components/Layout';
 import RegisterForm from '@@/components/Register';
 
 const Register = () => {
@@ -9,6 +9,6 @@ const Register = () => {
       <RegisterForm />
     </Layout>
   );
-}
+};
 
 export default Register;

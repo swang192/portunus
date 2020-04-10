@@ -11,14 +11,14 @@ const API = axios.create({
   },
 });
 
-const setupCsrf = () => API.get('set_csrf');
+const setupCsrf = () => API.get('set_csrf/');
 
-const register = payload => API.post('auth/register', payload);
+const register = payload => API.post('auth/register/', payload);
 
-const login = payload => API.post('auth/login', payload);
+const login = payload => API.post('auth/login/', payload);
 
-const logout = () => API.post('auth/logout');
+const logout = () => API.post('auth/logout/');
 
-const refresh = () => API.post('auth/token/refresh');
+const refresh = () => API.post('auth/token/refresh/');
 
 export { setupCsrf, register, login, logout, refresh };

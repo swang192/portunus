@@ -16,6 +16,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 PRODUCTION = env.bool("DJANGO_PRODUCTION", default=False)
 
+
+def prod_required_env(key, default, method="str"):
+    """Throw an exception if PRODUCTION is true and key is not provided"""
+    if PRODUCTION:
+        default = environ.Env.NOTSET
+    return getattr(env, method)(key, default)
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str(
     "DJANGO_SECRET_KEY", default="9a=5%_$0cykzvckso!3wo-1mu#&*t$4ur!xlybxx=l_8#zdex5"
@@ -40,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "backend.proxy.ReverseProxyHandlingMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

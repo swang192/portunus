@@ -11,6 +11,8 @@ import Typography from '@wui/basics/typography';
 import useInputFieldState from '@@/utils/hooks';
 import { completePasswordReset } from '@@/utils/API';
 
+const invalidPasswordError = 'invalid_password';
+
 const ResetPasswordComplete = ({ uuid, token }) => {
   const [newPassword1, onChangePassword1] = useInputFieldState('');
   const [newPassword2, onChangePassword2] = useInputFieldState('');
@@ -22,11 +24,11 @@ const ResetPasswordComplete = ({ uuid, token }) => {
     const errors = {};
 
     if (!newPassword1) {
-      errors.firstPassword = 'Please enter your new password';
+      errors.firstPassword = 'Please enter your new password.';
     }
 
     if (newPassword1 !== newPassword2) {
-      errors.secondPassword = 'Passwords do not match!';
+      errors.secondPassword = 'The two passwords you entered do not match.';
     }
 
     setInputErrors(errors);
@@ -48,7 +50,11 @@ const ResetPasswordComplete = ({ uuid, token }) => {
       setValidationError(null);
       setSuccess(true);
     } catch (error) {
-      setValidationError('ERROR');
+      const errorMsg =
+        error.response.data.error === invalidPasswordError
+          ? error.response.data.validation_error
+          : 'Your reset password link is invalid or expired. You can try requesting a new one.';
+      setValidationError(errorMsg);
     }
   };
 

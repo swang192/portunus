@@ -1,0 +1,22 @@
+{
+  "base": {
+    "aws_region": "us-east-1",
+    "django_settings": "backend.settings.zygoat_settings",
+    "profile_name": "default",
+    "project_name": "portunus-backend",
+    "runtime": "python3.7",
+    "s3_bucket": "com.willing.portunus-deployments"
+    "vpc_config": {
+      "SubnetIds": [
+        "subnet-0bd3002fa3d21142f",
+        "subnet-06f38c8eef613bc98",
+      ],
+      "SecurityGroupIds": ["sg-074c6991e4690e44a"],
+      "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/72bec828-02c1-4d2d-9e4d-69868e0119d9",
+    },
+  },
+  "staging": {
+    "extends": "base",
+    "domain": "api.portunus-staging.willing.com",
+  }
+}

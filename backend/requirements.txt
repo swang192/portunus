@@ -8,3 +8,4 @@ djangorestframework-simplejwt==4.4.0
 cryptography==2.8
 simplejwt-extensions==0.1.0
 django-anymail==7.0.0
+zappa==0.51.0

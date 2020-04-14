@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Button from '@wui/input/button';
 import Spacer from '@wui/layout/spacer';
 

@@ -9,3 +9,5 @@ cryptography==2.8
 simplejwt-extensions==0.1.0
 django-anymail==7.1.0
 zappa==0.51.0
+google-auth==1.13.1
+requests==2.23.0

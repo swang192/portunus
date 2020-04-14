@@ -1,13 +1,5 @@
 from .zygoat_settings import *  # noqa
 
-
-def prod_required_env(key, default):
-    """Throw an exception if PRODUCTION is true and key is not provided"""
-    if PRODUCTION:
-        default = environ.Env.NOTSET
-    return env.str(key, default)
-
-
 AUTH_USER_MODEL = "authentication.User"
 
 INSTALLED_APPS = [
@@ -86,3 +78,9 @@ DEFAULT_REDIRECT_URL = prod_required_env(
     "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:4000"
 )
 VALID_REDIRECT_HOSTNAMES = ["localhost"]
+
+GOOGLE_APP_ID = prod_required_env("DJANGO_GOOGLE_APP_ID", default=None)
+
+FACEBOOK_CLIENT_ID = prod_required_env("DJANGO_FACEBOOK_CLIENT_ID", default=None)
+
+FACEBOOK_CLIENT_SECRET = prod_required_env("DJANGO_FACEBOOK_CLIENT_SECRET", default=None)

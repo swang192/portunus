@@ -12,6 +12,10 @@
     },
     "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/0b42f140-7af8-4369-91f9-debd04bc1e2d"
   },
+  "dev": {
+    "extends": "base",
+    "domain": "api-dev.portunus.willing.com"
+  },
   "staging": {
     "extends": "base",
     "domain": "api-staging.portunus.willing.com"

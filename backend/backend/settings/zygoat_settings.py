@@ -25,7 +25,7 @@ def prod_required_env(key, default, method="str"):
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str(
+SECRET_KEY = prod_required_env(
     "DJANGO_SECRET_KEY", default="9a=5%_$0cykzvckso!3wo-1mu#&*t$4ur!xlybxx=l_8#zdex5"
 )
 

@@ -5,9 +5,11 @@ from zygoat.utils.files import repository_root, use_dir
 from zygoat.utils.shell import run
 from zygoat.constants import Projects
 from zygoat.utils.printing import log
+from zygoat.config import Config
 
 
 def main(args):
+    config = Config()
     with repository_root():
         with use_dir(Projects.BACKEND):
             log.info(f"Updating {args.environment} backend")
@@ -18,7 +20,7 @@ def main(args):
 
         with use_dir(Projects.FRONTEND):
             log.info(f"Updating {args.environment} frontend")
-            run(["eb", "deploy", args.environment])
+            run(["eb", "deploy", f"{config.name}-{args.environment}"])
 
 
 if __name__ == "__main__":

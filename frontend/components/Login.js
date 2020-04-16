@@ -15,7 +15,7 @@ const Login = () => {
       </Typography>
       <Typography>
         Forgot your password?&nbsp;
-        <KeepParamsLink href="/password-reset">
+        <KeepParamsLink href="/reset-password">
           <a>Reset Password</a>
         </KeepParamsLink>
       </Typography>

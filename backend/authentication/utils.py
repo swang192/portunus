@@ -37,7 +37,9 @@ def make_response(success, data=None, status=None):
     if data:
         response_data.update(data)
 
-    response = HttpResponse(json.dumps(response_data), status=status)
+    response = HttpResponse(
+        json.dumps(response_data), content_type="application/json", status=status
+    )
     patch_cache_control(response, no_cache=True, no_store=True)
     return response
 

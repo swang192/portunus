@@ -4,7 +4,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .social_utils import is_valid_existing_account, is_valid_token
+from authentication.social_utils import is_valid_existing_account, is_valid_token
 from .models import User
 
 

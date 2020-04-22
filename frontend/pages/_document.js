@@ -7,10 +7,7 @@ export default class MyDocument extends Document {
     return (
       <html lang="en">
         <Head>
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-          />
+          <link rel="stylesheet" href="/averta.css" />
         </Head>
         <body>
           <Main />

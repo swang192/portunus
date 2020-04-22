@@ -28,10 +28,7 @@ const App = ({ Component, pageProps }) => {
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
         />
 
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
+        <link rel="stylesheet" href="/averta.css" />
       </Head>
 
       <CssBaseline />

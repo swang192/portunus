@@ -1,0 +1,49 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 3597422, 2018-06-15T18:31:15-0400
+ *
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are
+ * explicitly restricted from using the Licensed Webfonts(s).
+ *
+ * You may obtain a valid license at the URLs below.
+ *
+ * Webfont: AvertaPE-Bold by Intelligent Design
+ * URL: https://www.myfonts.com/fonts/intelligent-foundry/averta/pe-bold-177940/
+ *
+ * Webfont: AvertaPE-Regular by Intelligent Design
+ * URL: https://www.myfonts.com/fonts/intelligent-foundry/averta/pe-regular-177940/
+ *
+ * Webfont: AvertaPE-Thin by Intelligent Design
+ * URL: https://www.myfonts.com/fonts/intelligent-foundry/averta/pe-thin-177940/
+ *
+ *
+ * License: https://www.myfonts.com/viewlicense?type=web&buildid=3597422
+ * Licensed pageviews: 100,000
+ * Webfonts copyright: Copyright (c) 2015 by Kostas Bartsokas. All rights reserved.
+ *
+ * © 2018 MyFonts Inc
+*/
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("//hello.myfonts.net/count/36e46e");
+
+@font-face {
+  font-family: 'AvertaPE';
+  font-weight: bold;
+  src: url('webfonts/36E46E_0_0.eot');
+  src: url('webfonts/36E46E_0_0.eot?#iefix') format('embedded-opentype'), url('webfonts/36E46E_0_0.woff2') format('woff2'), url('webfonts/36E46E_0_0.woff') format('woff'), url('webfonts/36E46E_0_0.ttf') format('truetype'), url('webfonts/36E46E_0_0.svg#wf') format('svg');
+}
+
+@font-face {
+  font-family: 'AvertaPE';
+  font-weight: normal;
+  src: url('webfonts/36E46E_1_0.eot');
+  src: url('webfonts/36E46E_1_0.eot?#iefix') format('embedded-opentype'), url('webfonts/36E46E_1_0.woff2') format('woff2'), url('webfonts/36E46E_1_0.woff') format('woff'), url('webfonts/36E46E_1_0.ttf') format('truetype'), url('webfonts/36E46E_1_0.svg#wf') format('svg');
+}
+
+@font-face {
+  font-family: 'AvertaPE';
+  font-weight: 300;
+  src: url('webfonts/36E46E_2_0.eot');
+  src: url('webfonts/36E46E_2_0.eot?#iefix') format('embedded-opentype'), url('webfonts/36E46E_2_0.woff2') format('woff2'), url('webfonts/36E46E_2_0.woff') format('woff'), url('webfonts/36E46E_2_0.ttf') format('truetype'), url('webfonts/36E46E_2_0.svg#wf') format('svg');
+}

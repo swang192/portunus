@@ -7,7 +7,7 @@
     "runtime": "python3.7",
     "s3_bucket": "com.willing.portunus-deployments",
     "vpc_config": {
-      "SubnetIds": ["subnet-0bd3002fa3d21142f", "subnet-06f38c8eef613bc98"],
+      "SubnetIds": ["subnet-02c8170b670b0c4df", "subnet-0a9bd034e0d43d078"],
       "SecurityGroupIds": ["sg-074c6991e4690e44a"]
     },
     "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/0b42f140-7af8-4369-91f9-debd04bc1e2d"

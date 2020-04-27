@@ -1,4 +1,4 @@
-import React from 'react';
+import { observer } from 'mobx-react';
 
 import Layout from '@@/components/Layout';
 import RegisterForm from '@@/components/Register';
@@ -11,4 +11,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default observer(Register);

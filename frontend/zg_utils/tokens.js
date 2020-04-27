@@ -25,25 +25,22 @@ class TokenFetcher {
     this.timerId = null;
   }
 
-  defaultOnError(_) {
-    window.location.replace(loginUrl);
-  }
-
-  async fetchToken() {
+  fetchToken = async () => {
     try {
       const response = await this.fetchFunction();
       this.accessToken = response.data.access;
+      this.onSuccess(this.accessToken);
       return true;
     } catch (error) {
       if (error.response) {
-        if (error.response.status === 401) {
+        if (error.response.status === 400) {
           this.clearToken();
         }
       }
       this.onError(error);
     }
     return false;
-  }
+  };
 
   clearToken() {
     this.accessToken = '';
@@ -65,10 +62,4 @@ class TokenFetcher {
 
 const tokenFetcher = new TokenFetcher();
 
-const isLoggedIn = () => {
-  // NOTE this will only be guaranteed to be up-to-date if the tokenFetcher is started on
-  // every page load.
-  return Bool(tokenFetcher.accessToken);
-};
-
-export { tokenFetcher, isLoggedIn };
+export default tokenFetcher;

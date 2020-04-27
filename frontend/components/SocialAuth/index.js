@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { observer } from 'mobx-react';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
@@ -85,4 +86,4 @@ SocialAuth.propTypes = {
   setProcessing: PropTypes.func.isRequired,
 };
 
-export default SocialAuth;
+export default observer(SocialAuth);

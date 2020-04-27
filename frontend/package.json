@@ -17,6 +17,8 @@
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.0",
     "js-cookie": "^2.2.1",
+    "mobx": "^5.15.4",
+    "mobx-react": "^6.2.2",
     "next": "9.3.2",
     "next-compose-plugins": "^2.2.0",
     "next-images": "^1.4.0",

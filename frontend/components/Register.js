@@ -1,3 +1,5 @@
+import { observer } from 'mobx-react';
+
 import Typography from '@wui/basics/typography';
 
 import { register } from '@@/utils/API';
@@ -17,4 +19,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default observer(Register);

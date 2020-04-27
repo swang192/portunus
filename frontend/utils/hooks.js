@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useObserver } from 'mobx-react';
 
-const useInputFieldState = initial => {
+import { GlobalContext } from '@@/global-context';
+
+export const useInputFieldState = initial => {
   const [value, setValue] = useState(initial);
 
   return [value, e => setValue(e.target.value)];
 };
 
-export default useInputFieldState;
+export const useGlobalContext = () => useObserver(() => useContext(GlobalContext));

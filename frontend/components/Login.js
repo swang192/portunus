@@ -1,3 +1,5 @@
+import { observer } from 'mobx-react';
+
 import Typography from '@wui/basics/typography';
 
 import { login } from '@@/utils/API';
@@ -23,4 +25,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default observer(Login);

@@ -1,4 +1,4 @@
-import React from 'react';
+import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 
@@ -27,4 +27,4 @@ Layout.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default Layout;
+export default observer(Layout);

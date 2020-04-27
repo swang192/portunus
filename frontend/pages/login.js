@@ -1,4 +1,4 @@
-import React from 'react';
+import { observer } from 'mobx-react';
 
 import Layout from '@@/components/Layout';
 import LoginForm from '@@/components/Login';
@@ -11,4 +11,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default observer(Login);

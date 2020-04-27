@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
@@ -11,16 +12,22 @@ import Typography from '@wui/basics/typography';
 import TabDivider from '@wui/layout/tabDivider';
 
 import SocialAuth from '@@/components/SocialAuth';
-import useInputFieldState from '../utils/hooks';
+import { useGlobalContext, useInputFieldState } from '@@/utils/hooks';
 
 const AuthBase = ({ submitCredentials, submitText, children }) => {
   const [email, onChangeEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
   const [inputErrors, setInputErrors] = useState({});
   const [processing, setProcessing] = useState(false);
+  const router = useRouter();
   const {
-    query: { next },
-  } = useRouter();
+    query: { next, localNext },
+  } = router;
+  const store = useGlobalContext();
+
+  if (store.authenticated) {
+    router.push('/');
+  }
 
   const validateForm = () => {
     const errors = {};
@@ -39,7 +46,12 @@ const AuthBase = ({ submitCredentials, submitText, children }) => {
   };
 
   const handleSuccess = response => {
-    window.location.href = response.data.next;
+    if (localNext) {
+      store.login();
+      router.push(localNext);
+    } else {
+      window.location.href = response.data.next;
+    }
   };
 
   const handleError = error => {
@@ -149,4 +161,4 @@ AuthBase.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default AuthBase;
+export default observer(AuthBase);

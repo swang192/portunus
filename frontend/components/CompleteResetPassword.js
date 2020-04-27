@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 
@@ -8,7 +9,7 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import useInputFieldState from '@@/utils/hooks';
+import { useInputFieldState } from '@@/utils/hooks';
 import { completePasswordReset } from '@@/utils/API';
 import { INVALID_PASSWORD } from '@@/utils/constants';
 
@@ -110,4 +111,4 @@ ResetPasswordComplete.propTypes = {
   token: PropTypes.string.isRequired,
 };
 
-export default ResetPasswordComplete;
+export default observer(ResetPasswordComplete);

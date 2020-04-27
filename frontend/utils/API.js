@@ -1,9 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// TODO this is a holdover until we've got plugin support for tokens for portunus,
-// remove this once that's available.
-const TOKEN_COOKIE = 'accesstoken';
+import tokenFetcher from '@@/zg_utils/tokens';
 
 const API = axios.create({
   baseURL: '/api/',
@@ -16,8 +14,8 @@ const API = axios.create({
 
 API.interceptors.request.use(config => {
   config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
-  if (Cookies.get(TOKEN_COOKIE) !== '') {
-    config.headers.Authorization = `Bearer ${Cookies.get(TOKEN_COOKIE)}`;
+  if (tokenFetcher.accessToken) {
+    config.headers.Authorization = `Bearer ${tokenFetcher.accessToken}`;
   }
   return config;
 });
@@ -32,16 +30,7 @@ export const socialAuth = payload => API.post('auth/social-auth/', payload);
 
 export const logout = () => API.post('auth/logout/');
 
-export const refresh = async () => {
-  try {
-    const response = await API.post('auth/token/refresh/');
-    // TODO this is a holdover until we've got plugin support for tokens for portunus,
-    // remove this once that's available.
-    Cookies.set(TOKEN_COOKIE, response.data.access);
-  } catch {
-    Cookies.set(TOKEN_COOKIE, '');
-  }
-};
+export const refresh = async () => API.post('auth/token/refresh/');
 
 export const resetPassword = payload => API.post('auth/password-reset/', payload);
 

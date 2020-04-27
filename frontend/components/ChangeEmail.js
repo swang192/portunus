@@ -6,7 +6,7 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import useInputFieldState from '@@/utils/hooks';
+import { useInputFieldState } from '@@/utils/hooks';
 import { refresh, changeUserEmail } from '@@/utils/API';
 import Success from '@@/components/Success';
 

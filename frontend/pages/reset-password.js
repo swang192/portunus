@@ -11,4 +11,6 @@ const ResetPassword = () => {
   );
 };
 
+ResetPassword.public = true;
+
 export default observer(ResetPassword);

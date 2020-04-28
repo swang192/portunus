@@ -11,4 +11,6 @@ const Login = () => {
   );
 };
 
+Login.public = true;
+
 export default observer(Login);

@@ -7,7 +7,8 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '@wui/theme';
 
 import GlobalContextProvider from '@@/global-context';
-import { setupCsrf } from '../utils/API';
+import { setupCsrf } from '@@/utils/API';
+import ProtectedPage from '@@/components/ProtectedPage';
 
 const App = ({ Component, pageProps }) => {
   useEffect(() => {
@@ -23,6 +24,8 @@ const App = ({ Component, pageProps }) => {
     setupCsrf();
   }, []);
 
+  const ProtectComponent = Component.public ? React.Fragment : ProtectedPage;
+
   return (
     <GlobalContextProvider>
       <ThemeProvider theme={theme}>
@@ -36,7 +39,9 @@ const App = ({ Component, pageProps }) => {
         </Head>
 
         <CssBaseline />
-        <Component {...pageProps} />
+        <ProtectComponent>
+          <Component {...pageProps} />
+        </ProtectComponent>
       </ThemeProvider>
     </GlobalContextProvider>
   );

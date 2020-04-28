@@ -11,4 +11,6 @@ const Register = () => {
   );
 };
 
+Register.public = true;
+
 export default observer(Register);

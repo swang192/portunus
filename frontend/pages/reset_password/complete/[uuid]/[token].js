@@ -15,4 +15,6 @@ const CompletePasswordReset = () => {
   );
 };
 
+CompletePasswordReset.public = true;
+
 export default CompletePasswordReset;

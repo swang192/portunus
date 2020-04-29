@@ -71,3 +71,9 @@ class SocialAuthSerializer(serializers.Serializer):
 
     def save(self):
         return self.user
+
+
+class ChangeEmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("email",)

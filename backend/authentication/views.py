@@ -7,7 +7,12 @@ from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRef
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes, api_view
 
-from .serializers import RegistrationSerializer, LoginSerializer, SocialAuthSerializer
+from .serializers import (
+    RegistrationSerializer,
+    LoginSerializer,
+    SocialAuthSerializer,
+    ChangeEmailSerializer,
+)
 from .models import User
 from .utils import (
     login_user,
@@ -47,31 +52,51 @@ social_auth = make_auth_view(SocialAuthSerializer)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def logout(drf_request):
-    if drf_request.user.is_anonymous:
+def logout(request):
+    if request.user.is_anonymous:
         return make_response(True)
 
-    blacklist_user_tokens(drf_request.user)
-    logout_user(drf_request)
+    blacklist_user_tokens(request.user)
+    logout_user(request)
     return make_response(True)
 
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def change_password(drf_request):
-    user = drf_request.user
-    password = drf_request.data.get("password")
-    new_password = drf_request.data.get("new_password")
+def change_password(request):
+    user = request.user
+    password = request.data.get("password")
+    new_password = request.data.get("new_password")
 
     if not user.check_password(password):
         return make_response(False, {"error": AUTH_FAILURE})
 
-    return check_and_change_password(drf_request, user, new_password)
+    return check_and_change_password(request, user, new_password)
 
 
 @api_view(["POST"])
-def request_password_reset(drf_request):
-    email = drf_request.data.get("email")
+@permission_classes([IsAuthenticated])
+def change_email(request):
+    user = request.user
+    password = request.data.get("password")
+    new_email = request.data.get("new_email")
+
+    if not user.check_password(password):
+        return make_response(False, {"error": AUTH_FAILURE})
+
+    # TODO get a confirmation email going with a link that will
+    # verify the email address.
+    serializer = ChangeEmailSerializer(instance=user, data={"email": new_email})
+
+    if not serializer.is_valid():
+        return make_response(False)
+
+    return make_response(True)
+
+
+@api_view(["POST"])
+def request_password_reset(request):
+    email = request.data.get("email")
     if not email:
         return make_response(False)
 
@@ -86,10 +111,10 @@ def request_password_reset(drf_request):
 
 
 @api_view(["POST"])
-def reset_password(drf_request):
-    uid = drf_request.data.get("portunus_uuid")
-    token = drf_request.data.get("token")
-    new_password = drf_request.data.get("new_password")
+def reset_password(request):
+    uid = request.data.get("portunus_uuid")
+    token = request.data.get("token")
+    new_password = request.data.get("new_password")
 
     try:
         user = User.objects.get(portunus_uuid=uid)
@@ -101,7 +126,7 @@ def reset_password(drf_request):
     if not check_onetime_token(token, user):
         return make_response(False, {"error": INVALID_TOKEN})
 
-    return check_and_change_password(drf_request, user, new_password)
+    return check_and_change_password(request, user, new_password)
 
 
 class TokenRefreshView(SimpleJWTTokenRefreshView):

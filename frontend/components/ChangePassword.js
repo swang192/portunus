@@ -7,14 +7,14 @@ import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
 import useInputFieldState from '@@/utils/hooks';
-import { refresh, changeUserEmail } from '@@/utils/API';
+import { changePassword, refresh } from '@@/utils/API';
+import { INVALID_PASSWORD } from '@@/utils/constants';
 import Success from '@@/components/Success';
 
-import { AUTH_FAILURE } from '@@/utils/constants';
-
-const ChangeEmailForm = () => {
-  const [newEmail, onChangeNewEmail] = useInputFieldState('');
+const ChangePasswordForm = () => {
   const [password, onChangePassword] = useInputFieldState('');
+  const [newPassword, onChangeNewPassword] = useInputFieldState('');
+  const [newPassword2, onChangeNewPassword2] = useInputFieldState('');
   const [inputErrors, setInputErrors] = useState({});
   const [success, setSuccess] = useState(false);
 
@@ -25,8 +25,12 @@ const ChangeEmailForm = () => {
       errors.password = 'Please enter your current password.';
     }
 
-    if (!newEmail) {
-      errors.newEmail = 'Please enter your email address.';
+    if (!newPassword) {
+      errors.newPassword = 'Please enter a new password.';
+    } else if (!newPassword2) {
+      errors.newPassword2 = 'Please re-enter your new password.';
+    } else if (newPassword !== newPassword2) {
+      errors.newPassword2 = 'The two passwords you entered do not match.';
     }
 
     setInputErrors(errors);
@@ -37,9 +41,9 @@ const ChangeEmailForm = () => {
   const handleError = error => {
     if (error.response && error.response.data) {
       const submitError =
-        error.response.data.error === AUTH_FAILURE
-          ? 'Your password did not match the one we have for your account. Try again.'
-          : 'The email you entered was not valid';
+        error.response.data.error === INVALID_PASSWORD
+          ? error.response.data.validation_error
+          : 'Your current password did not match the one we have on file. Try again.';
       setInputErrors({ submitError });
     } else {
       setInputErrors({ non_field_errors: 'An unknown error has occurred. Please try again.' });
@@ -54,9 +58,9 @@ const ChangeEmailForm = () => {
     }
 
     refresh().then(() => {
-      changeUserEmail({
+      changePassword({
         password,
-        new_email: newEmail.toLowerCase(),
+        new_password: newPassword,
       })
         .then(() => setSuccess(true))
         .catch(handleError);
@@ -64,16 +68,16 @@ const ChangeEmailForm = () => {
   };
 
   if (success) {
-    return <Success header="Change Email" message="Your email has been changed!" />;
+    return <Success header="Change Password" message="Your password has been changed!" />;
   }
 
   return (
-    <>
-      <Typography variant="h4">Change Email</Typography>
+    <div>
+      <Typography variant="h4">Change Password</Typography>
 
       <Form error={inputErrors.submitError} onSubmit={handleSubmit} noMargin>
         <Textbox
-          name="password"
+          name="current_password"
           type="password"
           label="Current Password"
           value={password}
@@ -82,22 +86,30 @@ const ChangeEmailForm = () => {
         />
 
         <Textbox
-          name="new_email"
-          type="email"
-          label="New Email"
-          autoComplete="email"
-          value={newEmail}
-          onChange={onChangeNewEmail}
-          error={inputErrors.newEmail}
+          name="new_password"
+          type="password"
+          label="New Password"
+          value={newPassword}
+          onChange={onChangeNewPassword}
+          error={inputErrors.newPassword}
         />
 
+        <Textbox
+          name="new_password_2"
+          type="password"
+          label="Confirm New Password"
+          value={newPassword2}
+          onChange={onChangeNewPassword2}
+          error={inputErrors.newPassword2}
+        />
+
+        <Spacer v={8} />
         <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
-          Change Email
+          Change Password
         </Button>
       </Form>
-      <Spacer v={8} />
-    </>
+    </div>
   );
 };
 
-export default ChangeEmailForm;
+export default ChangePasswordForm;

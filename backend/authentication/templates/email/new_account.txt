@@ -1,0 +1,9 @@
+{% if user.name %}
+Hello {{ user.name }},
+
+{% endif %}
+You are receiving this message because an account has been created for you at MetLife Legal Plans.
+
+Use this link to sign in to your new account: {{ new_account_url }}
+
+Thank you for using MetLife Legal Plans!

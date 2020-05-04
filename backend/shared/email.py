@@ -25,3 +25,16 @@ class PortunusMailer(Mailer):
             "reset_password",
             {"user": user, "reset_url": reset_url},
         )
+
+    @classmethod
+    def send_account_creation_notice(cls, user):
+        token = ResetToken.for_user(user)
+        new_account_url = parse.urljoin(
+            BASE_URL, f"/set-password/{user.portunus_uuid}/{token}",
+        )
+        cls.send_email(
+            [user.email],
+            "Account Created",
+            "new_account",
+            {"user": user, "new_account_url": new_account_url},
+        )

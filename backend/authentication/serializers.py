@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from authentication.social_utils import is_valid_existing_account, is_valid_token
+from shared.email import PortunusMailer
 from .models import User
 
 
@@ -77,3 +78,16 @@ class ChangeEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("email",)
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("email",)
+
+    def create(self, validated_data):
+        user = User(**validated_data)
+        user.set_unusable_password()
+        user.save()
+        PortunusMailer.send_account_creation_notice(user)
+        return user

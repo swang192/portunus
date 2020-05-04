@@ -3,8 +3,9 @@ import json
 from django.contrib.auth import logout as logout_user
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
+from rest_framework.generics import CreateAPIView
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, api_view
 
 from .serializers import (
@@ -12,6 +13,7 @@ from .serializers import (
     LoginSerializer,
     SocialAuthSerializer,
     ChangeEmailSerializer,
+    CreateUserSerializer,
 )
 from .models import User
 from .utils import (
@@ -139,3 +141,24 @@ class TokenRefreshView(SimpleJWTTokenRefreshView):
         kwargs["data"] = dict(kwargs["data"])
         kwargs["data"]["refresh"] = self.request.session.get(REFRESH_TOKEN_SESSION_KEY)
         return super().get_serializer(*args, **kwargs)
+
+
+class CreateUserView(CreateAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = CreateUserSerializer
+
+
+@api_view(["POST"])
+def send_new_user_email(request):
+    uuid = request.data.get("portunus_uuid")
+    if not uuid:
+        return make_response(False)
+
+    try:
+        user = User.objects.get(portunus_uuid=uuid)
+    except User.DoesNotExist:
+        # Send back success even if the account DNE to avoid leaking uuids.
+        return make_response(True)
+
+    PortunusMailer.send_account_creation_notice(user)
+    return make_response(True)

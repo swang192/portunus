@@ -34,6 +34,8 @@ export const refresh = async () => API.post('auth/token/refresh/');
 
 export const resetPassword = payload => API.post('auth/password-reset/', payload);
 
+export const sendNewUserEmail = payload => API.post('auth/send-new-user-email', payload);
+
 export const completePasswordReset = payload => API.post('auth/password-reset/complete/', payload);
 
 export const changeUserEmail = payload => API.post('auth/change-email/', payload);

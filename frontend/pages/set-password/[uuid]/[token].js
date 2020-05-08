@@ -4,18 +4,24 @@ import { useRouter } from 'next/router';
 
 import CompleteResetPassword from '@@/components/CompleteResetPassword';
 import Layout from '@@/components/Layout';
+import { sendNewUserEmail } from '@@/utils/API';
 
-const CompletePasswordReset = () => {
+const SetPassword = () => {
   const router = useRouter();
   const { uuid, token } = router.query;
 
   return (
     <Layout>
-      <CompleteResetPassword uuid={uuid} token={token} />
+      <CompleteResetPassword
+        uuid={uuid}
+        token={token}
+        action="set"
+        resendEmail={() => sendNewUserEmail({ portunus_uuid: uuid })}
+      />
     </Layout>
   );
 };
 
-CompletePasswordReset.public = true;
+SetPassword.public = true;
 
-export default observer(CompletePasswordReset);
+export default observer(SetPassword);

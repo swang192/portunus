@@ -11,6 +11,7 @@ urlpatterns = [
     path("social-auth/", views.social_auth, name="social_auth"),
     path("logout/", views.logout, name="logout"),
     path("users/", views.CreateUserView.as_view(), name="create_user"),
+    path("users/<str:portunus_uuid>/", views.RetrieveUserView.as_view(), name="retrieve_user"),
     path("token/refresh/", views.TokenRefreshView.as_view(), name="token_refresh"),
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("change-password/", views.change_password, name="change_password"),

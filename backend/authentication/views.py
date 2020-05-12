@@ -3,7 +3,7 @@ import json
 from django.contrib.auth import logout as logout_user
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, api_view
@@ -12,7 +12,7 @@ from .serializers import (
     RegistrationSerializer,
     LoginSerializer,
     SocialAuthSerializer,
-    ChangeEmailSerializer,
+    UserSerializer,
     CreateUserSerializer,
 )
 from .models import User
@@ -88,7 +88,7 @@ def change_email(request):
 
     # TODO get a confirmation email going with a link that will
     # verify the email address.
-    serializer = ChangeEmailSerializer(instance=user, data={"email": new_email})
+    serializer = UserSerializer(instance=user, data={"email": new_email})
 
     if not serializer.is_valid():
         return make_response(False)
@@ -146,6 +146,12 @@ class TokenRefreshView(SimpleJWTTokenRefreshView):
 class CreateUserView(CreateAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = CreateUserSerializer
+
+
+class RetrieveUserView(RetrieveAPIView):
+    serializer_class = UserSerializer
+    lookup_field = "portunus_uuid"
+    queryset = User.objects.all()
 
 
 @api_view(["POST"])

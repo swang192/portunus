@@ -2,8 +2,7 @@ import axios from 'axios';
 
 const TOKEN_REFRESH_INTERVAL = 4 * 60 * 1000; // 4 min in ms
 
-// TODO change this up once portunus is deployed.
-const PORTUNUS_URL = 'https://dev.portunus.willing.com';
+const PORTUNUS_URL = process.env.PORTUNUS_URL || 'https://dev.portunus.willing.com';
 
 const defaultFetch = () =>
   axios({ method: 'post', url: `${PORTUNUS_URL}/api/auth/token/refresh/`, withCredentials: true });
@@ -33,7 +32,7 @@ class TokenFetcher {
       return true;
     } catch (error) {
       if (error.response) {
-        if (error.response.status === 400) {
+        if (error.response.status === 401) {
           this.clearToken();
         }
       }
@@ -53,9 +52,8 @@ class TokenFetcher {
     this.onSuccess = onSuccess || this.onSuccess;
     this.onError = onError || this.onError;
     if (!this.timerId) {
-      if (this.fetchToken()) {
-        this.timerId = setInterval(this.fetchToken, TOKEN_REFRESH_INTERVAL);
-      }
+      this.timerId = setInterval(this.fetchToken, TOKEN_REFRESH_INTERVAL);
+      this.fetchToken();
     }
   }
 }

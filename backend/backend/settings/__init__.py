@@ -6,7 +6,6 @@ INSTALLED_APPS = [
     *INSTALLED_APPS,
     "rest_framework",
     "authentication",
-    "anymail",
     "rest_framework_simplejwt.token_blacklist",
 ]
 
@@ -56,14 +55,6 @@ CORS_ORIGIN_ALLOW_ALL = DEBUG
 CORS_ALLOW_CREDENTIALS = True
 
 BASE_URL = env("DJANGO_BASE_URL", default="http://localhost:3000/")
-
-EMAIL_BACKEND = env(
-    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend",
-)
-
-ANYMAIL = {
-    "MANDRILL_API_KEY": env("DJANGO_MANDRILL_API_KEY", default=None),
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {

@@ -17,7 +17,6 @@ from .models import User
 from .utils import (
     login_user,
     REFRESH_TOKEN_SESSION_KEY,
-    send_password_reset,
     check_and_change_password,
     check_onetime_token,
     make_response,
@@ -25,6 +24,7 @@ from .utils import (
     get_valid_redirect_url,
 )
 from .errors import AUTH_FAILURE, INVALID_TOKEN
+from shared.email import PortunusMailer
 
 
 def make_auth_view(serializer_class):
@@ -106,7 +106,7 @@ def request_password_reset(request):
         # Send back success even if the account DNE to avoid leaking user emails.
         return make_response(True)
 
-    send_password_reset(user)
+    PortunusMailer.send_password_reset(user)
     return make_response(True)
 
 

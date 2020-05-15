@@ -1,14 +1,10 @@
 import json
-from urllib import parse
 from urllib.parse import urlparse
 
-from anymail.exceptions import AnymailError
 from django.conf import settings
 from django.core.validators import URLValidator
 from django.http import HttpResponse
-from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import ValidationError
-from django.template.loader import render_to_string
 from django.contrib.auth import user_logged_in
 from django.contrib.auth.password_validation import validate_password
 from django.middleware.csrf import rotate_token
@@ -122,31 +118,3 @@ def check_onetime_token(token_str, user):
         return False
 
     return True
-
-
-def send_password_reset(user):
-    # Make a one-time token linked to this user.
-    token = ResetToken.for_user(user)
-    reset_url = parse.urljoin(
-        settings.BASE_URL, f"/reset_password/complete/{user.portunus_uuid}/{token}/",
-    )
-    return _send_email(
-        [user.email],
-        "Password Reset Request",
-        "reset_password",
-        {"user": user, "reset_url": reset_url,},
-    )
-
-
-def _send_email(to_list, subject, template_name, data):
-    email_txt = render_to_string(f"reset_password.txt", data)
-    email_html = render_to_string(f"reset_password.html", data)
-    msg = EmailMultiAlternatives(
-        subject=subject, body=email_txt, from_email=FROM_EMAIL, to=to_list,
-    )
-    msg.attach_alternative(email_html, "text/html")
-    try:
-        msg.send()
-        return True
-    except AnymailError:
-        return False

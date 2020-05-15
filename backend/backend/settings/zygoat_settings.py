@@ -155,3 +155,15 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+EMAIL_BACKEND = "django.core.mail.backends.{}.EmailBackend".format(
+    "console" if DEBUG else "smtp"
+)
+EMAIL_HOST = "email-smtp.us-east-1.amazonaws.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = prod_required_env("DJANGO_EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = prod_required_env("DJANGO_EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = True
+
+SUPPORT_PHONE_NUMBER = prod_required_env("DJANGO_SUPPORT_PHONE_NUMBER", "")
+SUPPORT_EMAIL_ADDRESS = prod_required_env("DJANGO_SUPPORT_EMAIL_ADDRESS", "")

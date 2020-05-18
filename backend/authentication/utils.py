@@ -29,13 +29,7 @@ def make_response(success, data=None, status=None):
     if not status:
         status = status_codes.HTTP_200_OK if success else status_codes.HTTP_400_BAD_REQUEST
 
-    response_data = {"success": success}
-    if data:
-        response_data.update(data)
-
-    response = HttpResponse(
-        json.dumps(response_data), content_type="application/json", status=status
-    )
+    response = HttpResponse(json.dumps(data), content_type="application/json", status=status)
     patch_cache_control(response, no_cache=True, no_store=True)
     return response
 

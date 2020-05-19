@@ -7,7 +7,6 @@ from authentication.utils import REFRESH_TOKEN_SESSION_KEY
 
 def assert_successful_response(response, redirect_url):
     assert response.status_code == 200
-    assert response.json()["success"]
     assert response.json()["next"] == redirect_url or settings.DEFAULT_REDIRECT_URL
 
 
@@ -23,7 +22,6 @@ def assert_authenticated(client):
 
 def assert_failure_response(response):
     assert response.status_code == 400
-    assert not response.json()["success"]
 
 
 def assert_unauthenticated(client):

@@ -25,7 +25,7 @@ REFRESH_TOKEN_SESSION_KEY = "refresh_token"
 FROM_EMAIL = "Willing <hello@willing.com>"
 
 
-def make_response(success, data=None, status=None):
+def make_response(success=True, data=None, status=None):
     if not status:
         status = status_codes.HTTP_200_OK if success else status_codes.HTTP_400_BAD_REQUEST
 

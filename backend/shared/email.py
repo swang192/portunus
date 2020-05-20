@@ -17,7 +17,7 @@ class PortunusMailer(Mailer):
         # Make a one-time token linked to this user.
         token = ResetToken.for_user(user)
         reset_url = parse.urljoin(
-            BASE_URL, f"/reset_password/complete/{user.portunus_uuid}/{token}/",
+            BASE_URL, f"/reset-password/complete/{user.portunus_uuid}/{token}/",
         )
         cls.send_email(
             [user.email],

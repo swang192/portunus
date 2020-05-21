@@ -56,11 +56,11 @@ social_auth = make_auth_view(SocialAuthSerializer)
 @permission_classes([IsAuthenticated])
 def logout(request):
     if request.user.is_anonymous:
-        return make_response(True)
+        return make_response()
 
     blacklist_user_tokens(request.user)
     logout_user(request)
-    return make_response(True)
+    return make_response()
 
 
 @api_view(["POST"])
@@ -93,7 +93,7 @@ def change_email(request):
     if not serializer.is_valid():
         return make_response(False)
 
-    return make_response(True)
+    return make_response()
 
 
 @api_view(["POST"])
@@ -106,10 +106,10 @@ def request_password_reset(request):
         user = User.objects.get(email=email.lower())
     except User.DoesNotExist:
         # Send back success even if the account DNE to avoid leaking user emails.
-        return make_response(True)
+        return make_response()
 
     PortunusMailer.send_password_reset(user)
-    return make_response(True)
+    return make_response()
 
 
 @api_view(["POST"])
@@ -164,7 +164,7 @@ def send_new_user_email(request):
         user = User.objects.get(portunus_uuid=uuid)
     except User.DoesNotExist:
         # Send back success even if the account DNE to avoid leaking uuids.
-        return make_response(True)
+        return make_response()
 
     PortunusMailer.send_account_creation_notice(user)
-    return make_response(True)
+    return make_response()

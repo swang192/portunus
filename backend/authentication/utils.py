@@ -1,4 +1,5 @@
 import json
+from fnmatch import fnmatchcase
 from urllib.parse import urlparse
 
 from django.conf import settings
@@ -48,7 +49,10 @@ def get_valid_redirect_url(url):
     is_valid = URLValidator()
     try:
         is_valid(url)
-        if urlparse(url).hostname not in settings.VALID_REDIRECT_HOSTNAMES:
+        host_name = urlparse(url).hostname
+        if not any(
+            fnmatchcase(host_name, pattern) for pattern in settings.VALID_REDIRECT_HOSTNAMES
+        ):
             raise ValidationError("Invalid host")
         return url
     except ValidationError:

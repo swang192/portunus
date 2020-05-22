@@ -7,7 +7,7 @@ from authentication.utils import REFRESH_TOKEN_SESSION_KEY
 
 def assert_successful_response(response, redirect_url):
     assert response.status_code == 200
-    assert response.json()["next"] == redirect_url or settings.DEFAULT_REDIRECT_URL
+    assert response.json()["next"] == (redirect_url or settings.DEFAULT_REDIRECT_URL)
 
 
 def assert_authenticated(client):

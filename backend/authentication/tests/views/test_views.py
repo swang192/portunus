@@ -1,6 +1,7 @@
 from unittest.mock import patch, Mock
 
 import pytest
+from django.test import override_settings
 from django.urls import reverse
 
 from authentication.factories import UserFactory
@@ -82,6 +83,15 @@ class TestRegister:
 
     def test_redirect(self, authenticate_and_test):
         redirect_url = "http://localhost:1234/test_path"
+        data = {
+            **USER_DATA,
+            "next": redirect_url,
+        }
+        authenticate_and_test("authentication:register", data, redirect_url=redirect_url)
+
+    @override_settings(VALID_REDIRECT_HOSTNAMES=["*.testing.com"])
+    def test_redirect_wildcard(self, authenticate_and_test):
+        redirect_url = "http://sub.testing.com"
         data = {
             **USER_DATA,
             "next": redirect_url,

@@ -14,7 +14,7 @@ import TabDivider from '@wui/layout/tabDivider';
 import SocialAuth from '@@/components/SocialAuth';
 import { useGlobalContext, useInputFieldState } from '@@/utils/hooks';
 
-const AuthBase = ({ submitCredentials, submitText, children }) => {
+const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
   const [email, onChangeEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
   const [inputErrors, setInputErrors] = useState({});
@@ -82,7 +82,7 @@ const AuthBase = ({ submitCredentials, submitText, children }) => {
 
   return (
     <>
-      <Typography variant="h4">Login</Typography>
+      <Typography variant="h4">{headerText}</Typography>
       <Form error={inputErrors.non_field_errors} onSubmit={handleSubmit} noMargin>
         <Textbox
           name="email"
@@ -158,6 +158,7 @@ const AuthBase = ({ submitCredentials, submitText, children }) => {
 AuthBase.propTypes = {
   submitCredentials: PropTypes.func.isRequired,
   submitText: PropTypes.string.isRequired,
+  headerText: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
 };
 

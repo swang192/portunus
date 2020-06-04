@@ -15,7 +15,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 
-from .models import User
 from .errors import INVALID_PASSWORD
 from .token import ResetToken
 
@@ -73,10 +72,6 @@ def blacklist_token(token_str):
 def blacklist_user_tokens(user):
     user_tokens = OutstandingToken.objects.filter(user__portunus_uuid=user.portunus_uuid)
     [blacklist_token(t.token) for t in user_tokens]
-
-
-def create_user(portunus_uuid):
-    User.objects.create_user(portunus_uuid=portunus_uuid)
 
 
 def check_and_change_password(drf_request, user, new_password):

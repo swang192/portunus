@@ -45,7 +45,6 @@ xQlyJdlvbLmNCAf6uwIDAQAB
 
 SIMPLE_JWT = {
     "USER_ID_FIELD": "portunus_uuid",
-    "NEW_USER_CALLBACK": "backend.utils.create_user",
     "ALGORITHM": "RS512",
     "SIGNING_KEY": prod_required_env("DJANGO_JWT_SIGNING_KEY", DEFAULT_SIGNING_KEY),
     "VERIFYING_KEY": prod_required_env("DJANGO_JWT_VEFIFYING_KEY", DEFAULT_VERIFYING_KEY),

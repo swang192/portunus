@@ -12,7 +12,7 @@ const ProtectedPage = ({ children }) => {
 
   useEffect(() => {
     if (store.authenticated || store.loading) return;
-    router.replace({ pathname: '/login', shallow: true, query: { localNext: router.pathname } });
+    router.replace({ pathname: '/login', shallow: true, query: { localNext: router.asPath } });
   }, [store.authenticated, store.loading]);
 
   if (store.loading) {

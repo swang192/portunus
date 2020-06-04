@@ -92,6 +92,7 @@ def change_email(request):
 
     if not serializer.is_valid():
         return make_response(False)
+    serializer.save()
 
     return make_response()
 

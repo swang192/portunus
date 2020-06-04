@@ -73,15 +73,6 @@ const ChangeEmailForm = () => {
 
       <Form error={inputErrors.submitError} onSubmit={handleSubmit} noMargin>
         <Textbox
-          name="password"
-          type="password"
-          label="Current Password"
-          value={password}
-          onChange={onChangePassword}
-          error={inputErrors.password}
-        />
-
-        <Textbox
           name="new_email"
           type="email"
           label="New Email"
@@ -89,6 +80,15 @@ const ChangeEmailForm = () => {
           value={newEmail}
           onChange={onChangeNewEmail}
           error={inputErrors.newEmail}
+        />
+
+        <Textbox
+          name="password"
+          type="password"
+          label="Current Password"
+          value={password}
+          onChange={onChangePassword}
+          error={inputErrors.password}
         />
 
         <Button variant="contained" color="primary" type="submit" noMinWidth size="large">

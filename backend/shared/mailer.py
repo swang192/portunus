@@ -39,3 +39,12 @@ class Mailer:
             # TODO: report exception
             print(e, vars(e))
             return False
+
+    @classmethod
+    def send_account_notice(cls, user, subject, text):
+        return cls.send_email(
+            [user.email],
+            f"Account Notice: {subject}",
+            "mlp_transactional_email",
+            {"user": user, "notice": text,},
+        )

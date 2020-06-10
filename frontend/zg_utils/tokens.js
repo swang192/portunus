@@ -2,17 +2,25 @@ import axios from 'axios';
 
 const TOKEN_REFRESH_INTERVAL = 4 * 60 * 1000; // 4 min in ms
 
-const PORTUNUS_URL = process.env.PORTUNUS_URL || 'https://dev.portunus.willing.com';
+export const PORTUNUS_URL = process.env.PORTUNUS_URL || 'https://dev.portunus.willing.com';
 
 const defaultFetch = () =>
   axios({ method: 'post', url: `${PORTUNUS_URL}/api/auth/token/refresh/`, withCredentials: true });
 
 const loginUrl = `${PORTUNUS_URL}/login`;
 
-const defaultOnError = () => {
+export const withReturn = url => {
+  if (typeof window === 'undefined') {
+    // server side rendering, so we don't know where to return to
+    return url;
+  }
   const params = new URLSearchParams();
   params.append('next', window.location.href);
-  window.location.replace(`${loginUrl}?${params.toString()}`);
+  return `${url}?${params.toString()}`;
+};
+
+const defaultOnError = () => {
+  window.location.replace(withReturn(loginUrl));
 };
 
 class TokenFetcher {
@@ -20,15 +28,27 @@ class TokenFetcher {
     this.fetchFunction = defaultFetch;
     this.onError = defaultOnError;
     this.onSuccess = () => null;
-    this.accessToken = '';
+    this.currentToken = '';
     this.timerId = null;
+    this.tokenCallbacks = [];
+  }
+
+  get accessToken() {
+    return new Promise(resolve => {
+      if (this.currentToken) {
+        resolve(this.currentToken);
+      } else {
+        this.tokenCallbacks.push(resolve);
+      }
+    });
   }
 
   fetchToken = async () => {
     try {
       const response = await this.fetchFunction();
-      this.accessToken = response.data.access;
-      this.onSuccess(this.accessToken);
+      this.currentToken = response.data.access;
+      this.onSuccess(this.currentToken);
+      this.clearCallbacks();
       return true;
     } catch (error) {
       if (error.response) {
@@ -42,9 +62,15 @@ class TokenFetcher {
   };
 
   clearToken() {
-    this.accessToken = '';
+    this.currentToken = '';
     clearInterval(this.timerId);
     this.timerId = null;
+    this.clearCallbacks();
+  }
+
+  clearCallbacks() {
+    this.tokenCallbacks.forEach(cb => cb(this.currentToken));
+    this.tokenCallbacks = [];
   }
 
   start(fetchFn, onSuccess, onError) {

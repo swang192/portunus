@@ -3,34 +3,44 @@ import Cookies from 'js-cookie';
 
 import tokenFetcher from '@@/zg_utils/tokens';
 
-const API = axios.create({
+const apiConfig = {
   baseURL: '/api/',
   responseType: 'json',
   headers: {
     'X-REQUESTED-WITH': 'XMLHttpRequest',
     'Content-Type': 'application/json',
   },
+};
+
+const unauthenticatedAPI = axios.create(apiConfig);
+
+const API = axios.create(apiConfig);
+
+unauthenticatedAPI.interceptors.request.use(config => {
+  config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
+  return config;
 });
 
-API.interceptors.request.use(config => {
+API.interceptors.request.use(async config => {
   config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
-  if (tokenFetcher.accessToken) {
-    config.headers.Authorization = `Bearer ${tokenFetcher.accessToken}`;
+  const accessToken = await tokenFetcher.accessToken;
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
 
-export const setupCsrf = () => API.get('set_csrf/');
+export const setupCsrf = () => unauthenticatedAPI.get('set_csrf/');
 
-export const register = payload => API.post('auth/register/', payload);
+export const register = payload => unauthenticatedAPI.post('auth/register/', payload);
 
-export const login = payload => API.post('auth/login/', payload);
+export const login = payload => unauthenticatedAPI.post('auth/login/', payload);
 
 export const socialAuth = payload => API.post('auth/social-auth/', payload);
 
 export const logout = () => API.post('auth/logout/');
 
-export const refresh = async () => API.post('auth/token/refresh/');
+export const refresh = async () => unauthenticatedAPI.post('auth/token/refresh/');
 
 export const resetPassword = payload => API.post('auth/password-reset/', payload);
 

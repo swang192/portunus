@@ -14,11 +14,13 @@ services:
     ports:
     - 5432:5432
   frontend:
-    build: frontend
+    build:
+      context: frontend
+      dockerfile: Dockerfile.dev
     ports:
     - 3000:3000
     volumes:
     - ./frontend:/code
     - /code/node_modules
     - /code/.next
-version: '3'
+version: '3.4'

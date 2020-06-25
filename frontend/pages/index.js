@@ -1,15 +1,15 @@
 import { observer } from 'mobx-react';
 
 import ProtectedPage from '@@/components/ProtectedPage';
-import Button from '@wui/input/button';
-import { useGlobalContext } from '@@/utils/hooks';
+import Link from 'next/link';
 
 const Index = () => {
-  const store = useGlobalContext();
   return (
     <ProtectedPage>
       <div>Home</div>
-      <Button onClick={store.logout}>Log out</Button>
+      <Link href="/api/logout/">
+        <a>Log out</a>
+      </Link>
     </ProtectedPage>
   );
 };

@@ -30,12 +30,6 @@ class Store {
     this.authenticated = true;
     this.startFetching();
   }
-
-  logout = async () => {
-    await api.logout();
-    tokenFetcher.clearToken();
-    this.authenticated = false;
-  };
 }
 
 export default Store;

@@ -51,3 +51,5 @@ export const completePasswordReset = payload => API.post('auth/password-reset/co
 export const changeUserEmail = payload => API.post('auth/change-email/', payload);
 
 export const changePassword = payload => API.post('auth/change-password/', payload);
+
+export const getCurrentUserSettings = () => API.get('auth/users/settings/');

@@ -10,6 +10,8 @@ import GlobalContextProvider from '@@/global-context';
 import { setupCsrf } from '@@/utils/API';
 import ProtectedPage from '@@/components/ProtectedPage';
 
+import '@@/global.css';
+
 const App = ({ Component, pageProps }) => {
   useEffect(() => {
     // Remove the server-side injected CSS.

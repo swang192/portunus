@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Form from '@wui/layout/form';

@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { observer } from 'mobx-react';
+
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
 
 import Form from '@wui/layout/form';
 import Button from '@wui/input/button';
@@ -8,15 +12,27 @@ import Typography from '@wui/basics/typography';
 
 import { useInputFieldState } from '@@/utils/hooks';
 import { refresh, changeUserEmail } from '@@/utils/API';
+
+import Page from '@@/components/Page';
 import Success from '@@/components/Success';
 
 import { AUTH_FAILURE } from '@@/utils/constants';
 
-const ChangeEmailForm = () => {
+const useStyles = makeStyles(theme => ({
+  root: {
+    padding: [[32, 20]],
+    [theme.breakpoints.notPhone]: {
+      padding: [[32, 60]],
+    },
+  },
+}));
+
+const ChangeEmail = () => {
   const [newEmail, onChangeNewEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
   const [inputErrors, setInputErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const classes = useStyles();
 
   const validateForm = () => {
     const errors = {};
@@ -39,7 +55,7 @@ const ChangeEmailForm = () => {
       const submitError =
         error.response.data.error === AUTH_FAILURE
           ? 'Your password did not match the one we have for your account. Try again.'
-          : 'The email you entered was not valid';
+          : 'The email you entered was not valid.';
       setInputErrors({ submitError });
     } else {
       setInputErrors({ non_field_errors: 'An unknown error has occurred. Please try again.' });
@@ -64,40 +80,49 @@ const ChangeEmailForm = () => {
   };
 
   if (success) {
-    return <Success header="Change Email" message="Your email has been changed!" />;
+    return (
+      <Page>
+        <Container maxWidth="md" className={classes.root}>
+          <Spacer v={32} />
+          <Success header="Change Email" message="Your email has been changed!" />
+        </Container>
+      </Page>
+    );
   }
 
   return (
-    <>
-      <Typography variant="h4">Change Email</Typography>
+    <Page>
+      <Container maxWidth="md" className={classes.root}>
+        <Typography variant="h4">Change Email</Typography>
 
-      <Form error={inputErrors.submitError} onSubmit={handleSubmit} noMargin>
-        <Textbox
-          name="new_email"
-          type="email"
-          label="New Email"
-          autoComplete="email"
-          value={newEmail}
-          onChange={onChangeNewEmail}
-          error={inputErrors.newEmail}
-        />
+        <Form error={inputErrors.submitError} onSubmit={handleSubmit} noMargin>
+          <Textbox
+            name="new_email"
+            type="email"
+            label="New Email"
+            autoComplete="email"
+            value={newEmail}
+            onChange={onChangeNewEmail}
+            error={inputErrors.newEmail}
+          />
 
-        <Textbox
-          name="password"
-          type="password"
-          label="Current Password"
-          value={password}
-          onChange={onChangePassword}
-          error={inputErrors.password}
-        />
+          <Textbox
+            name="password"
+            type="password"
+            label="Current Password"
+            value={password}
+            onChange={onChangePassword}
+            error={inputErrors.password}
+          />
 
-        <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
-          Change Email
-        </Button>
-      </Form>
-      <Spacer v={8} />
-    </>
+          <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
+            Change Email
+          </Button>
+        </Form>
+        <Spacer v={8} />
+      </Container>
+    </Page>
   );
 };
 
-export default ChangeEmailForm;
+export default observer(ChangeEmail);

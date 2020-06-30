@@ -25,7 +25,7 @@ from .utils import (
     blacklist_user_tokens,
     get_valid_redirect_url,
 )
-from .errors import AUTH_FAILURE, INVALID_TOKEN
+from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL
 from shared.email import PortunusMailer
 
 
@@ -91,7 +91,7 @@ def change_email(request):
     serializer = UserSerializer(instance=user, data={"email": new_email})
 
     if not serializer.is_valid():
-        return make_response(False)
+        return make_response(False, {"error": INVALID_EMAIL})
     serializer.save()
 
     return make_response()
@@ -153,6 +153,14 @@ class RetrieveUserView(RetrieveAPIView):
     serializer_class = UserSerializer
     lookup_field = "portunus_uuid"
     queryset = User.objects.all()
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_current_user_settings(request):
+    # TODO add social auth settings and link in the frontend.
+    # TODO use a serializer for this when adding new fields.
+    return make_response(data={"email": request.user.email})
 
 
 @api_view(["POST"])

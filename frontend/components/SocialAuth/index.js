@@ -22,7 +22,7 @@ const FACEBOOK_TO_GOOGLE = {
   not_authorized: 'access_denied',
 };
 
-const SocialAuth = ({ handleSuccess, handleError, processing, setProcessing }) => {
+const SocialAuth = ({ handleSuccess, handleError, processing, setProcessing, next }) => {
   const onFailure = data => {
     // `data.error` is returned by Google. `data.status` is returned by Facebook.
     //    Translate the error from Facebook to the Google equivalent so we don't
@@ -40,7 +40,7 @@ const SocialAuth = ({ handleSuccess, handleError, processing, setProcessing }) =
     }
     setProcessing(false);
 
-    socialAuth({ token: token.accessToken, email: token.email, provider })
+    socialAuth({ token: token.accessToken, email: token.email, provider, next })
       .then(handleSuccess)
       .catch(handleError);
   };
@@ -84,6 +84,7 @@ SocialAuth.propTypes = {
   handleError: PropTypes.func.isRequired,
   processing: PropTypes.bool.isRequired,
   setProcessing: PropTypes.func.isRequired,
+  next: PropTypes.string.isRequired,
 };
 
 export default observer(SocialAuth);

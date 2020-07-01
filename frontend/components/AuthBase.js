@@ -149,6 +149,7 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
         handleError={handleError}
         processing={processing}
         setProcessing={setProcessing}
+        next={next}
       />
       <Spacer v={16} />
     </>

@@ -11,9 +11,7 @@ const Register = () => {
     <AuthBase submitCredentials={register} submitText="Register" headerText="Create Account">
       <Typography>
         Already have an account?&nbsp;
-        <KeepParamsLink href="/login">
-          <a>Login</a>
-        </KeepParamsLink>
+        <KeepParamsLink href="/login">Login</KeepParamsLink>
       </Typography>
     </AuthBase>
   );

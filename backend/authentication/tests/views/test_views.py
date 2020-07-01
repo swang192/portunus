@@ -1,12 +1,15 @@
+import json
 from unittest.mock import Mock
 from urllib import parse
 
 import pytest
+from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
 from django.test import override_settings
 from django.urls import reverse
 
 from authentication.factories import UserFactory
 from authentication.models import User
+from authentication.views import CreateUserView
 from shared import frontend_urls
 from .utils import assert_unauthenticated
 
@@ -128,3 +131,46 @@ class TestLogout:
         assert parsed_url.query == query_string
 
         assert_unauthenticated(client)
+
+
+class TestCreateUserView(APITestCase):
+    def test_create_with_no_existing_user(self):
+        admin_user = UserFactory(**USER_DATA)
+        admin_user.is_staff = True
+        admin_user.is_superuser = True
+        admin_user.save()
+
+        factory = APIRequestFactory()
+        view = CreateUserView.as_view()
+        new_email = "newuser@test.com"
+        request = factory.post(
+            reverse("authentication:create_user"),
+            {"email": new_email, "password": VALID_PASSWORD,},
+            format="json",
+        )
+        force_authenticate(request, user=admin_user)
+        response = view(request)
+        new_user = User.objects.get(email=new_email)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            json.loads(response.content)["portunus_uuid"], str(new_user.portunus_uuid)
+        )
+
+    def test_create_with_existing_user(self):
+        admin_user = UserFactory(**USER_DATA)
+        admin_user.is_staff = True
+        admin_user.is_superuser = True
+        admin_user.save()
+
+        factory = APIRequestFactory()
+        view = CreateUserView.as_view()
+        request = factory.post(reverse("authentication:create_user"), USER_DATA, format="json")
+        force_authenticate(request, user=admin_user)
+        response = view(request)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content)["portunus_uuid"], admin_user.portunus_uuid
+        )
+        self.assertEqual(json.loads(response.content)["user_exists"], True)

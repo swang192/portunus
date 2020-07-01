@@ -133,6 +133,21 @@ class CreateUserView(CreateAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = CreateUserSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.create(request.data)
+            return make_response(True, {"portunus_uuid": str(user.portunus_uuid)})
+        else:
+            existing_user = User.objects.filter(email=request.data["email"]).first()
+            data = serializer.errors
+
+            if existing_user:
+                data["portunus_uuid"] = str(existing_user.portunus_uuid)
+                data["user_exists"] = True
+            return make_response(False, data)
+
 
 class RetrieveUserView(RetrieveAPIView):
     serializer_class = UserSerializer

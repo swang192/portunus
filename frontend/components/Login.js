@@ -11,15 +11,11 @@ const Login = () => {
     <AuthBase submitCredentials={login} submitText="Login" headerText="Login">
       <Typography>
         Don't have an account yet?&nbsp;
-        <KeepParamsLink href="/register">
-          <a>Create Account</a>
-        </KeepParamsLink>
+        <KeepParamsLink href="/register">Create Account</KeepParamsLink>
       </Typography>
       <Typography>
         Forgot your password?&nbsp;
-        <KeepParamsLink href="/reset-password">
-          <a>Reset Password</a>
-        </KeepParamsLink>
+        <KeepParamsLink href="/reset-password">Reset Password</KeepParamsLink>
       </Typography>
     </AuthBase>
   );

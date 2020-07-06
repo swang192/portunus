@@ -3,15 +3,12 @@ import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
-import Grid from '@wui/layout/grid';
 import Form from '@wui/layout/form';
 import Button from '@wui/input/button';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
-import TabDivider from '@wui/layout/tabDivider';
 
-import SocialAuth from '@@/components/SocialAuth';
 import { useGlobalContext, useInputFieldState } from '@@/utils/hooks';
 
 const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
@@ -120,38 +117,6 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
       {children}
 
       <Spacer v={24} />
-
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        alignContent="center"
-        spacing={2}
-      >
-        <Grid item xs={3}>
-          <TabDivider noMargin />
-        </Grid>
-
-        <Grid item xs={1}>
-          <Typography variant="intro">or</Typography>
-        </Grid>
-
-        <Grid item xs={3}>
-          <TabDivider noMargin />
-        </Grid>
-      </Grid>
-
-      <Spacer v={24} />
-
-      <SocialAuth
-        handleSuccess={handleSuccess}
-        handleError={handleError}
-        processing={processing}
-        setProcessing={setProcessing}
-        next={next}
-      />
-      <Spacer v={16} />
     </>
   );
 };

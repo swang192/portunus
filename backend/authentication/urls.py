@@ -8,7 +8,6 @@ app_name = "authentication"
 urlpatterns = [
     path("register/", views.register, name="register"),
     path("login/", views.login, name="login"),
-    path("social-auth/", views.social_auth, name="social_auth"),
     path("logout/", views.logout, name="logout"),
     path("users/settings/", views.get_current_user_settings, name="get_current_user"),
     path("users/", views.CreateUserView.as_view(), name="create_user"),

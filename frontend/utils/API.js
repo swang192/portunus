@@ -36,8 +36,6 @@ export const register = payload => unauthenticatedAPI.post('auth/register/', pay
 
 export const login = payload => unauthenticatedAPI.post('auth/login/', payload);
 
-export const socialAuth = payload => unauthenticatedAPI.post('auth/social-auth/', payload);
-
 export const logout = () => API.post('auth/logout/');
 
 export const refresh = async () => unauthenticatedAPI.post('auth/token/refresh/');

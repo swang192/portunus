@@ -11,7 +11,6 @@ from rest_framework.decorators import permission_classes, api_view
 from .serializers import (
     RegistrationSerializer,
     LoginSerializer,
-    SocialAuthSerializer,
     UserSerializer,
     CreateUserSerializer,
 )
@@ -49,7 +48,6 @@ def make_auth_view(serializer_class):
 
 register = make_auth_view(RegistrationSerializer)
 login = make_auth_view(LoginSerializer)
-social_auth = make_auth_view(SocialAuthSerializer)
 
 
 @api_view(["POST"])

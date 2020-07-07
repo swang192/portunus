@@ -36,15 +36,15 @@ export const register = payload => unauthenticatedAPI.post('auth/register/', pay
 
 export const login = payload => unauthenticatedAPI.post('auth/login/', payload);
 
-export const logout = () => API.post('auth/logout/');
-
 export const refresh = async () => unauthenticatedAPI.post('auth/token/refresh/');
 
-export const resetPassword = payload => API.post('auth/password-reset/', payload);
+export const resetPassword = payload => unauthenticatedAPI.post('auth/password-reset/', payload);
 
-export const sendNewUserEmail = payload => API.post('auth/send-new-user-email', payload);
+export const sendNewUserEmail = payload =>
+  unauthenticatedAPI.post('auth/send-new-user-email', payload);
 
-export const completePasswordReset = payload => API.post('auth/password-reset/complete/', payload);
+export const completePasswordReset = payload =>
+  unauthenticatedAPI.post('auth/password-reset/complete/', payload);
 
 export const changeUserEmail = payload => API.post('auth/change-email/', payload);
 

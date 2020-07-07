@@ -52,6 +52,11 @@ SIMPLE_JWT = {
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 CORS_ALLOW_CREDENTIALS = True
+if not DEBUG:
+    CORS_ORIGIN_REGEX_WHITELIST = [
+        r"^https://[\w.]+\.willing\.com$",
+        r"^https://[\w.]+\.legalplans\.com$",
+    ]
 
 BASE_URL = env("DJANGO_BASE_URL", default="http://localhost:3000/")
 

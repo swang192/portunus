@@ -1,3 +1,5 @@
+from urllib import parse
+
 from django.http import HttpResponse
 from django.views.decorators.http import require_GET
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -9,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
 from authentication.utils import blacklist_user_tokens
+from shared import frontend_urls
 
 
 @api_view(["GET"])
@@ -24,8 +27,13 @@ def set_csrf(request):
     return HttpResponse("success", status=HTTP_200_OK)
 
 
+@api_view(["GET"])
 def logout(request):
     if request.user.is_authenticated:
         blacklist_user_tokens(request.user)
     logout_user(request)
-    return redirect("/")
+
+    query_string = ""
+    if request.query_params:
+        query_string = f"?{parse.urlencode(request.query_params)}"
+    return redirect(f"{frontend_urls.LOGIN}{query_string}")

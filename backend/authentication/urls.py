@@ -8,7 +8,6 @@ app_name = "authentication"
 urlpatterns = [
     path("register/", views.register, name="register"),
     path("login/", views.login, name="login"),
-    path("logout/", views.logout, name="logout"),
     path("users/settings/", views.get_current_user_settings, name="get_current_user"),
     path("users/", views.CreateUserView.as_view(), name="create_user"),
     path("users/<str:portunus_uuid>/", views.RetrieveUserView.as_view(), name="retrieve_user"),

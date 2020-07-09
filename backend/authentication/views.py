@@ -1,6 +1,5 @@
 import json
 
-from django.contrib.auth import logout as logout_user
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
@@ -21,7 +20,6 @@ from .utils import (
     check_and_change_password,
     check_onetime_token,
     make_response,
-    blacklist_user_tokens,
     get_valid_redirect_url,
 )
 from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL
@@ -48,17 +46,6 @@ def make_auth_view(serializer_class):
 
 register = make_auth_view(RegistrationSerializer)
 login = make_auth_view(LoginSerializer)
-
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def logout(request):
-    if request.user.is_anonymous:
-        return make_response()
-
-    blacklist_user_tokens(request.user)
-    logout_user(request)
-    return make_response()
 
 
 @api_view(["POST"])

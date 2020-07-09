@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+from urllib import parse
 
 import pytest
 from django.test import override_settings
@@ -6,6 +7,7 @@ from django.urls import reverse
 
 from authentication.factories import UserFactory
 from authentication.models import User
+from shared import frontend_urls
 from .utils import assert_unauthenticated
 
 pytestmark = [pytest.mark.django_db]
@@ -106,8 +108,23 @@ class TestRegister:
 
 
 class TestLogout:
-    def test_logout(self, post, client, authenticate_and_test):
+    def test_logout(self, client, authenticate_and_test):
         authenticate_and_test("authentication:register", USER_DATA)
-        client.force_authenticate(User.objects.last())
-        post(reverse("authentication:logout"))
+        response = client.get(reverse("logout"))
+        assert response.status_code == 302
+        assert response.url == frontend_urls.LOGIN
+        assert_unauthenticated(client)
+
+    def test_logout_preserves_query_params(self, client, authenticate_and_test):
+        authenticate_and_test("authentication:register", USER_DATA)
+        query_params = {"test": "value"}
+        response = client.get(reverse("logout"), query_params)
+        assert response.status_code == 302
+
+        parsed_url = parse.urlparse(response.url)
+        assert parsed_url.path == frontend_urls.LOGIN
+
+        query_string = parse.urlencode(query_params)
+        assert parsed_url.query == query_string
+
         assert_unauthenticated(client)

@@ -10,7 +10,7 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from '@@/utils/hooks';
+import { useInputFieldState } from '@@/hooks';
 import { refresh, changeUserEmail } from '@@/utils/API';
 
 import Page from '@@/components/Page';

@@ -4,6 +4,8 @@ import tokenFetcher from '@@/zg_utils/tokens';
 import * as api from '@@/utils/API';
 
 class Store {
+  @observable showNavBar = true;
+
   @observable loading = true;
 
   @observable authenticated = false;

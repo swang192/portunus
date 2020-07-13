@@ -10,7 +10,7 @@ import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
 import TermsCheckbox from '@@/components/TermsCheckbox';
-import { useGlobalContext, useInputFieldState } from '@@/utils/hooks';
+import { useGlobalContext, useInputFieldState } from '@@/hooks';
 
 const AuthBase = ({
   submitCredentials,

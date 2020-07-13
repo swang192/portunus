@@ -80,7 +80,7 @@ LoginSettings.propTypes = {
 };
 
 LoginSettings.defaultProps = {
-  showBack: false,
+  showBack: true,
 };
 
 export default observer(LoginSettings);

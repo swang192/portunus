@@ -9,3 +9,5 @@ export const PRIVACY_POLICY_URL =
 export const PRIVACY_REQUEST_URL = 'https://www.metlife.com/privacy-request';
 
 export const TERMS_OF_SERVICE_URL = 'https://www.metlife.com/about-us/terms-and-conditions/';
+
+export const SUPPORT_PHONE_NUMBER = '800-821-6400';

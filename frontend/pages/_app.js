@@ -8,6 +8,7 @@ import theme from '@wui/theme';
 
 import GlobalContextProvider from '@@/global-context';
 import { setupCsrf } from '@@/utils/API';
+import Nav from '@@/components/Nav';
 import ChatWidget from '@@/components/ChatWidget';
 import ProtectedPage from '@@/components/ProtectedPage';
 import { ZENDESK_CHAT_KEY } from '@@/utils/constants/chat';
@@ -45,6 +46,7 @@ const App = ({ Component, pageProps }) => {
 
         <CssBaseline />
         <ProtectComponent>
+          <Nav />
           <Component {...pageProps} />
         </ProtectComponent>
       </ThemeProvider>

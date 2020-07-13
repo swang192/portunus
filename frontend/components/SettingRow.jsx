@@ -36,7 +36,7 @@ const AccountSettingRow = ({ value, label, routeTo, hidden }) => {
       alignItems="center"
       className={classes.root}
     >
-      <Grid item xs={10} sm={4}>
+      <Grid item xs={8} sm={4}>
         <Typography bold variant="body1">
           {label}
         </Typography>
@@ -44,12 +44,12 @@ const AccountSettingRow = ({ value, label, routeTo, hidden }) => {
       </Grid>
 
       <Hidden xsDown>
-        <Grid item xs={7}>
+        <Grid item xs={1} sm={6}>
           {hidden ? '****************' : value}
         </Grid>
       </Hidden>
 
-      <Grid item xs={1}>
+      <Grid item xs={3} sm={2}>
         <Button className={classes.edit} onClick={() => router.push(routeTo)}>
           Change
         </Button>

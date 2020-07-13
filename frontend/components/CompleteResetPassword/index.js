@@ -8,7 +8,7 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from '@@/utils/hooks';
+import { useInputFieldState } from '@@/hooks';
 import { INVALID_PASSWORD } from '@@/utils/constants';
 import { capitalize } from '@@/utils/strings';
 import { completePasswordReset } from '@@/utils/API';

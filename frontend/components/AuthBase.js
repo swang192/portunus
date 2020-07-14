@@ -11,9 +11,16 @@ import Typography from '@wui/basics/typography';
 
 import { useGlobalContext, useInputFieldState } from '@@/utils/hooks';
 
-const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
+const AuthBase = ({
+  submitCredentials,
+  submitText,
+  headerText,
+  confirmPassword: showConfirmPassword,
+  children,
+}) => {
   const [email, onChangeEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
+  const [confirmPassword, onChangeConfirmPassword] = useInputFieldState('');
   const [inputErrors, setInputErrors] = useState({});
   const [processing, setProcessing] = useState(false);
   const router = useRouter();
@@ -35,6 +42,12 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
 
     if (!password) {
       errors.password = 'Please enter your password.';
+    }
+
+    if (!confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password.';
+    } else if (password !== confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match.';
     }
 
     setInputErrors(errors);
@@ -77,6 +90,10 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
       .catch(handleError);
   };
 
+  const passwordHelp = showConfirmPassword
+    ? 'Use 7+ characters with both letters and numbers.'
+    : '';
+
   return (
     <>
       <Typography variant="h4">{headerText}</Typography>
@@ -98,7 +115,18 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
           value={password}
           onChange={onChangePassword}
           error={inputErrors.password}
+          helperText={passwordHelp}
         />
+        {showConfirmPassword && (
+          <Textbox
+            name="confirmPassword"
+            type="password"
+            label="Confirm Password"
+            value={confirmPassword}
+            onChange={onChangeConfirmPassword}
+            error={inputErrors.confirmPassword}
+          />
+        )}
         <Spacer v={8} />
         <Button
           variant="contained"
@@ -125,7 +153,12 @@ AuthBase.propTypes = {
   submitCredentials: PropTypes.func.isRequired,
   submitText: PropTypes.string.isRequired,
   headerText: PropTypes.string.isRequired,
+  confirmPassword: PropTypes.bool,
   children: PropTypes.node.isRequired,
+};
+
+AuthBase.defaultProps = {
+  confirmPassword: false,
 };
 
 export default observer(AuthBase);

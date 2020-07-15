@@ -44,10 +44,12 @@ const AuthBase = ({
       errors.password = 'Please enter your password.';
     }
 
-    if (!confirmPassword) {
-      errors.confirmPassword = 'Please confirm your password.';
-    } else if (password !== confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match.';
+    if (showConfirmPassword) {
+      if (!confirmPassword) {
+        errors.confirmPassword = 'Please confirm your password.';
+      } else if (password !== confirmPassword) {
+        errors.confirmPassword = 'Passwords do not match.';
+      }
     }
 
     setInputErrors(errors);

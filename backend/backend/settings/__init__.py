@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from .zygoat_settings import *  # noqa
 
 AUTH_USER_MODEL = "authentication.User"
@@ -48,6 +50,7 @@ SIMPLE_JWT = {
     "ALGORITHM": "RS512",
     "SIGNING_KEY": prod_required_env("DJANGO_JWT_SIGNING_KEY", DEFAULT_SIGNING_KEY),
     "VERIFYING_KEY": prod_required_env("DJANGO_JWT_VEFIFYING_KEY", DEFAULT_VERIFYING_KEY),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=1),
 }
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG

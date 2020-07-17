@@ -2,7 +2,7 @@ import json
 
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveDestroyAPIView
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, api_view
@@ -149,7 +149,7 @@ class CreateUserView(CreateAPIView):
             return make_response(False, data)
 
 
-class RetrieveUserView(RetrieveAPIView):
+class RetrieveDeleteUserView(RetrieveDestroyAPIView):
     serializer_class = UserSerializer
     lookup_field = "portunus_uuid"
     queryset = User.objects.all()

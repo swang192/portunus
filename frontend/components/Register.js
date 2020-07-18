@@ -13,6 +13,7 @@ const Register = () => {
       submitText="Register"
       headerText="Create Account"
       confirmPassword
+      showTerms
     >
       <Typography>
         Already have an account?&nbsp;

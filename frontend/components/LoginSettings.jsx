@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
+import PropTypes from 'prop-types';
 
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const LoginSettings = () => {
+const LoginSettings = ({ showBack }) => {
   const [error, setError] = useState('');
   const [userData, setUserData] = useState({});
   const classes = useStyles();
@@ -41,7 +42,7 @@ const LoginSettings = () => {
   }, []);
 
   return (
-    <Page>
+    <Page showBack={showBack}>
       <Container maxWidth="md" className={classes.root}>
         <Grid container direction="row" justify="space-between" alignItems="center">
           <div>
@@ -72,6 +73,14 @@ const LoginSettings = () => {
       </Container>
     </Page>
   );
+};
+
+LoginSettings.propTypes = {
+  showBack: PropTypes.bool,
+};
+
+LoginSettings.defaultProps = {
+  showBack: false,
 };
 
 export default observer(LoginSettings);

@@ -12,12 +12,12 @@ const useStyles = makeStyles({
   },
 });
 
-const Page = ({ children, className: externClassName, ...props }) => {
+const Page = ({ children, className: externClassName, showBack, ...props }) => {
   const classes = useStyles();
 
   return (
     <Paper className={classNames(classes.root, externClassName)} {...props}>
-      <BackButton />
+      {showBack && <BackButton />}
       {children}
     </Paper>
   );
@@ -26,10 +26,12 @@ const Page = ({ children, className: externClassName, ...props }) => {
 Page.propTypes = {
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
+  showBack: PropTypes.bool,
 };
 
 Page.defaultProps = {
   className: '',
+  showBack: true,
 };
 
 export default observer(Page);

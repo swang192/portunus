@@ -9,3 +9,4 @@ cryptography==2.8
 simplejwt-extensions==0.1.0
 zappa==0.51.0
 requests==2.23.0
+django-axes==5.4.1

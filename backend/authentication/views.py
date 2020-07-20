@@ -30,7 +30,7 @@ def make_auth_view(serializer_class):
     @require_POST
     def view(request):
         data = json.loads(request.body)
-        serializer = serializer_class(data=data)
+        serializer = serializer_class(data=data, context={"request": request})
 
         if not serializer.is_valid():
             first_errors = {k: v[0] for k, v in serializer.errors.items()}

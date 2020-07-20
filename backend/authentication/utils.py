@@ -2,6 +2,7 @@ import json
 from fnmatch import fnmatchcase
 from urllib.parse import urlparse
 
+from axes.helpers import get_cool_off
 from django.conf import settings
 from django.core.validators import URLValidator
 from django.http import HttpResponse
@@ -11,6 +12,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.middleware.csrf import rotate_token
 from django.utils.cache import patch_cache_control
 from rest_framework import status as status_codes
+from rest_framework.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
@@ -111,3 +113,12 @@ def check_onetime_token(token_str, user):
         return False
 
     return True
+
+
+def generate_axes_lockout_response(request, credentials):
+    cool_off = get_cool_off()
+    cool_off_hours = (
+        int(cool_off.total_seconds() / 3600) if cool_off else settings.AXES_COOLOFF_TIME
+    )
+    error_message = f"Too many failed login attempts, try again in {cool_off_hours} hours."
+    return make_response(data={api_settings.NON_FIELD_ERRORS_KEY: error_message}, status=403)

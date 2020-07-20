@@ -8,11 +8,13 @@ INSTALLED_APPS = [
     *INSTALLED_APPS,
     "authentication",
     "rest_framework_simplejwt.token_blacklist",
+    "axes",
 ]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     *MIDDLEWARE,
+    "axes.middleware.AxesMiddleware",
 ]
 
 REST_FRAMEWORK = {
@@ -20,6 +22,18 @@ REST_FRAMEWORK = {
         "simplejwt_extensions.authentication.JWTAuthentication",
     ),
 }
+
+AUTHENTICATION_BACKENDS = [
+    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    "axes.backends.AxesBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+AXES_FAILURE_LIMIT = env.int("DJANGO_AXES_FAILURE_LIMIT", default=5)
+AXES_USERNAME_FORM_FIELD = "email"
+AXES_COOLOFF_TIME = 24  # 24 hours
+AXES_ONLY_USER_FAILURES = True
+AXES_LOCKOUT_CALLABLE = "authentication.utils.generate_axes_lockout_response"
 
 DEFAULT_SIGNING_KEY = """-----BEGIN RSA PRIVATE KEY-----
 MIICXQIBAAKBgQC91RWCawEvxQj+tigRvuHxouO8jKd35ukUxFBFRAGcI57firbA

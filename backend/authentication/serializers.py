@@ -31,7 +31,9 @@ class LoginSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}, "email": {"validators": []}}
 
     def validate(self, data):
-        self.user = authenticate(email=data["email"], password=data["password"])
+        self.user = authenticate(
+            request=self.context["request"], email=data["email"], password=data["password"]
+        )
         if not self.user:
             raise ValidationError(_("Invalid username or password"))
 

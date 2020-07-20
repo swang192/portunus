@@ -30,7 +30,7 @@ SECRET_KEY = prod_required_env(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not PRODUCTION
+DEBUG = False if PRODUCTION else env.bool("DJANGO_DEBUG", default=True)
 
 ALLOWED_HOSTS = [env("DJANGO_ALLOWED_HOST", default="*")]
 

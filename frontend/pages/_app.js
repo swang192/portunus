@@ -8,7 +8,9 @@ import theme from '@wui/theme';
 
 import GlobalContextProvider from '@@/global-context';
 import { setupCsrf } from '@@/utils/API';
+import ChatWidget from '@@/components/ChatWidget';
 import ProtectedPage from '@@/components/ProtectedPage';
+import { ZENDESK_CHAT_KEY } from '@@/utils/constants/chat';
 
 import '@@/global.css';
 
@@ -38,6 +40,7 @@ const App = ({ Component, pageProps }) => {
           />
 
           <link rel="stylesheet" href="/averta.css" />
+          <ChatWidget key={ZENDESK_CHAT_KEY} />
         </Head>
 
         <CssBaseline />

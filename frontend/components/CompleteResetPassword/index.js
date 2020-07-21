@@ -74,6 +74,8 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
     return <Resend action={action} resendEmail={resendEmail} />;
   }
 
+  const passwordHelp = 'Use 7+ characters with both letters and numbers.';
+
   return (
     <>
       <Typography variant="h4">Set New Password</Typography>
@@ -85,6 +87,7 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
           value={newPassword1}
           onChange={onChangePassword1}
           error={inputErrors.firstPassword}
+          helperText={passwordHelp}
         />
         <Textbox
           name="confirmed_password"

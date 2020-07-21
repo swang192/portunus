@@ -31,8 +31,9 @@ AUTHENTICATION_BACKENDS = [
 
 AXES_FAILURE_LIMIT = env.int("DJANGO_AXES_FAILURE_LIMIT", default=5)
 AXES_USERNAME_FORM_FIELD = "email"
-AXES_COOLOFF_TIME = 24  # 24 hours
+AXES_RESET_ON_SUCCESS = True
 AXES_ONLY_USER_FAILURES = True
+AXES_USERNAME_CALLABLE = "authentication.utils.get_username"
 AXES_LOCKOUT_CALLABLE = "authentication.utils.generate_axes_lockout_response"
 
 DEFAULT_SIGNING_KEY = """-----BEGIN RSA PRIVATE KEY-----

@@ -2,7 +2,7 @@ import json
 from fnmatch import fnmatchcase
 from urllib.parse import urlparse
 
-from axes.helpers import get_cool_off
+from axes.helpers import get_client_username
 from django.conf import settings
 from django.core.validators import URLValidator
 from django.http import HttpResponse
@@ -17,6 +17,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 
+from shared.utils.tasks import enqueue
 from .errors import INVALID_PASSWORD
 from .token import ResetToken
 
@@ -76,7 +77,7 @@ def blacklist_user_tokens(user):
     [blacklist_token(t.token) for t in user_tokens]
 
 
-def check_and_change_password(drf_request, user, new_password):
+def check_and_change_password(request, user, new_password):
     try:
         validate_password(new_password)
     except ValidationError as e:
@@ -87,6 +88,8 @@ def check_and_change_password(drf_request, user, new_password):
     blacklist_user_tokens(user)
     user.set_password(new_password)
     user.save()
+
+    login_user(request, user)
 
     return make_response(True)
 
@@ -115,10 +118,18 @@ def check_onetime_token(token_str, user):
     return True
 
 
+def get_username(request, credentials):
+    if credentials:
+        return credentials.get("email")
+
+    return json.loads(request.body).get("email")
+
+
 def generate_axes_lockout_response(request, credentials):
-    cool_off = get_cool_off()
-    cool_off_hours = (
-        int(cool_off.total_seconds() / 3600) if cool_off else settings.AXES_COOLOFF_TIME
+    enqueue(
+        "authentication.tasks:force_password_reset", get_client_username(request, credentials)
     )
-    error_message = f"Too many failed login attempts, try again in {cool_off_hours} hours."
+    error_message = (
+        f"Too many failed login attempts, check your email to choose a new password."
+    )
     return make_response(data={api_settings.NON_FIELD_ERRORS_KEY: error_message}, status=403)

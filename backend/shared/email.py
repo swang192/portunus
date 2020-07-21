@@ -13,17 +13,29 @@ class PortunusMailer(Mailer):
         Mailer.send_email(to, subject, template, context, bcc, attachments)
 
     @classmethod
-    def send_password_reset(cls, user):
+    def generate_password_reset_url(cls, user):
         # Make a one-time token linked to this user.
         token = ResetToken.for_user(user)
-        reset_url = parse.urljoin(
+        return parse.urljoin(
             BASE_URL, f"/reset-password/complete/{user.portunus_uuid}/{token}/",
         )
+
+    @classmethod
+    def send_password_reset(cls, user):
         cls.send_email(
             [user.email],
             "Password Reset Request",
             "reset_password",
-            {"user": user, "reset_url": reset_url},
+            {"user": user, "reset_url": cls.generate_password_reset_url(user)},
+        )
+
+    @classmethod
+    def send_lockout_email(cls, user):
+        cls.send_email(
+            [user.email],
+            "Choose a New Password",
+            "email_lockout",
+            {"user": user, "reset_url": cls.generate_password_reset_url(user)},
         )
 
     @classmethod

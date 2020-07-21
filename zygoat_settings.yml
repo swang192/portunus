@@ -5,5 +5,6 @@ extras:
   - willing_zg:deployment
   - willing_zg:token_util
   - willing_zg:email
+  - willing_zg:chat
 exclude:
   - Frontend__Proxy

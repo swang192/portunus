@@ -16,7 +16,7 @@ export const withReturn = url => {
     return url;
   }
   const params = new URLSearchParams();
-  params.append('next', encodeURIComponent(window.location.href));
+  params.append('next', window.location.href);
   return `${url}?${params.toString()}`;
 };
 

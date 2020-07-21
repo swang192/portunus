@@ -32,7 +32,7 @@ SECRET_KEY = prod_required_env(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if PRODUCTION else env.bool("DJANGO_DEBUG", default=True)
 
-ALLOWED_HOSTS = [env("DJANGO_ALLOWED_HOST", default="*")]
+ALLOWED_HOSTS = [prod_required_env("DJANGO_ALLOWED_HOST", default="*")]
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
     "backend",
 ]
 
@@ -118,21 +119,23 @@ STATIC_URL = "/static/"
 
 
 # Cookies
-
 SHARED_DOMAIN = prod_required_env("DJANGO_SHARED_DOMAIN", default=None)
-
 CSRF_COOKIE_DOMAIN = SHARED_DOMAIN
-
 CSRF_TRUSTED_ORIGINS = SHARED_DOMAIN and [f".{SHARED_DOMAIN}"]
-
 SESSION_COOKIE_DOMAIN = SHARED_DOMAIN
-
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
-
 SESSION_COOKIE_AGE = 3600
+CSRF_COOKIE_AGE = SESSION_COOKIE_AGE
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+
+# Set security headers
+X_FRAME_OPTIONS = "DENY"
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 
 REST_FRAMEWORK = {
@@ -146,16 +149,6 @@ REST_FRAMEWORK = {
         "djangorestframework_camel_case.parser.CamelCaseJSONParser",
     ),
 }
-
-
-# Set security headers
-
-X_FRAME_OPTIONS = "DENY"
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-
 
 # production must use SMTP. others will use DJANGO_EMAIL_BACKEND or default to "console"
 EMAIL_BACKEND = "django.core.mail.backends.{}.EmailBackend".format(

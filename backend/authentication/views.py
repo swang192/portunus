@@ -2,10 +2,13 @@ import json
 
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
+from django.contrib.auth import logout as logout_user
 from rest_framework.generics import CreateAPIView, RetrieveDestroyAPIView
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, api_view
+
+from authentication.utils import blacklist_user_tokens
 
 from .serializers import (
     RegistrationSerializer,
@@ -153,6 +156,12 @@ class RetrieveDeleteUserView(RetrieveDestroyAPIView):
     serializer_class = UserSerializer
     lookup_field = "portunus_uuid"
     queryset = User.objects.all()
+
+    def delete(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            blacklist_user_tokens(request.user)
+        logout_user(request)
+        return self.destroy(request, *args, **kwargs)
 
 
 @api_view(["GET"])

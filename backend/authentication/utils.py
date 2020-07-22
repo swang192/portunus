@@ -5,9 +5,10 @@ from urllib.parse import urlparse
 from axes.helpers import get_client_username
 from django.conf import settings
 from django.core.validators import URLValidator
+from django.db.models import F
 from django.http import HttpResponse
 from django.core.exceptions import ValidationError
-from django.contrib.auth import user_logged_in
+from django.contrib.auth import user_logged_in, logout
 from django.contrib.auth.password_validation import validate_password
 from django.middleware.csrf import rotate_token
 from django.utils.cache import patch_cache_control
@@ -18,7 +19,8 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 
 from shared.utils.tasks import enqueue
-from .errors import INVALID_PASSWORD
+from .models import User
+from .errors import INVALID_PASSWORD, AUTH_FAILURE, AUTH_CHANGE_LOCKOUT
 from .token import ResetToken
 
 
@@ -38,6 +40,9 @@ def make_response(success=True, data=None, status=None):
 
 
 def login_user(request, user):
+    User.objects.filter(pk=user.pk).update(auth_change_failures=0)
+    user.auth_change_failures = 0
+
     refresh = RefreshToken.for_user(user)
     request.session[REFRESH_TOKEN_SESSION_KEY] = str(refresh)
     rotate_token(request)
@@ -75,6 +80,22 @@ def blacklist_token(token_str):
 def blacklist_user_tokens(user):
     user_tokens = OutstandingToken.objects.filter(user__portunus_uuid=user.portunus_uuid)
     [blacklist_token(t.token) for t in user_tokens]
+
+
+def check_password_for_auth_change(request, user, password):
+    if not user.check_password(password):
+        User.objects.filter(pk=user.pk).update(
+            auth_change_failures=F("auth_change_failures") + 1
+        )
+        user.auth_change_failures += 1
+
+        if user.has_max_auth_change_failures:
+            blacklist_user_tokens(request.user)
+            logout(request)
+            return make_response(False, {"error": AUTH_CHANGE_LOCKOUT})
+
+        return make_response(False, {"error": AUTH_FAILURE})
+    return None
 
 
 def check_and_change_password(request, user, new_password):

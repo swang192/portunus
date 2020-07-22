@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from .constants import MAX_AUTH_CHANGE_FAILURES
 from .managers import UserManager
 
 
@@ -22,8 +23,13 @@ class User(AbstractUser):
     social_login_provider = models.CharField(
         max_length=256, choices=PROVIDER_CHOICES, blank=True, default=""
     )
+    auth_change_failures = models.IntegerField(default=0)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    @property
+    def has_max_auth_change_failures(self):
+        return self.auth_change_failures >= MAX_AUTH_CHANGE_FAILURES

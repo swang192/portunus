@@ -16,7 +16,7 @@ import { refresh, changeUserEmail } from '@@/utils/API';
 import Page from '@@/components/Page';
 import Success from '@@/components/Success';
 
-import { AUTH_FAILURE } from '@@/utils/constants';
+import { AUTH_FAILURE, AUTH_CHANGE_LOCKOUT } from '@@/utils/constants';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,6 +52,11 @@ const ChangeEmail = () => {
 
   const handleError = error => {
     if (error.response && error.response.data) {
+      if (error.response.data.error === AUTH_CHANGE_LOCKOUT) {
+        window.location = '/';
+        return;
+      }
+
       const submitError =
         error.response.data.error === AUTH_FAILURE
           ? 'Your password did not match the one we have for your account. Try again.'

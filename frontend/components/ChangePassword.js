@@ -12,7 +12,7 @@ import Typography from '@wui/basics/typography';
 
 import { useInputFieldState } from '@@/hooks';
 import { changePassword, refresh } from '@@/utils/API';
-import { INVALID_PASSWORD } from '@@/utils/constants';
+import { INVALID_PASSWORD, AUTH_CHANGE_LOCKOUT } from '@@/utils/constants';
 
 import Page from '@@/components/Page';
 import Success from '@@/components/Success';
@@ -56,6 +56,11 @@ const ChangePassword = () => {
 
   const handleError = error => {
     if (error.response && error.response.data) {
+      if (error.response.data.error === AUTH_CHANGE_LOCKOUT) {
+        window.location = '/';
+        return;
+      }
+
       const submitError =
         error.response.data.error === INVALID_PASSWORD
           ? error.response.data.validation_error

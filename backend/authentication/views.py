@@ -24,6 +24,7 @@ from .utils import (
     check_onetime_token,
     make_response,
     get_valid_redirect_url,
+    check_password_for_auth_change,
 )
 from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL
 from shared.email import PortunusMailer
@@ -58,8 +59,9 @@ def change_password(request):
     password = request.data.get("password")
     new_password = request.data.get("new_password")
 
-    if not user.check_password(password):
-        return make_response(False, {"error": AUTH_FAILURE})
+    response = check_password_for_auth_change(request, user, password)
+    if response is not None:
+        return response
 
     return check_and_change_password(request, user, new_password)
 
@@ -71,8 +73,9 @@ def change_email(request):
     password = request.data.get("password")
     new_email = request.data.get("new_email")
 
-    if not user.check_password(password):
-        return make_response(False, {"error": AUTH_FAILURE})
+    response = check_password_for_auth_change(request, user, password)
+    if response is not None:
+        return response
 
     # TODO get a confirmation email going with a link that will
     # verify the email address.

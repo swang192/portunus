@@ -19,6 +19,11 @@ urlpatterns = [
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("change-password/", views.change_password, name="change_password"),
     path("password-reset/", views.request_password_reset, name="password_reset"),
+    path(
+        "admin-password-reset/",
+        views.admin_request_password_reset,
+        name="admin_password_reset",
+    ),
     path("password-reset/complete/", views.reset_password, name="password_reset_complete"),
     path("change-email/", views.change_email, name="change_email"),
     path("send-new-user-email", views.send_new_user_email, name="send_new_user_email"),

@@ -105,6 +105,22 @@ def request_password_reset(request):
 
 
 @api_view(["POST"])
+@permission_classes([IsAdminUser])
+def admin_request_password_reset(request):
+    portunus_uuid = request.data.get("portunus_uuid")
+    if not portunus_uuid:
+        return make_response(False)
+
+    try:
+        user = User.objects.get(portunus_uuid=portunus_uuid)
+    except User.DoesNotExist:
+        return make_response(False)
+
+    PortunusMailer.send_password_reset(user)
+    return make_response()
+
+
+@api_view(["POST"])
 def reset_password(request):
     uid = request.data.get("portunus_uuid")
     token = request.data.get("token")

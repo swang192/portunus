@@ -1,26 +1,33 @@
 services:
   backend:
-    build: backend
+    build:
+      context: backend
+      dockerfile: Dockerfile.local
     depends_on:
-    - db
-    ports:
-    - 3001:3001
+      - db
     volumes:
-    - ./backend:/code
+      - ./backend:/code
   db:
     environment:
-    - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=postgres
     image: postgres:11
     ports:
-    - 5432:5432
+      - 5432:5432
   frontend:
     build:
       context: frontend
-      dockerfile: Dockerfile.dev
-    ports:
-    - 3000:3000
+      dockerfile: Dockerfile.local
     volumes:
-    - ./frontend:/code
-    - /code/node_modules
-    - /code/.next
+      - ./frontend:/code
+      - /code/node_modules
+      - /code/.next
+  reverse-proxy:
+    depends_on:
+      - frontend
+      - backend
+    image: caddy:2.0.0
+    ports:
+      - 3000:3000
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
 version: '3.4'

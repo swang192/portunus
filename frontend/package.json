@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node next-server.js",
+    "dev": "next dev",
     "build": "next build",
-    "start": "npm run build && NODE_ENV=production node next-server.js",
+    "start": "NODE_ENV=production next start",
     "pretty-lint": "pretty-quick --check --branch",
-    "eslint": "node_modules/.bin/eslint --ext .js,.jsx ."
+    "eslint": "node_modules/.bin/eslint --ext .js,.jsx .",
+    "lint": "eslint --ext .js,.jsx .",
+    "fix": "yarn lint --fix"
   },
   "dependencies": {
     "@bequestinc/wui": "^1.0.12",
@@ -29,7 +31,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
-    "@testing-library/dom": "^7.21.3",
+    "@testing-library/dom": "^7.21.4",
     "@testing-library/react": "^10.4.7",
     "babel-eslint": "^10.1.0",
     "babel-plugin-module-resolver": "^4.0.0",

@@ -1,7 +1,6 @@
 name: portunus
 version: 0.1.0
 extras:
-  - willing_zg:custom_server
   - willing_zg:deployment
   - willing_zg:token_util
   - willing_zg:email

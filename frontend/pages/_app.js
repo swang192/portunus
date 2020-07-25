@@ -12,6 +12,7 @@ import Nav from '@@/components/Nav';
 import ChatWidget from '@@/components/ChatWidget';
 import ProtectedPage from '@@/components/ProtectedPage';
 import { ZENDESK_CHAT_KEY } from '@@/utils/constants/chat';
+import { googleAnalyticsEffect } from '@@/utils/google-analytics';
 
 import '@@/global.css';
 
@@ -28,6 +29,8 @@ const App = ({ Component, pageProps }) => {
     // Ensure the CSRF cookie is set.
     setupCsrf();
   }, []);
+
+  useEffect(googleAnalyticsEffect, []);
 
   const ProtectComponent = Component.public ? React.Fragment : ProtectedPage;
 

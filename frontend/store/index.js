@@ -21,7 +21,7 @@ class Store {
   };
 
   startFetching() {
-    tokenFetcher.start(api.refresh, this.onSuccess, this.onError);
+    tokenFetcher.start('', api.refresh, this.onSuccess, this.onError);
   }
 
   constructor() {

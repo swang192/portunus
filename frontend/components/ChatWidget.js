@@ -17,7 +17,7 @@ const setDepartment = department => {
 };
 
 const defaultDepartment = 'Members';
-import('@@/utils/constants/chat').then(module => {
+import('utils/constants/chat').then(module => {
   setDepartment(module.ZENDESK_CHAT_DEPARTMENT || defaultDepartment);
 });
 

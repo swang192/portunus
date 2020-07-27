@@ -29,6 +29,6 @@
   "prod": {
     "extends": "base",
     "domain": "api-prod.login.legalplans.com",
-    "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/ab9d1772-860e-4277-92bd-bf574995e3d7"
+    "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/45742008-a602-4f1b-8dbf-56b044e3409e"
   }
 }

@@ -41,7 +41,7 @@ const App = ({ Component, pageProps }) => {
           />
 
           <link rel="stylesheet" href="/averta.css" />
-          <ChatWidget key={ZENDESK_CHAT_KEY} />
+          <ChatWidget apiKey={ZENDESK_CHAT_KEY} />
         </Head>
 
         <CssBaseline />

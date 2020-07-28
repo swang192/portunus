@@ -28,7 +28,11 @@
   },
   "prod": {
     "extends": "base",
-    "domain": "api-prod.login.legalplans.com",
+    "domain": "api.login.legalplans.com",
+    "vpc_config": {
+       "SubnetIds": ["subnet-02c8170b670b0c4df", "subnet-0a9bd034e0d43d078"],
+       "SecurityGroupIds": ["sg-0bf776e3ee76bd3d0"]
+     },
     "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/45742008-a602-4f1b-8dbf-56b044e3409e"
   }
 }

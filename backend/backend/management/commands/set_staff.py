@@ -30,6 +30,10 @@ class Command(BaseCommand):
         user_values = [convert(v.strip()) for v in options.get("users")]
         where = {"{}__in".format(options.get("field")): user_values}
         users = User.objects.filter(**where)
+        print(
+            f"Setting staff to {'False' if options.get('unset') else 'True'} for users with uuid(s):",
+        )
         for u in users:
             u.is_staff = not options.get("unset")
+            print(f"UUID: {u.portunus_uuid}")
         users = User.objects.bulk_update(users, ["is_staff"])

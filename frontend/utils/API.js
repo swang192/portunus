@@ -16,13 +16,18 @@ const unauthenticatedAPI = axios.create(apiConfig);
 
 const API = axios.create(apiConfig);
 
-unauthenticatedAPI.interceptors.request.use(config => {
-  config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
+const addCsrfToken = config => {
+  const token = Cookies.get('csrftoken');
+  if (token) {
+    config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
+  }
   return config;
-});
+};
+
+unauthenticatedAPI.interceptors.request.use(addCsrfToken);
 
 API.interceptors.request.use(async config => {
-  config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
+  addCsrfToken(config);
   const accessToken = await tokenFetcher.accessToken;
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;

@@ -94,10 +94,4 @@ VALID_REDIRECT_HOSTNAMES = ["*.willing.com", "*.legalplans.com"]
 if not PRODUCTION:
     VALID_REDIRECT_HOSTNAMES.append("localhost")
 
-GOOGLE_APP_ID = prod_required_env("DJANGO_GOOGLE_APP_ID", default=None)
-
-FACEBOOK_CLIENT_ID = prod_required_env("DJANGO_FACEBOOK_CLIENT_ID", default=None)
-
-FACEBOOK_CLIENT_SECRET = prod_required_env("DJANGO_FACEBOOK_CLIENT_SECRET", default=None)
-
 SESSION_COOKIE_SAMESITE = None

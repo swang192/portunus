@@ -89,7 +89,7 @@ AUTH_PASSWORD_VALIDATORS = [
 DEFAULT_REDIRECT_URL = prod_required_env(
     "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:3000"
 )
-VALID_REDIRECT_HOSTNAMES = ["*.willing.com"]
+VALID_REDIRECT_HOSTNAMES = ["*.willing.com", "*.legalplans.com"]
 
 if not PRODUCTION:
     VALID_REDIRECT_HOSTNAMES.append("localhost")

@@ -114,6 +114,7 @@ class TestLogout:
     def test_logout(self, client, authenticate_and_test):
         authenticate_and_test("authentication:register", USER_DATA)
         response = client.get(reverse("logout"))
+
         assert response.status_code == 302
         assert response.url == frontend_urls.LOGIN
         assert_unauthenticated(client)
@@ -122,6 +123,7 @@ class TestLogout:
         authenticate_and_test("authentication:register", USER_DATA)
         query_params = {"test": "value"}
         response = client.get(reverse("logout"), query_params)
+
         assert response.status_code == 302
 
         parsed_url = parse.urlparse(response.url)
@@ -130,6 +132,28 @@ class TestLogout:
         query_string = parse.urlencode(query_params)
         assert parsed_url.query == query_string
 
+        assert_unauthenticated(client)
+
+    @override_settings(VALID_REDIRECT_HOSTNAMES=["*.testing.com"])
+    def test_logout_redirects_to_logout_redirect(self, client, authenticate_and_test):
+        authenticate_and_test("authentication:register", USER_DATA)
+        test_url = "https://www.testing.com"
+        params = {"logoutNext": test_url}
+        response = client.get(reverse("logout"), params)
+
+        assert response.status_code == 302
+        assert response.url == test_url
+        assert_unauthenticated(client)
+
+    @override_settings(VALID_REDIRECT_HOSTNAMES=["*.testing.com"])
+    def test_logout_does_not_redirect_to_bad_domain(self, client, authenticate_and_test):
+        authenticate_and_test("authentication:register", USER_DATA)
+        params = {"logoutNext": "https://www.badsite.com"}
+        response = client.get(reverse("logout"), params)
+
+        assert response.status_code == 302
+        parsed_url = parse.urlparse(response.url)
+        assert parsed_url.path == frontend_urls.LOGIN
         assert_unauthenticated(client)
 
 

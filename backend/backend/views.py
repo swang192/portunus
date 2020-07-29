@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
-from authentication.utils import blacklist_user_tokens
+from authentication.utils import blacklist_user_tokens, is_valid_redirect_url
 from shared import frontend_urls
 
 
@@ -33,7 +33,13 @@ def logout(request):
         blacklist_user_tokens(request.user)
     logout_user(request)
 
+    query_params = request.query_params
+
+    logout_next = query_params.get("logoutNext")
+    if is_valid_redirect_url(logout_next):
+        return redirect(logout_next)
+
     query_string = ""
-    if request.query_params:
-        query_string = f"?{parse.urlencode(request.query_params)}"
+    if query_params:
+        query_string = f"?{parse.urlencode(query_params)}"
     return redirect(f"{frontend_urls.LOGIN}{query_string}")

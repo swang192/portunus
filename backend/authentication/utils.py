@@ -49,9 +49,9 @@ def login_user(request, user):
     user_logged_in.send(sender=user.__class__, request=request, user=user)
 
 
-def get_valid_redirect_url(url):
+def is_valid_redirect_url(url):
     if url is None:
-        return settings.DEFAULT_REDIRECT_URL
+        return False
 
     is_valid = URLValidator()
     try:
@@ -61,9 +61,15 @@ def get_valid_redirect_url(url):
             fnmatchcase(host_name, pattern) for pattern in settings.VALID_REDIRECT_HOSTNAMES
         ):
             raise ValidationError("Invalid host")
-        return url
+        return True
     except ValidationError:
-        return settings.DEFAULT_REDIRECT_URL
+        return False
+
+
+def get_valid_redirect_url(url):
+    if is_valid_redirect_url(url):
+        return url
+    return settings.DEFAULT_REDIRECT_URL
 
 
 def blacklist_token(token_str):

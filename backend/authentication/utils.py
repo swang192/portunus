@@ -112,7 +112,7 @@ def check_and_change_password(request, user, new_password):
 
     login_user(request, user)
 
-    return make_response(True)
+    return make_response(data={"next": settings.DEFAULT_REDIRECT_URL})
 
 
 def check_onetime_token(token_str, user):

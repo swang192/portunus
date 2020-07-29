@@ -32,6 +32,7 @@ const ChangePassword = () => {
   const [newPassword2, onChangeNewPassword2] = useInputFieldState('');
   const [inputErrors, setInputErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const [next, setNext] = useState(null);
   const classes = useStyles();
 
   const validateForm = () => {
@@ -83,7 +84,10 @@ const ChangePassword = () => {
         password,
         new_password: newPassword,
       })
-        .then(() => setSuccess(true))
+        .then(response => {
+          setSuccess(true);
+          setNext(response.data.next);
+        })
         .catch(handleError);
     });
   };
@@ -94,6 +98,19 @@ const ChangePassword = () => {
         <Container maxWidth="md" className={classes.root}>
           <Spacer v={32} />
           <Success header="Change Password" message="Your password has been changed!" />
+          <Spacer v={32} />
+          {next && (
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={() => {
+                window.location = next;
+              }}
+            >
+              OK
+            </Button>
+          )}
         </Container>
       </Page>
     );

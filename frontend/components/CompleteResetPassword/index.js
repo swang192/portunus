@@ -47,8 +47,8 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
       portunus_uuid: uuid,
       token,
     })
-      .then(() => {
-        window.location = '/';
+      .then(response => {
+        window.location = response.data.next || '/';
       })
       .catch(error => {
         if (error.response.data.error === INVALID_PASSWORD) {

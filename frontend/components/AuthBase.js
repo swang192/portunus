@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
@@ -32,9 +32,11 @@ const AuthBase = ({
   } = router;
   const store = useGlobalContext();
 
-  if (store.authenticated) {
-    router.push('/');
-  }
+  useEffect(() => {
+    if (store.authenticated) {
+      router.push('/');
+    }
+  }, []);
 
   const validateForm = () => {
     const errors = {};

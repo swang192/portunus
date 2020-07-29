@@ -2,7 +2,6 @@ import json
 
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from django.contrib.auth import logout as logout_user
 from rest_framework.generics import CreateAPIView, RetrieveDestroyAPIView
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -28,6 +27,7 @@ from .utils import (
 )
 from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL
 from shared.email import PortunusMailer
+from shared.permissions import IsSameUserOrAdmin
 
 
 def make_auth_view(serializer_class):
@@ -172,14 +172,14 @@ class CreateUserView(CreateAPIView):
 
 
 class RetrieveDeleteUserView(RetrieveDestroyAPIView):
+    permission_classes = [IsSameUserOrAdmin]
     serializer_class = UserSerializer
     lookup_field = "portunus_uuid"
     queryset = User.objects.all()
 
     def delete(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            blacklist_user_tokens(request.user)
-        logout_user(request)
+        user = self.get_object()
+        blacklist_user_tokens(user)
         return self.destroy(request, *args, **kwargs)
 
 

@@ -7,8 +7,9 @@ from rest_framework.test import APIRequestFactory, APITestCase, force_authentica
 from django.test import override_settings
 from django.urls import reverse
 
-from authentication.factories import UserFactory
+from authentication.factories import UserFactory, StaffUserFactory
 from authentication.models import User
+from authentication.serializers import UserSerializer
 from authentication.views import CreateUserView
 from shared import frontend_urls
 from .utils import assert_unauthenticated
@@ -159,10 +160,7 @@ class TestLogout:
 
 class TestCreateUserView(APITestCase):
     def test_create_with_no_existing_user(self):
-        admin_user = UserFactory(**USER_DATA)
-        admin_user.is_staff = True
-        admin_user.is_superuser = True
-        admin_user.save()
+        staff_user = StaffUserFactory(**USER_DATA)
 
         factory = APIRequestFactory()
         view = CreateUserView.as_view()
@@ -172,7 +170,7 @@ class TestCreateUserView(APITestCase):
             {"email": new_email, "password": VALID_PASSWORD,},
             format="json",
         )
-        force_authenticate(request, user=admin_user)
+        force_authenticate(request, user=staff_user)
         response = view(request)
         new_user = User.objects.get(email=new_email)
 
@@ -182,19 +180,65 @@ class TestCreateUserView(APITestCase):
         )
 
     def test_create_with_existing_user(self):
-        admin_user = UserFactory(**USER_DATA)
-        admin_user.is_staff = True
-        admin_user.is_superuser = True
-        admin_user.save()
+        staff_user = StaffUserFactory(**USER_DATA)
 
         factory = APIRequestFactory()
         view = CreateUserView.as_view()
         request = factory.post(reverse("authentication:create_user"), USER_DATA, format="json")
-        force_authenticate(request, user=admin_user)
+        force_authenticate(request, user=staff_user)
         response = view(request)
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            json.loads(response.content)["portunus_uuid"], admin_user.portunus_uuid
+            json.loads(response.content)["portunus_uuid"], staff_user.portunus_uuid
         )
         self.assertEqual(json.loads(response.content)["user_exists"], True)
+
+
+class TestRetrieveDeleteUserView(APITestCase):
+    def setUp(self):
+        self.user = UserFactory()
+
+    @property
+    def endpoint_path(self):
+        return reverse(
+            "authentication:retrieve_or_delete_user", args=[self.user.portunus_uuid]
+        )
+
+    def check_get(self, status_code):
+        response = self.client.get(self.endpoint_path)
+        self.assertEqual(response.status_code, status_code)
+
+        if status_code == 200:
+            self.assertDictEqual(response.json(), UserSerializer(self.user).data)
+
+    def check_delete(self, status_code=204):
+        response = self.client.delete(self.endpoint_path)
+        self.assertEqual(response.status_code, status_code)
+
+        user = User.objects.filter(pk=self.user.pk).first()
+        if status_code == 204:
+            self.assertIsNone(user)
+        else:
+            self.assertIsNotNone(user)
+
+    def check_user(self, user_requesting, status_code=None):
+        if user_requesting:
+            self.client.force_authenticate(user_requesting)
+
+        self.check_get(status_code or 200)
+        self.check_delete(status_code or 204)
+
+    def test_same_user(self):
+        self.check_user(self.user)
+
+    def test_staff_user(self):
+        staff_user = StaffUserFactory()
+        self.check_user(staff_user)
+
+    def test_wrong_user(self):
+        other_user = UserFactory()
+        self.check_user(other_user, status_code=403)
+
+    def test_unauthenticated_user(self):
+        self.check_user(None, status_code=401)

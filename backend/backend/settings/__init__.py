@@ -1,5 +1,8 @@
 from datetime import timedelta
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from .zygoat_settings import *  # noqa
 
 AUTH_USER_MODEL = "authentication.User"
@@ -99,3 +102,23 @@ if not PRODUCTION:
     VALID_REDIRECT_HOSTNAMES.append("localhost")
 
 SESSION_COOKIE_SAMESITE = None
+
+# Sentry
+SENTRY_DSN = prod_required_env("DJANGO_SENTRY_DSN", default=None)
+ENVIRONMENT = prod_required_env("DJANGO_ENVIRONMENT", default=None)
+
+if SENTRY_DSN is not None:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        send_default_pii=True,
+        environment=ENVIRONMENT,
+    )
+
+ZYGOAT_FRONTEND_META_CONFIG = {
+    "sentry_dsn": prod_required_env(
+        "DJANGO_FRONTEND_SENTRY_DSN",
+        default="https://8db6b816b01548e0bacdb9bdbeb2caf8@o39628.ingest.sentry.io/5339664",
+    ),
+    "sentry_environment": ENVIRONMENT,
+}

@@ -23,6 +23,7 @@ api_patterns = [
     path("is_authenticated/", views.is_authenticated, name="is_authenticated"),
     path("set_csrf/", views.set_csrf, name="set_csrf_cookie"),
     path("logout/", views.logout, name="logout"),
+    path("zygoat/", include("willing_zg.urls")),
 ]
 
 urlpatterns = [

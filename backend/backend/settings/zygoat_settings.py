@@ -162,5 +162,5 @@ EMAIL_HOST_PASSWORD = prod_required_env("DJANGO_EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = True
 
 SUPPORT_PHONE_NUMBER = "+1 (855) 943-4177"
-SUPPORT_EMAIL_ADDRESS = "support@legalplans.com"
+SUPPORT_EMAIL_ADDRESS = "clientservice@legalplans.com"
 PANEL_EMAIL_ADDRESS = "panel@legalplans.com"

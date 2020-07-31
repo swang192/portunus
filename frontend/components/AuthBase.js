@@ -1,22 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
-import Grid from '@wui/layout/grid';
-import Form from '@wui/layout/form';
 import Button from '@wui/input/button';
+import Form from '@wui/layout/form';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
-import TabDivider from '@wui/layout/tabDivider';
 
-import SocialAuth from '@@/components/SocialAuth';
-import { useGlobalContext, useInputFieldState } from '@@/utils/hooks';
+import TermsCheckbox from '@@/components/TermsCheckbox';
+import { useGlobalContext, useInputFieldState } from '@@/hooks';
 
-const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
+const AuthBase = ({
+  submitCredentials,
+  submitText,
+  headerText,
+  confirmPassword: showConfirmPassword,
+  showTerms,
+  children,
+}) => {
   const [email, onChangeEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
+  const [confirmPassword, onChangeConfirmPassword] = useInputFieldState('');
+  const [termsOfService, setTermsOfService] = useState(false);
   const [inputErrors, setInputErrors] = useState({});
   const [processing, setProcessing] = useState(false);
   const router = useRouter();
@@ -25,9 +32,11 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
   } = router;
   const store = useGlobalContext();
 
-  if (store.authenticated) {
-    router.push('/');
-  }
+  useEffect(() => {
+    if (store.authenticated) {
+      router.push('/');
+    }
+  }, []);
 
   const validateForm = () => {
     const errors = {};
@@ -38,6 +47,18 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
 
     if (!password) {
       errors.password = 'Please enter your password.';
+    }
+
+    if (showConfirmPassword) {
+      if (!confirmPassword) {
+        errors.confirmPassword = 'Please confirm your password.';
+      } else if (password !== confirmPassword) {
+        errors.confirmPassword = 'Passwords do not match.';
+      }
+    }
+
+    if (showTerms && !termsOfService) {
+      errors.terms = 'Please agree to continue.';
     }
 
     setInputErrors(errors);
@@ -80,6 +101,10 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
       .catch(handleError);
   };
 
+  const passwordHelp = showConfirmPassword
+    ? 'Use 7+ characters with both letters and numbers.'
+    : '';
+
   return (
     <>
       <Typography variant="h4">{headerText}</Typography>
@@ -88,7 +113,7 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
           name="email"
           type="email"
           label="Email"
-          autoComplete="username"
+          autoComplete={showConfirmPassword ? 'off' : 'username'}
           value={email}
           onChange={onChangeEmail}
           error={inputErrors.email}
@@ -97,11 +122,29 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
           name="password"
           type="password"
           label="Password"
-          autoComplete="current-password"
+          autoComplete={showConfirmPassword ? 'off' : 'current-password'}
           value={password}
           onChange={onChangePassword}
           error={inputErrors.password}
+          helperText={passwordHelp}
         />
+        {showConfirmPassword && (
+          <Textbox
+            name="confirmPassword"
+            type="password"
+            label="Confirm Password"
+            autoComplete="off"
+            value={confirmPassword}
+            onChange={onChangeConfirmPassword}
+            error={inputErrors.confirmPassword}
+          />
+        )}
+        {showTerms && (
+          <TermsCheckbox
+            onChange={() => setTermsOfService(!termsOfService)}
+            error={inputErrors.terms}
+          />
+        )}
         <Spacer v={8} />
         <Button
           variant="contained"
@@ -120,37 +163,6 @@ const AuthBase = ({ submitCredentials, submitText, headerText, children }) => {
       {children}
 
       <Spacer v={24} />
-
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        alignContent="center"
-        spacing={2}
-      >
-        <Grid item xs={3}>
-          <TabDivider noMargin />
-        </Grid>
-
-        <Grid item xs={1}>
-          <Typography variant="intro">or</Typography>
-        </Grid>
-
-        <Grid item xs={3}>
-          <TabDivider noMargin />
-        </Grid>
-      </Grid>
-
-      <Spacer v={24} />
-
-      <SocialAuth
-        handleSuccess={handleSuccess}
-        handleError={handleError}
-        processing={processing}
-        setProcessing={setProcessing}
-      />
-      <Spacer v={16} />
     </>
   );
 };
@@ -159,7 +171,14 @@ AuthBase.propTypes = {
   submitCredentials: PropTypes.func.isRequired,
   submitText: PropTypes.string.isRequired,
   headerText: PropTypes.string.isRequired,
+  confirmPassword: PropTypes.bool,
+  showTerms: PropTypes.bool,
   children: PropTypes.node.isRequired,
+};
+
+AuthBase.defaultProps = {
+  confirmPassword: false,
+  showTerms: false,
 };
 
 export default observer(AuthBase);

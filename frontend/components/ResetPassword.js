@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Form from '@wui/layout/form';
@@ -7,7 +7,7 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from '@@/utils/hooks';
+import { useInputFieldState } from '@@/hooks';
 import { resetPassword } from '@@/utils/API';
 import KeepParamsLink from '@@/components/KeepParamsLink';
 

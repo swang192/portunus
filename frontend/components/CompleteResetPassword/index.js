@@ -8,11 +8,10 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from '@@/utils/hooks';
+import { useInputFieldState } from '@@/hooks';
 import { INVALID_PASSWORD } from '@@/utils/constants';
 import { capitalize } from '@@/utils/strings';
 import { completePasswordReset } from '@@/utils/API';
-import Success from './Success';
 import Resend from './Resend';
 
 const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
@@ -20,7 +19,6 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
   const [newPassword2, onChangePassword2] = useInputFieldState('');
   const [inputErrors, setInputErrors] = useState({});
   const [validationError, setValidationError] = useState(null);
-  const [success, setSuccess] = useState(false);
   const [showResendLink, setShowResendLink] = useState(false);
 
   const validateForm = () => {
@@ -49,9 +47,8 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
       portunus_uuid: uuid,
       token,
     })
-      .then(() => {
-        setValidationError(null);
-        setSuccess(true);
+      .then(response => {
+        window.location = response.data.next || '/';
       })
       .catch(error => {
         if (error.response.data.error === INVALID_PASSWORD) {
@@ -66,13 +63,11 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
       });
   };
 
-  if (success) {
-    return <Success action={action} />;
-  }
-
   if (showResendLink) {
     return <Resend action={action} resendEmail={resendEmail} />;
   }
+
+  const passwordHelp = 'Use 7+ characters with both letters and numbers.';
 
   return (
     <>
@@ -85,6 +80,7 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
           value={newPassword1}
           onChange={onChangePassword1}
           error={inputErrors.firstPassword}
+          helperText={passwordHelp}
         />
         <Textbox
           name="confirmed_password"

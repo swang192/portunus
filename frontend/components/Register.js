@@ -8,12 +8,16 @@ import AuthBase from './AuthBase';
 
 const Register = () => {
   return (
-    <AuthBase submitCredentials={register} submitText="Register" headerText="Create Account">
+    <AuthBase
+      submitCredentials={register}
+      submitText="Register"
+      headerText="Create Account"
+      confirmPassword
+      showTerms
+    >
       <Typography>
         Already have an account?&nbsp;
-        <KeepParamsLink href="/login">
-          <a>Login</a>
-        </KeepParamsLink>
+        <KeepParamsLink href="/login">Login</KeepParamsLink>
       </Typography>
     </AuthBase>
   );

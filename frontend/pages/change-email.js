@@ -1,12 +1,3 @@
-import ChangeEmailForm from '@@/components/ChangeEmail';
-import Layout from '@@/components/Layout';
-
-const ChangeEmail = () => {
-  return (
-    <Layout>
-      <ChangeEmailForm />
-    </Layout>
-  );
-};
+import ChangeEmail from '@@/components/ChangeEmail';
 
 export default ChangeEmail;

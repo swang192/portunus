@@ -2,13 +2,6 @@ import axios from 'axios';
 
 const TOKEN_REFRESH_INTERVAL = 4 * 60 * 1000; // 4 min in ms
 
-export const PORTUNUS_URL = process.env.PORTUNUS_URL || 'https://dev.portunus.willing.com';
-
-const defaultFetch = () =>
-  axios({ method: 'post', url: `${PORTUNUS_URL}/api/auth/token/refresh/`, withCredentials: true });
-
-const loginUrl = `${PORTUNUS_URL}/login`;
-
 export const withReturn = url => {
   if (typeof window === 'undefined') {
     // server side rendering, so we don't know where to return to
@@ -19,19 +12,34 @@ export const withReturn = url => {
   return `${url}?${params.toString()}`;
 };
 
-const defaultOnError = () => {
-  window.location.replace(withReturn(loginUrl));
-};
-
 class TokenFetcher {
   constructor() {
-    this.fetchFunction = defaultFetch;
-    this.onError = defaultOnError;
-    this.onSuccess = () => null;
+    this.portunusUrl = '';
+    this.fetchFunction = this.defaultFetch;
+    this.onError = this.defaultOnError;
+    this.onSuccess = this.defaultOnSuccess;
     this.currentToken = '';
     this.timerId = null;
     this.tokenCallbacks = [];
   }
+
+  get loginUrl() {
+    return withReturn(`${this.portunusUrl}/login`);
+  }
+
+  defaultFetch() {
+    return axios({
+      method: 'post',
+      url: `${this.portunusUrl}/api/auth/token/refresh/`,
+      withCredentials: true,
+    });
+  }
+
+  defaultOnError() {
+    window.location.replace(this.loginUrl);
+  }
+
+  defaultOnSuccess = () => null;
 
   get accessToken() {
     return new Promise(resolve => {
@@ -73,10 +81,11 @@ class TokenFetcher {
     this.tokenCallbacks = [];
   }
 
-  start(fetchFn, onSuccess, onError) {
-    this.fetchFunction = fetchFn || this.fetchFunction;
-    this.onSuccess = onSuccess || this.onSuccess;
-    this.onError = onError || this.onError;
+  start(portunusUrl, fetchFn, onSuccess, onError) {
+    this.portunusUrl = portunusUrl || this.portunusUrl;
+    this.fetchFunction = fetchFn || this.defaultFetch;
+    this.onSuccess = onSuccess || this.defaultOnSuccess;
+    this.onError = onError || this.defaultOnError;
     if (!this.timerId) {
       this.timerId = setInterval(this.fetchToken, TOKEN_REFRESH_INTERVAL);
       this.fetchToken();

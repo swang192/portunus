@@ -1,0 +1,9 @@
+{% if user.name %}
+Hello {{ user.name }},
+
+{% endif %}
+You are receiving this message because there were too many failed login attempts for your account at MetLife Legal Plans.
+
+Use this link to choose a new password for your account: {{ reset_url }}
+
+Thank you for using MetLife Legal Plans!

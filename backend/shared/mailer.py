@@ -1,7 +1,10 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.conf import settings
 
-from backend.settings import SUPPORT_PHONE_NUMBER, SUPPORT_EMAIL_ADDRESS
+
+class MailerError(Exception):
+    pass
 
 
 class Mailer:
@@ -9,9 +12,16 @@ class Mailer:
 
     @classmethod
     def send_email(cls, to_emails, subject, template, context, bcc=None, attachments=None):
+        if not len(to_emails):
+            raise MailerError("no TO EMAIL provided")
+
+        if not template:
+            raise MailerError("no email template provided")
+
         email_context = {
-            "support_phone_number": SUPPORT_PHONE_NUMBER,
-            "support_email_address": SUPPORT_EMAIL_ADDRESS,
+            "support_phone_number": settings.SUPPORT_PHONE_NUMBER,
+            "support_email_address": settings.SUPPORT_EMAIL_ADDRESS,
+            "panel_email_address": settings.PANEL_EMAIL_ADDRESS,
         }
         email_context.update(context)
 
@@ -21,7 +31,7 @@ class Mailer:
         message = EmailMultiAlternatives(
             subject=subject,
             body=email_text,
-            from_email="MetLife Legal Plans <support@legalplans.com>",
+            from_email=f"MetLife Legal Plans <{settings.SUPPORT_EMAIL_ADDRESS}>",
             to=to_emails,
             bcc=bcc,
         )

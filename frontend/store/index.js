@@ -4,6 +4,8 @@ import tokenFetcher from '@@/zg_utils/tokens';
 import * as api from '@@/utils/API';
 
 class Store {
+  @observable showNavBar = true;
+
   @observable loading = true;
 
   @observable authenticated = false;
@@ -19,7 +21,7 @@ class Store {
   };
 
   startFetching() {
-    tokenFetcher.start(api.refresh, this.onSuccess, this.onError);
+    tokenFetcher.start('', api.refresh, this.onSuccess, this.onError);
   }
 
   constructor() {
@@ -30,12 +32,6 @@ class Store {
     this.authenticated = true;
     this.startFetching();
   }
-
-  logout = async () => {
-    await api.logout();
-    tokenFetcher.clearToken();
-    this.authenticated = false;
-  };
 }
 
 export default Store;

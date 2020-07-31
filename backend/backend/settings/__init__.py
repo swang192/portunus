@@ -1,17 +1,23 @@
+from datetime import timedelta
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from .zygoat_settings import *  # noqa
 
 AUTH_USER_MODEL = "authentication.User"
 
 INSTALLED_APPS = [
     *INSTALLED_APPS,
-    "rest_framework",
     "authentication",
     "rest_framework_simplejwt.token_blacklist",
+    "axes",
 ]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     *MIDDLEWARE,
+    "axes.middleware.AxesMiddleware",
 ]
 
 REST_FRAMEWORK = {
@@ -20,8 +26,20 @@ REST_FRAMEWORK = {
     ),
 }
 
-DEFAULT_SIGNING_KEY = """-----BEGIN RSA PRIVATE KEY-----
-MIICXQIBAAKBgQC91RWCawEvxQj+tigRvuHxouO8jKd35ukUxFBFRAGcI57firbA
+AUTHENTICATION_BACKENDS = [
+    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    "axes.backends.AxesBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+AXES_FAILURE_LIMIT = env.int("DJANGO_AXES_FAILURE_LIMIT", default=5)
+AXES_USERNAME_FORM_FIELD = "email"
+AXES_RESET_ON_SUCCESS = True
+AXES_ONLY_USER_FAILURES = True
+AXES_USERNAME_CALLABLE = "authentication.utils.get_username"
+AXES_LOCKOUT_CALLABLE = "authentication.utils.generate_axes_lockout_response"
+
+DEFAULT_SIGNING_KEY = """MIICXQIBAAKBgQC91RWCawEvxQj+tigRvuHxouO8jKd35ukUxFBFRAGcI57firbA
 kFII6zPIiWAENGMqtjX57hk9EjAZ27XvQ4SQACvD5j7htsJT31bZbVUH7a3JEDpx
 a02VXpXdfPYSs8umZkdxMxxmiD9uH9VmLN3VS14lxQlyJdlvbLmNCAf6uwIDAQAB
 AoGACXFcDIy+Fl46wFDXVWqlWpu7sFleyzwVRA8v3wIvAlFTSdNgm9uR+ReaD9Ol
@@ -33,25 +51,36 @@ ExiKpfzPufYeu7qLwhyaHniR9huSZIx0kwJBALMRTFIAR4iHpgsRw7omqKDv70tl
 2KWWyF5gIxx8fsLyV64VYjfRlXD5J9MDFDtPYYwp4+3pPMoTT1C3BNcmJwECQEYV
 Ero0b4LKYsce4XNdSblFJ5Coh+k5u2eb1KSwuBG20WNQ44mAmtP4AsxewnqRrtxi
 zjdZQs4goDrQInGIMscCQQCIT5jvRb197iRinBqpNy01i7GdlLtMC7Z9V/PV0YW1
-GmX50gvd7aA+i2UuZj7BxapFStyEGl4Nggglnn+QqQ+L
------END RSA PRIVATE KEY-----"""
+GmX50gvd7aA+i2UuZj7BxapFStyEGl4Nggglnn+QqQ+L"""
 
-DEFAULT_VERIFYING_KEY = """-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC91RWCawEvxQj+tigRvuHxouO8
+DEFAULT_VERIFYING_KEY = """MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC91RWCawEvxQj+tigRvuHxouO8
 jKd35ukUxFBFRAGcI57firbAkFII6zPIiWAENGMqtjX57hk9EjAZ27XvQ4SQACvD
 5j7htsJT31bZbVUH7a3JEDpxa02VXpXdfPYSs8umZkdxMxxmiD9uH9VmLN3VS14l
-xQlyJdlvbLmNCAf6uwIDAQAB
+xQlyJdlvbLmNCAf6uwIDAQAB"""
+
+SIGNING_KEY = f"""-----BEGIN RSA PRIVATE KEY-----
+{prod_required_env("DJANGO_JWT_SIGNING_KEY", DEFAULT_SIGNING_KEY)}
+-----END RSA PRIVATE KEY-----"""
+
+VERIFYING_KEY = f"""-----BEGIN PUBLIC KEY-----
+{prod_required_env("DJANGO_JWT_VERIFYING_KEY", DEFAULT_VERIFYING_KEY)}
 -----END PUBLIC KEY-----"""
 
 SIMPLE_JWT = {
     "USER_ID_FIELD": "portunus_uuid",
     "ALGORITHM": "RS512",
-    "SIGNING_KEY": prod_required_env("DJANGO_JWT_SIGNING_KEY", DEFAULT_SIGNING_KEY),
-    "VERIFYING_KEY": prod_required_env("DJANGO_JWT_VEFIFYING_KEY", DEFAULT_VERIFYING_KEY),
+    "SIGNING_KEY": SIGNING_KEY,
+    "VERIFYING_KEY": VERIFYING_KEY,
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=1),
 }
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 CORS_ALLOW_CREDENTIALS = True
+if not DEBUG:
+    CORS_ORIGIN_REGEX_WHITELIST = [
+        r"^https://[\w.]+\.willing\.com$",
+        r"^https://[\w.]+\.legalplans\.com$",
+    ]
 
 BASE_URL = env("DJANGO_BASE_URL", default="http://localhost:3000/")
 
@@ -67,15 +96,29 @@ AUTH_PASSWORD_VALIDATORS = [
 DEFAULT_REDIRECT_URL = prod_required_env(
     "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:3000"
 )
-VALID_REDIRECT_HOSTNAMES = ["*.willing.com"]
+VALID_REDIRECT_HOSTNAMES = ["*.willing.com", "*.legalplans.com"]
 
 if not PRODUCTION:
     VALID_REDIRECT_HOSTNAMES.append("localhost")
 
-GOOGLE_APP_ID = prod_required_env("DJANGO_GOOGLE_APP_ID", default=None)
-
-FACEBOOK_CLIENT_ID = prod_required_env("DJANGO_FACEBOOK_CLIENT_ID", default=None)
-
-FACEBOOK_CLIENT_SECRET = prod_required_env("DJANGO_FACEBOOK_CLIENT_SECRET", default=None)
-
 SESSION_COOKIE_SAMESITE = None
+
+# Sentry
+SENTRY_DSN = prod_required_env("DJANGO_SENTRY_DSN", default=None)
+ENVIRONMENT = prod_required_env("DJANGO_ENVIRONMENT", default=None)
+
+if SENTRY_DSN is not None:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        send_default_pii=True,
+        environment=ENVIRONMENT,
+    )
+
+ZYGOAT_FRONTEND_META_CONFIG = {
+    "sentry_dsn": prod_required_env(
+        "DJANGO_FRONTEND_SENTRY_DSN",
+        default="https://8db6b816b01548e0bacdb9bdbeb2caf8@o39628.ingest.sentry.io/5339664",
+    ),
+    "sentry_environment": ENVIRONMENT,
+}

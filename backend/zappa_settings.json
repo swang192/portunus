@@ -9,14 +9,30 @@
       "SubnetIds": ["subnet-02c8170b670b0c4df", "subnet-0a9bd034e0d43d078"],
       "SecurityGroupIds": ["sg-074c6991e4690e44a"]
     },
-    "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/0b42f140-7af8-4369-91f9-debd04bc1e2d"
+    "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/0b42f140-7af8-4369-91f9-debd04bc1e2d",
+    "manage_roles": false,
+    "role_name": "PortunusZappaRole"
   },
   "dev": {
     "extends": "base",
     "domain": "api-dev.portunus.willing.com"
   },
+  "qa": {
+    "extends": "base",
+    "domain": "api-qa.portunus.willing.com"
+  },
   "staging": {
     "extends": "base",
-    "domain": "api-staging.portunus.willing.com"
+    "domain": "api-staging.login.legalplans.com",
+    "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/ab9d1772-860e-4277-92bd-bf574995e3d7"
+  },
+  "prod": {
+    "extends": "base",
+    "domain": "api.login.legalplans.com",
+    "vpc_config": {
+       "SubnetIds": ["subnet-02c8170b670b0c4df", "subnet-0a9bd034e0d43d078"],
+       "SecurityGroupIds": ["sg-0bf776e3ee76bd3d0"]
+     },
+    "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/45742008-a602-4f1b-8dbf-56b044e3409e"
   }
 }

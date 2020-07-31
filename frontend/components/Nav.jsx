@@ -66,11 +66,13 @@ const Nav = () => {
     return null;
   }
 
+  const search = typeof window === 'undefined' ? '' : window.location.search;
+
   return (
     <AppBar position="sticky" className={classes.appBar} elevation={0}>
       <Toolbar className={classes.toolBar}>
         <Grid container direction="row" justify="space-between" alignItems="center">
-          <Link href="/">
+          <Link href={`/${search}`}>
             <a>
               <MlpLogo alt="Go to the home page" className={classes.logo} />
             </a>

@@ -1,5 +1,10 @@
 import axios from 'axios';
 
+const headers = {
+  'X-REQUESTED-WITH': 'XMLHttpRequest',
+  'Content-Type': 'application/json',
+};
+
 const getEnv = (keys, url = '/api/zygoat/env/') => {
   const resolves = {};
   const env = {};
@@ -17,7 +22,7 @@ const getEnv = (keys, url = '/api/zygoat/env/') => {
 
   const isSsr = typeof window === 'undefined';
   if (!isSsr) {
-    axios({ method: 'GET', url })
+    axios({ method: 'GET', url, headers })
       .then(response => {
         for (const [key, resolve] of Object.entries(resolves)) {
           resolve(response.data[key]);

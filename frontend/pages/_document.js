@@ -2,6 +2,8 @@ import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 
+import BrowserCompatibilityBanner from 'components/BrowserCompatibilityBanner';
+
 export default class MyDocument extends Document {
   render() {
     return (
@@ -16,23 +18,7 @@ export default class MyDocument extends Document {
           />
         </Head>
         <body>
-          <div id="outdated">
-            <h6>Your browser is out-of-date!</h6>
-            <p>
-              Update your browser to view this website correctly.{' '}
-              <a id="btnUpdateBrowser" href="https://bestvpn.org/outdatedbrowser/">
-                {' '}
-                Learn More{' '}
-              </a>
-            </p>
-            <p className="last">
-              {/* Ignoring this rule so that our markup will match what is expected by outdatedbrowser.css */}
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a href="#" id="btnCloseUpdateBrowser" title="Close">
-                &times;
-              </a>
-            </p>
-          </div>
+          <BrowserCompatibilityBanner />
 
           <Main />
           <NextScript />

@@ -1,12 +1,16 @@
 import json
+from datetime import datetime
+from calendar import timegm
 
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, RetrieveDestroyAPIView
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, api_view
 from django.core.validators import validate_email
+from sentry_sdk import capture_exception, configure_scope
 
 from authentication.utils import blacklist_user_tokens
 
@@ -171,6 +175,19 @@ class TokenRefreshView(SimpleJWTTokenRefreshView):
         kwargs["data"] = dict(kwargs["data"])
         kwargs["data"]["refresh"] = self.request.session.get(REFRESH_TOKEN_SESSION_KEY)
         return super().get_serializer(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        refresh = self.request.session.get(REFRESH_TOKEN_SESSION_KEY)
+        if refresh:
+            try:
+                RefreshToken(refresh)
+            except Exception as e:
+                with configure_scope() as scope:
+                    scope.set_extra("token_payload", repr(RefreshToken(refresh, verify=False)))
+                    scope.set_extra("now_timestamp", timegm(datetime.utcnow().utctimetuple()))
+                    capture_exception(e)
+
+        return super().post(request, *args, **kwargs)
 
 
 class CreateUserView(CreateAPIView):

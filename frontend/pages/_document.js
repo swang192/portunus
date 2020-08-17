@@ -2,16 +2,33 @@ import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 
+import BrowserCompatibilityBanner from 'components/BrowserCompatibilityBanner';
+
 export default class MyDocument extends Document {
   render() {
     return (
       <html lang="en">
         <Head>
           <link rel="stylesheet" href="/averta.css" />
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css"
+            integrity="sha256-KNfTksp/+PcmJJ0owdo8yBLi/SVMQrH/PNPm25nR/pI="
+            crossOrigin="anonymous"
+          />
         </Head>
         <body>
+          <BrowserCompatibilityBanner />
+
           <Main />
           <NextScript />
+
+          <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"
+            integrity="sha256-yV0saZESxHBqfSfNncH044y3GHbsxLZJbQQmuxrXv90="
+            crossOrigin="anonymous"
+          />
+          <script src="/browserCompatibility.js" />
         </body>
       </html>
     );

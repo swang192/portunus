@@ -69,6 +69,7 @@ def main(args):
             ecs.update_service(
                 cluster=f"{config.name}",
                 service=f"frontend-{args.environment}",
+                taskDefinition=f"{config.name}-frontend-{args.environment}",
                 forceNewDeployment=True,
             )
 

@@ -232,3 +232,10 @@ SIMPLE_JWT = {
     "SIGNING_KEY": None,
     "VERIFYING_KEY": VERIFYING_KEY,
 }
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": "INFO"},
+}

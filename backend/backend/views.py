@@ -11,7 +11,9 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
 from authentication.utils import blacklist_tokens_for_request, is_valid_redirect_url
+
 from shared import frontend_urls
+from shared.utils.logging import log_event
 
 
 @api_view(["GET"])
@@ -29,7 +31,8 @@ def set_csrf(request):
 
 @api_view(["GET"])
 def logout(request):
-    blacklist_tokens_for_request(request)
+    user = blacklist_tokens_for_request(request)
+    log_event("logout", request, extra_data={"user": user.email})
     logout_user(request)
     query_params = request.query_params
 

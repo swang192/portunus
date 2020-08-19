@@ -13,6 +13,7 @@ from django.core.validators import validate_email
 from sentry_sdk import capture_exception, configure_scope
 
 from authentication.utils import blacklist_user_tokens
+from shared.utils.logging import log_event, log_view_outcome
 
 from .serializers import (
     RegistrationSerializer,
@@ -36,12 +37,13 @@ from shared.email import PortunusMailer
 from shared.permissions import IsSameUserOrAdmin
 
 
-def make_auth_view(*serializer_classes):
+def make_auth_view(*serializer_classes, action):
     """
     Creates a view from an ordered list of serializers. If any serializer is valid with the
     given data, log the user in and redirect them to the given URL.
     """
 
+    @log_view_outcome(event_type=action)
     @require_POST
     def view(request):
         data = json.loads(request.body)
@@ -65,10 +67,11 @@ def make_auth_view(*serializer_classes):
     return view
 
 
-register = make_auth_view(RegistrationSerializer, LoginSerializer)
-login = make_auth_view(LoginSerializer)
+register = make_auth_view(RegistrationSerializer, LoginSerializer, action="register")
+login = make_auth_view(LoginSerializer, action="login")
 
 
+@log_view_outcome()
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def change_password(request):
@@ -83,6 +86,7 @@ def change_password(request):
     return check_and_change_password(request, user, new_password)
 
 
+@log_view_outcome()
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def request_email_change(request):
@@ -106,6 +110,7 @@ def request_email_change(request):
     return make_response()
 
 
+@log_view_outcome()
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def update_email(request):
@@ -135,9 +140,16 @@ def request_password_reset(request):
         user = User.objects.get(email=email.lower())
     except User.DoesNotExist:
         # Send back success even if the account DNE to avoid leaking user emails.
+        extra_data = {
+            "success": False,
+            "email": email,
+            "error": "Matching user does not exist",
+        }
+        log_event("request_password_reset", request, extra_data=extra_data)
         return make_response()
 
     PortunusMailer.send_password_reset(user)
+    log_event("request_password_reset", request, extra_data={"success": True})
     return make_response()
 
 
@@ -157,6 +169,7 @@ def admin_request_password_reset(request):
     return make_response()
 
 
+@log_view_outcome()
 @api_view(["POST"])
 def reset_password(request):
     uid = request.data.get("portunus_uuid")

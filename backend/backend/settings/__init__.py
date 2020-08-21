@@ -82,7 +82,7 @@ if not DEBUG:
         r"^https://[\w.]+\.legalplans\.com$",
     ]
 
-BASE_URL = env("DJANGO_BASE_URL", default="http://localhost:3000/")
+BASE_URL = env("DJANGO_BASE_URL", default="http://localhost:3001/")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -94,7 +94,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 DEFAULT_REDIRECT_URL = prod_required_env(
-    "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:3000"
+    "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:3001"
 )
 VALID_REDIRECT_HOSTNAMES = ["*.willing.com", "*.legalplans.com"]
 

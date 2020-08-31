@@ -16,13 +16,12 @@ const AuthBase = ({
   submitCredentials,
   submitText,
   headerText,
-  confirmPassword: showConfirmPassword,
   showTerms,
+  allowAutoComplete,
   children,
 }) => {
   const [email, onChangeEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
-  const [confirmPassword, onChangeConfirmPassword] = useInputFieldState('');
   const [termsOfService, setTermsOfService] = useState(false);
   const [inputErrors, setInputErrors] = useState({});
   const [processing, setProcessing] = useState(false);
@@ -47,14 +46,6 @@ const AuthBase = ({
 
     if (!password) {
       errors.password = 'Please enter your password.';
-    }
-
-    if (showConfirmPassword) {
-      if (!confirmPassword) {
-        errors.confirmPassword = 'Please confirm your password.';
-      } else if (password !== confirmPassword) {
-        errors.confirmPassword = 'Passwords do not match.';
-      }
     }
 
     if (showTerms && !termsOfService) {
@@ -101,7 +92,7 @@ const AuthBase = ({
       .catch(handleError);
   };
 
-  const passwordHelp = showConfirmPassword
+  const passwordHelp = showTerms
     ? 'Use 7+ characters with both letters and numbers.'
     : '';
 
@@ -113,7 +104,7 @@ const AuthBase = ({
           name="email"
           type="email"
           label="Email"
-          autoComplete={showConfirmPassword ? 'off' : 'username'}
+          autoComplete={allowAutoComplete ? 'username' : 'off'}
           value={email}
           onChange={onChangeEmail}
           error={inputErrors.email}
@@ -122,23 +113,12 @@ const AuthBase = ({
           name="password"
           type="password"
           label="Password"
-          autoComplete={showConfirmPassword ? 'off' : 'current-password'}
+          autoComplete={allowAutoComplete ? 'current-password' : 'off'}
           value={password}
           onChange={onChangePassword}
           error={inputErrors.password}
           helperText={passwordHelp}
         />
-        {showConfirmPassword && (
-          <Textbox
-            name="confirmPassword"
-            type="password"
-            label="Confirm Password"
-            autoComplete="off"
-            value={confirmPassword}
-            onChange={onChangeConfirmPassword}
-            error={inputErrors.confirmPassword}
-          />
-        )}
         {showTerms && (
           <TermsCheckbox
             onChange={() => setTermsOfService(!termsOfService)}
@@ -171,14 +151,14 @@ AuthBase.propTypes = {
   submitCredentials: PropTypes.func.isRequired,
   submitText: PropTypes.string.isRequired,
   headerText: PropTypes.string.isRequired,
-  confirmPassword: PropTypes.bool,
   showTerms: PropTypes.bool,
+  allowAutoComplete: PropTypes.bool,
   children: PropTypes.node.isRequired,
 };
 
 AuthBase.defaultProps = {
-  confirmPassword: false,
   showTerms: false,
+  allowAutoComplete: false,
 };
 
 export default observer(AuthBase);

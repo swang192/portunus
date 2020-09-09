@@ -58,7 +58,8 @@ const AuthBase = ({
   };
 
   const handleSuccess = response => {
-    if (localNext) {
+    // Always prefer using the next parameter when it is present
+    if (!next && localNext) {
       store.login();
       router.push(localNext);
     } else {

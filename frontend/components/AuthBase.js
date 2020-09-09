@@ -92,9 +92,7 @@ const AuthBase = ({
       .catch(handleError);
   };
 
-  const passwordHelp = showTerms
-    ? 'Use 7+ characters with both letters and numbers.'
-    : '';
+  const passwordHelp = showTerms ? 'Use 7+ characters with both letters and numbers.' : '';
 
   return (
     <>

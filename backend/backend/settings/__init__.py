@@ -53,26 +53,20 @@ Ero0b4LKYsce4XNdSblFJ5Coh+k5u2eb1KSwuBG20WNQ44mAmtP4AsxewnqRrtxi
 zjdZQs4goDrQInGIMscCQQCIT5jvRb197iRinBqpNy01i7GdlLtMC7Z9V/PV0YW1
 GmX50gvd7aA+i2UuZj7BxapFStyEGl4Nggglnn+QqQ+L"""
 
-DEFAULT_VERIFYING_KEY = """MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC91RWCawEvxQj+tigRvuHxouO8
-jKd35ukUxFBFRAGcI57firbAkFII6zPIiWAENGMqtjX57hk9EjAZ27XvQ4SQACvD
-5j7htsJT31bZbVUH7a3JEDpxa02VXpXdfPYSs8umZkdxMxxmiD9uH9VmLN3VS14l
-xQlyJdlvbLmNCAf6uwIDAQAB"""
+NAKED_SIGNING_KEY = prod_required_env("DJANGO_JWT_SIGNING_KEY", DEFAULT_SIGNING_KEY)
 
+if "DJANGO_JWT_SIGNING_KEY" in os.environ and PRODUCTION:
+    NAKED_SIGNING_KEY = json.loads(
+        get_secret(os.environ["DJANGO_JWT_SIGNING_KEY"])["SecretString"]
+    )["DJANGO_JWT_SIGNING_KEY"]
 SIGNING_KEY = f"""-----BEGIN RSA PRIVATE KEY-----
-{prod_required_env("DJANGO_JWT_SIGNING_KEY", DEFAULT_SIGNING_KEY)}
+{NAKED_SIGNING_KEY.replace(" ", "")}
 -----END RSA PRIVATE KEY-----"""
 
-VERIFYING_KEY = f"""-----BEGIN PUBLIC KEY-----
-{prod_required_env("DJANGO_JWT_VERIFYING_KEY", DEFAULT_VERIFYING_KEY)}
------END PUBLIC KEY-----"""
-
-SIMPLE_JWT = {
-    "USER_ID_FIELD": "portunus_uuid",
-    "ALGORITHM": "RS512",
-    "SIGNING_KEY": SIGNING_KEY,
-    "VERIFYING_KEY": VERIFYING_KEY,
-    "REFRESH_TOKEN_LIFETIME": timedelta(hours=1),
-}
+# Override the values set by willing-zg simple jwt plugin
+SIMPLE_JWT["USER_ID_FIELD"] = "portunus_uuid"
+SIMPLE_JWT["SIGNING_KEY"] = SIGNING_KEY
+SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"] = timedelta(hours=1)
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 CORS_ALLOW_CREDENTIALS = True
@@ -82,19 +76,25 @@ if not DEBUG:
         r"^https://[\w.]+\.legalplans\.com$",
     ]
 
-BASE_URL = env("DJANGO_BASE_URL", default="http://localhost:3000/")
+BASE_URL = env("DJANGO_BASE_URL", default="http://localhost:3001/")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-        "OPTIONS": {"min_length": 7,},
+        "OPTIONS": {
+            "min_length": 7,
+        },
     },
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "authentication.password_validators.AlphaNumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "authentication.password_validators.AlphaNumericPasswordValidator",
+    },
 ]
 
 DEFAULT_REDIRECT_URL = prod_required_env(
-    "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:3000"
+    "DJANGO_DEFAULT_REDIRECT_URL", "http://localhost:3001"
 )
 VALID_REDIRECT_HOSTNAMES = ["*.willing.com", "*.legalplans.com"]
 

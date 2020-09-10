@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { observer } from 'mobx-react';
 
 import { useGlobalContext } from '@@/hooks';
-import Login from '@@/pages/login';
+import Register from '@@/pages/register';
 
 const ProtectedPage = ({ children }) => {
   const store = useGlobalContext();
@@ -12,7 +12,11 @@ const ProtectedPage = ({ children }) => {
 
   useEffect(() => {
     if (store.authenticated || store.loading) return;
-    router.replace({ pathname: '/login', shallow: true, query: { localNext: router.asPath } });
+    router.replace({
+      pathname: '/register',
+      shallow: true,
+      query: { localNext: router.asPath, next: router.query.next },
+    });
   }, [store.authenticated, store.loading]);
 
   if (store.loading) {
@@ -20,7 +24,7 @@ const ProtectedPage = ({ children }) => {
   }
 
   if (!store.authenticated) {
-    return <Login />;
+    return <Register />;
   }
 
   return <>{children}</>;

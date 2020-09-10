@@ -8,7 +8,7 @@ import AuthBase from './AuthBase';
 
 const Login = () => {
   return (
-    <AuthBase submitCredentials={login} submitText="Login" headerText="Login">
+    <AuthBase submitCredentials={login} submitText="Login" headerText="Login" allowAutoComplete>
       <Typography>
         Don't have an account yet?&nbsp;
         <KeepParamsLink href="/register">Create Account</KeepParamsLink>

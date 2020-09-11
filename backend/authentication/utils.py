@@ -16,6 +16,7 @@ from rest_framework import status as status_codes
 from rest_framework.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.settings import api_settings as simplejwt_settings
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 
 from shared.utils.tasks import enqueue
@@ -86,6 +87,25 @@ def blacklist_token(token_str):
 def blacklist_user_tokens(user):
     user_tokens = OutstandingToken.objects.filter(user__portunus_uuid=user.portunus_uuid)
     [blacklist_token(t.token) for t in user_tokens]
+
+
+def blacklist_tokens_for_request(request):
+    """
+    Blacklists all blacklistable tokens for the user making the request.
+
+    The user is fetched using the refresh_token in the session cookie so that
+    this can be performed without an authorization header in the request.
+    """
+    token_string = request.session.get(REFRESH_TOKEN_SESSION_KEY)
+
+    try:
+        token = RefreshToken(token_string)
+        user = User.objects.get(portunus_uuid=token[simplejwt_settings.USER_ID_CLAIM])
+    except (User.DoesNotExist, TokenError):
+        return None
+
+    blacklist_user_tokens(user)
+    return user
 
 
 def check_password_for_auth_change(request, user, password):

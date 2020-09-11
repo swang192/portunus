@@ -11,12 +11,25 @@ class Mailer:
     """ The Mailer class holds helper functions for sending template emails """
 
     @classmethod
-    def send_email(cls, to_emails, subject, template, context, bcc=None, attachments=None):
+    def send_email(
+        cls,
+        to_emails,
+        subject,
+        template,
+        context,
+        bcc=None,
+        attachments=None,
+        reply_to=None,
+        from_email=None,
+    ):
         if not len(to_emails):
             raise MailerError("no TO EMAIL provided")
 
         if not template:
             raise MailerError("no email template provided")
+
+        if not from_email:
+            from_email = f"MetLife Legal Plans <{settings.SUPPORT_EMAIL_ADDRESS}>"
 
         email_context = {
             "support_phone_number": settings.SUPPORT_PHONE_NUMBER,
@@ -31,9 +44,10 @@ class Mailer:
         message = EmailMultiAlternatives(
             subject=subject,
             body=email_text,
-            from_email=f"MetLife Legal Plans <{settings.SUPPORT_EMAIL_ADDRESS}>",
+            from_email=from_email,
             to=to_emails,
             bcc=bcc,
+            reply_to=reply_to,
         )
 
         message.attach_alternative(email_html, "text/html")

@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
-from authentication.utils import blacklist_user_tokens, is_valid_redirect_url
+from authentication.utils import blacklist_tokens_for_request, is_valid_redirect_url
 from shared import frontend_urls
 
 
@@ -29,10 +29,8 @@ def set_csrf(request):
 
 @api_view(["GET"])
 def logout(request):
-    if request.user.is_authenticated:
-        blacklist_user_tokens(request.user)
+    blacklist_tokens_for_request(request)
     logout_user(request)
-
     query_params = request.query_params
 
     logout_next = query_params.get("logoutNext")

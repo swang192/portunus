@@ -36,14 +36,25 @@ from shared.email import PortunusMailer
 from shared.permissions import IsSameUserOrAdmin
 
 
-def make_auth_view(serializer_class):
+def make_auth_view(*serializer_classes):
+    """
+    Creates a view from an ordered list of serializers. If any serializer is valid with the
+    given data, log the user in and redirect them to the given URL.
+    """
+
     @require_POST
     def view(request):
         data = json.loads(request.body)
-        serializer = serializer_class(data=data, context={"request": request})
+
+        for serializer_class in serializer_classes:
+            serializer = serializer_class(data=data, context={"request": request})
+            if serializer.is_valid():
+                break
 
         if not serializer.is_valid():
-            first_errors = {k: v[0] for k, v in serializer.errors.items()}
+            first_serializer = serializer_classes[0](data=data, context={"request": request})
+            first_serializer.is_valid()
+            first_errors = {k: v[0] for k, v in first_serializer.errors.items()}
             return make_response(False, first_errors)
 
         user = serializer.save()
@@ -54,7 +65,7 @@ def make_auth_view(serializer_class):
     return view
 
 
-register = make_auth_view(RegistrationSerializer)
+register = make_auth_view(RegistrationSerializer, LoginSerializer)
 login = make_auth_view(LoginSerializer)
 
 

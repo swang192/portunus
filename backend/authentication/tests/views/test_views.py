@@ -6,6 +6,8 @@ import pytest
 from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
 from django.test import override_settings
 from django.urls import reverse
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from authentication.factories import UserFactory, StaffUserFactory
 from authentication.models import User
@@ -156,6 +158,14 @@ class TestLogout:
         parsed_url = parse.urlparse(response.url)
         assert parsed_url.path == frontend_urls.LOGIN
         assert_unauthenticated(client)
+
+    def test_logout_blacklists_user_tokens(self, client, authenticate_and_test):
+        authenticate_and_test("authentication:register", USER_DATA)
+        user = User.objects.get(email=USER_DATA["email"])
+        user_token = str(RefreshToken.for_user(user))
+        client.get(reverse("logout"))
+        with pytest.raises(TokenError):
+            RefreshToken(user_token)
 
 
 class TestCreateUserView(APITestCase):

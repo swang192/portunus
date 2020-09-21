@@ -1,6 +1,6 @@
 from urllib import parse
 
-from .mailer import Mailer
+from willing_zg.mailer import Mailer
 from authentication.utils import ResetToken, ChangeEmailToken
 from backend.settings import SUPPORT_PHONE_NUMBER, BASE_URL
 

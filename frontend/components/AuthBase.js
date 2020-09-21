@@ -15,7 +15,7 @@ import Grid from '@wui/layout/grid';
 
 import TermsCheckbox from '@@/components/TermsCheckbox';
 import { useGlobalContext, useInputFieldState } from '@@/hooks';
-import { MIN_PASSWORD_LENGTH } from '@@/constants';
+import { MIN_PASSWORD_LENGTH } from '@@/utils/constants';
 
 const AuthBase = ({
   submitCredentials,

@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
+import AxeCore from 'axe-core';
 import Head from 'next/head';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -21,12 +23,35 @@ import env from 'utils/env';
 
 import '@@/global.css';
 
-if (typeof window !== 'undefined') {
+const isSsr = typeof window === 'undefined';
+
+if (!isSsr) {
   Promise.all([env.sentry_dsn, env.sentry_environment])
     .then(([dsn, environment]) => {
       Sentry.init({ dsn, environment });
     })
     .catch(() => null);
+}
+
+/**
+ * Accessibility tool - outputs to devtools console on dev only and client-side only.
+ * @see https://github.com/dequelabs/react-axe
+ * For full list of a11y rules:
+ * @see https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md
+ */
+if (process.NODE_ENV !== 'production' && !isSsr) {
+  import('react-axe').then(axe => {
+    const config = {
+      rules: AxeCore.getRules(['wcag21aa', 'wcag2aa', 'wcag2a']).map(rule => ({
+        ...rule,
+        id: rule.ruleId,
+        enabled: true,
+      })),
+      disableOtherRules: true,
+    };
+
+    axe.default(React, ReactDOM, 1000, config);
+  });
 }
 
 const App = ({ Component, pageProps }) => {

@@ -19,7 +19,7 @@ import Typography from '@wui/basics/typography';
 
 import { useToggledState, useGlobalContext } from '@@/hooks';
 import NavMenu from '@@/components/NavMenu';
-import { SUPPORT_PHONE_NUMBER } from '@@/constants';
+import { SUPPORT_PHONE_NUMBER } from '@@/utils/constants';
 import MlpLogo from '@@/assets/images/mlp-logo.svg';
 
 const useStyles = makeStyles(theme => ({

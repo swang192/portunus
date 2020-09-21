@@ -14,8 +14,7 @@ import Typography from '@wui/basics/typography';
 
 import { useInputFieldState } from '@@/hooks';
 import { changePassword, refresh } from '@@/utils/API';
-import { INVALID_PASSWORD, AUTH_CHANGE_LOCKOUT } from '@@/utils/constants';
-import { MIN_PASSWORD_LENGTH } from '@@/constants';
+import { MIN_PASSWORD_LENGTH, INVALID_PASSWORD, AUTH_CHANGE_LOCKOUT } from '@@/utils/constants';
 
 import Page from '@@/components/Page';
 import Success from '@@/components/Success';

@@ -7,7 +7,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Spacer from '@wui/layout/spacer';
 import Typography from '@wui/basics/typography';
 
-import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from '@@/constants';
+import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from '@@/utils/constants';
 
 const TermsCheckbox = ({ onChange, error }) => {
   const [termsOfService, setTermsOfService] = useState(false);

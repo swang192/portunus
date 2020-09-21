@@ -11,10 +11,9 @@ import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
 import { useInputFieldState } from '@@/hooks';
-import { INVALID_PASSWORD } from '@@/utils/constants';
 import { capitalize } from '@@/utils/strings';
 import { completePasswordReset } from '@@/utils/API';
-import { MIN_PASSWORD_LENGTH } from '@@/constants';
+import { INVALID_PASSWORD, MIN_PASSWORD_LENGTH } from '@@/utils/constants';
 import Resend from './Resend';
 
 const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {

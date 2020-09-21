@@ -101,6 +101,8 @@ if "DATABASE_SECRET" in os.environ:
 
 db_config = env.db_url("DATABASE_URL", default="postgres://postgres:postgres@db/postgres")
 
+DATABASES = {"default": db_config}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

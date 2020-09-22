@@ -84,7 +84,7 @@ const ChangeEmailComplete = ({ token, newEmail }) => {
 
 ChangeEmailComplete.propTypes = {
   token: PropTypes.string.isRequired,
-  new_email: PropTypes.string.isRequired,
+  newEmail: PropTypes.string.isRequired,
 };
 
 export default observer(ChangeEmailComplete);

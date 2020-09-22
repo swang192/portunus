@@ -16,7 +16,7 @@ const SetPassword = () => {
         uuid={uuid}
         token={token}
         action="set"
-        resendEmail={() => sendNewUserEmail({ portunus_uuid: uuid })}
+        resendEmail={() => sendNewUserEmail({ portunusUuid: uuid })}
       />
     </Layout>
   );

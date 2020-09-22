@@ -71,7 +71,7 @@ const AuthBase = ({
     if (error.response && error.response.data) {
       setInputErrors(error.response.data);
     } else {
-      setInputErrors({ non_field_errors: 'An unknown error has occurred. Please try again.' });
+      setInputErrors({ nonFieldErrors: 'An unknown error has occurred. Please try again.' });
     }
     setProcessing(false);
   };
@@ -98,7 +98,7 @@ const AuthBase = ({
   return (
     <>
       <Typography variant="h4">{headerText}</Typography>
-      <Form error={inputErrors.non_field_errors} onSubmit={handleSubmit} noMargin>
+      <Form error={inputErrors.nonFieldErrors} onSubmit={handleSubmit} noMargin>
         <Textbox
           name="email"
           type="email"

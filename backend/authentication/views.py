@@ -5,6 +5,7 @@ from calendar import timegm
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, RetrieveDestroyAPIView
+from rest_framework.renderers import JSONRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -116,7 +117,7 @@ def request_email_change(request):
 def update_email(request):
     user = request.user
     token = request.data.get("token")
-    new_email = request.data.get("newEmail")
+    new_email = request.data.get("new_email")
 
     if not check_change_email_token(token, user):
         return make_response(False, {"error": INVALID_TOKEN})
@@ -217,6 +218,7 @@ class TokenRefreshView(SimpleJWTTokenRefreshView):
 class CreateUserView(CreateAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = CreateUserSerializer
+    renderer_classes = [JSONRenderer]
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)

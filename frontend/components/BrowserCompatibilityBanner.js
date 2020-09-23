@@ -7,12 +7,12 @@ export default () => (
         right: 0,
         bottom: 0,
         left: 0,
-        'background-color': 'rgba(255, 255, 255, 0.4)',
+        backgroundColor: 'rgba(255, 255, 255, 0.4)',
       }}
     />
     <div
       style={{
-        'background-color': '#5f249f',
+        backgroundColor: '#5f249f',
         position: 'absolute',
         top: 0,
         right: 0,
@@ -21,7 +21,7 @@ export default () => (
       }}
     >
       <h6>Your Browser Is Not Supported</h6>
-      <p style={{ 'text-transform': 'none', 'font-size': '14px' }}>
+      <p style={{ textTransform: 'none', fontSize: '14px' }}>
         Please try another browser to improve your experience and security.
         <a id="btnUpdateBrowser" style={{ display: 'none' }}>
           {' '}

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { observer } from 'mobx-react';
+import { observer, useStaticRendering } from 'mobx-react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import AxeCore from 'axe-core';
@@ -24,6 +24,8 @@ import env from 'utils/env';
 import '@@/global.css';
 
 const isSsr = typeof window === 'undefined';
+
+useStaticRendering(isSsr);
 
 if (!isSsr) {
   Promise.all([env.sentry_dsn, env.sentry_environment])

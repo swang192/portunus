@@ -25,7 +25,10 @@ class Store {
   }
 
   constructor() {
-    this.startFetching();
+    const isSsr = typeof window === 'undefined';
+    if (!isSsr) {
+      this.startFetching();
+    }
   }
 
   login() {

@@ -1,6 +1,5 @@
 version: 0.2
 
-
 phases:
   install:
     runtime-versions:
@@ -16,7 +15,7 @@ phases:
   build:
     commands:
       - docker-compose exec -T backend python manage.py wait_for_db
-      - npx wait-on@3.2.0 http-get://localhost:3000/app.js && echo "React Ready"
+      - npx wait-on@3.2.0 http-get://localhost:3001/app.js && echo "React Ready"
       - cypress run --project ./frontend --reporter junit --reporter-options "mochaFile=test-results/mocha/results.xml,toConsole=true" --record --key $CYPRESS_RECORD_KEY
   post_build:
     commands:

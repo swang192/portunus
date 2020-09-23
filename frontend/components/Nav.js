@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { observer } from 'mobx-react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -51,6 +52,7 @@ const Nav = () => {
   const store = useGlobalContext();
   const classes = useStyles();
   const menuText = 'My Account';
+  const { query } = useRouter();
 
   const onClick = e => {
     setMenuAnchor(e.currentTarget);
@@ -66,13 +68,11 @@ const Nav = () => {
     return null;
   }
 
-  const search = typeof window === 'undefined' ? '' : window.location.search;
-
   return (
     <AppBar position="sticky" className={classes.appBar} elevation={0}>
       <Toolbar className={classes.toolBar}>
         <Grid container direction="row" justify="space-between" alignItems="center">
-          <Link href={`/${search}`}>
+          <Link href={{ pathname: '/', query }}>
             <a>
               <MlpLogo alt="Go to the home page" className={classes.logo} />
             </a>

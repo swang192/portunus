@@ -25,7 +25,7 @@ services:
       - backend
     image: caddy:2.0.0
     ports:
-      - 3001:3000
+      - 3001:3001
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
 version: '3.4'

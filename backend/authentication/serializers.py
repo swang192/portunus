@@ -47,13 +47,10 @@ class LoginSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("email",)
-
-
-class CreateUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ("email",)
+        fields = (
+            "portunus_uuid",
+            "email",
+        )
 
     def create(self, validated_data):
         user = User(**validated_data)

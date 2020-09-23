@@ -4,7 +4,7 @@ from calendar import timegm
 
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from rest_framework.generics import CreateAPIView, RetrieveDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveDestroyAPIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
@@ -20,7 +20,6 @@ from .serializers import (
     RegistrationSerializer,
     LoginSerializer,
     UserSerializer,
-    CreateUserSerializer,
 )
 from .models import User
 from .utils import (
@@ -215,10 +214,18 @@ class TokenRefreshView(SimpleJWTTokenRefreshView):
         return super().post(request, *args, **kwargs)
 
 
-class CreateUserView(CreateAPIView):
+class ListCreateUsersView(ListCreateAPIView):
     permission_classes = [IsAdminUser]
-    serializer_class = CreateUserSerializer
+    serializer_class = UserSerializer
     renderer_classes = [JSONRenderer]
+
+    def get_queryset(self):
+        uuids = self.request.GET.getlist("portunus_uuids")
+
+        if uuids:
+            return User.objects.filter(portunus_uuid__in=uuids)
+
+        return User.objects.none()
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)

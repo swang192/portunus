@@ -1,9 +1,9 @@
-import json
 from unittest.mock import Mock
 from urllib import parse
+from parameterized import parameterized
 
 import pytest
-from rest_framework.test import APIRequestFactory, APITestCase, force_authenticate
+from rest_framework.test import APITestCase
 from django.test import override_settings
 from django.urls import reverse
 from rest_framework_simplejwt.exceptions import TokenError
@@ -12,7 +12,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from authentication.factories import UserFactory, StaffUserFactory
 from authentication.models import User
 from authentication.serializers import UserSerializer
-from authentication.views import CreateUserView
 from shared import frontend_urls
 from .utils import assert_unauthenticated
 
@@ -168,44 +167,54 @@ class TestLogout:
             RefreshToken(user_token)
 
 
-class TestCreateUserView(APITestCase):
+class TestListCreateUsersView(APITestCase):
+    @property
+    def endpoint_path(self):
+        return reverse("authentication:list_or_create_users")
+
+    def check_create(self, status_code, args=None):
+        self.client.force_authenticate(StaffUserFactory())
+        response = self.client.post(self.endpoint_path, args, format="json")
+        self.assertEqual(response.status_code, status_code)
+
+        return response.json()
+
     def test_create_with_no_existing_user(self):
-        staff_user = StaffUserFactory(**USER_DATA)
-
-        factory = APIRequestFactory()
-        view = CreateUserView.as_view()
         new_email = "newuser@test.com"
-        request = factory.post(
-            reverse("authentication:create_user"),
-            {
-                "email": new_email,
-                "password": VALID_PASSWORD,
-            },
-            format="json",
-        )
-        force_authenticate(request, user=staff_user)
-        response = view(request)
-        new_user = User.objects.get(email=new_email)
+        args = {"email": new_email, "password": VALID_PASSWORD}
+        response = self.check_create(200, args)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            json.loads(response.content)["portunus_uuid"], str(new_user.portunus_uuid)
-        )
+        new_user = User.objects.get(email=new_email)
+        self.assertEqual(response["portunus_uuid"], str(new_user.portunus_uuid))
 
     def test_create_with_existing_user(self):
-        staff_user = StaffUserFactory(**USER_DATA)
+        user = UserFactory()
+        response = self.check_create(400, {"email": user.email, "password": "asdf"})
+        self.assertEqual(response["portunus_uuid"], user.portunus_uuid)
+        self.assertEqual(response["user_exists"], True)
 
-        factory = APIRequestFactory()
-        view = CreateUserView.as_view()
-        request = factory.post(reverse("authentication:create_user"), USER_DATA, format="json")
-        force_authenticate(request, user=staff_user)
-        response = view(request)
+    @parameterized.expand([(False,), (True,)])
+    def test_list_users(self, from_uuid):
+        user1 = UserFactory()
+        user2 = UserFactory()
+        staff_user = StaffUserFactory()
+        self.client.force_authenticate(staff_user)
 
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            json.loads(response.content)["portunus_uuid"], staff_user.portunus_uuid
+        args = (
+            {"portunus_uuids": [user1.portunus_uuid, user2.portunus_uuid]}
+            if from_uuid
+            else None
         )
-        self.assertEqual(json.loads(response.content)["user_exists"], True)
+        response = self.client.get(self.endpoint_path, args, format="json")
+        self.assertEqual(response.status_code, 200)
+
+        response_users = [user1, user2] if from_uuid else User.objects.none()
+        self.assertCountEqual(response.json(), UserSerializer(response_users, many=True).data)
+
+    def test_unauthenticated_user(self):
+        response = self.client.get(self.endpoint_path)
+
+        self.assertEqual(response.status_code, 401)
 
 
 class TestRetrieveDeleteUserView(APITestCase):
@@ -223,7 +232,7 @@ class TestRetrieveDeleteUserView(APITestCase):
         self.assertEqual(response.status_code, status_code)
 
         if status_code == 200:
-            self.assertDictEqual(response.json(), UserSerializer(self.user).data)
+            self.assertDictEqual(response.data, UserSerializer(self.user).data)
 
     def check_delete(self, status_code=204):
         response = self.client.delete(self.endpoint_path)

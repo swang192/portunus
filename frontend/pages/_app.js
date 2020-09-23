@@ -7,7 +7,6 @@ import Head from 'next/head';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from '@wui/theme';
-import 'mobx-react-lite/batchingForReactDom';
 
 import * as Sentry from '@sentry/react';
 

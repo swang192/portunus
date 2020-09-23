@@ -27,7 +27,7 @@ const isSsr = typeof window === 'undefined';
 useStaticRendering(isSsr);
 
 if (!isSsr) {
-  Promise.all([env.sentry_dsn, env.sentry_environment])
+  Promise.all([env.sentryDsn, env.sentryEnvironment])
     .then(([dsn, environment]) => {
       Sentry.init({ dsn, environment });
     })

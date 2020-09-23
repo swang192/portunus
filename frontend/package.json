@@ -22,7 +22,7 @@
     "js-cookie": "^2.2.1",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
-    "next": "9.3.2",
+    "next": "^9.5.3",
     "next-compose-plugins": "^2.2.0",
     "next-images": "^1.4.2",
     "next-svgr": "^0.0.2",

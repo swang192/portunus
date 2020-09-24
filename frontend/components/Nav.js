@@ -73,7 +73,7 @@ const Nav = () => {
       <Toolbar className={classes.toolBar}>
         <Grid container direction="row" justify="space-between" alignItems="center">
           <Link href={{ pathname: '/', query }}>
-            <a>
+            <a aria-label="Home">
               <MlpLogo alt="Go to the home page" className={classes.logo} />
             </a>
           </Link>

@@ -84,6 +84,7 @@ const App = ({ Component, pageProps }) => {
 
           <link rel="stylesheet" href="/averta.css" />
           <ChatWidget apiKey={ZENDESK_CHAT_KEY} />
+          <title>MetLife Legal Plans</title>
         </Head>
 
         <CssBaseline />

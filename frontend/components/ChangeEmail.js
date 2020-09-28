@@ -66,7 +66,7 @@ const ChangeEmail = () => {
       }
       setInputErrors({ submitError });
     } else {
-      setInputErrors({ non_field_errors: 'An unknown error has occurred. Please try again.' });
+      setInputErrors({ submitError: 'An unknown error has occurred. Please try again.' });
     }
     setSuccess(false);
   };
@@ -80,7 +80,7 @@ const ChangeEmail = () => {
     refresh().then(() => {
       changeUserEmail({
         password,
-        new_email: newEmail.toLowerCase(),
+        newEmail: newEmail.toLowerCase(),
       })
         .then(() => setSuccess(true))
         .catch(handleError);

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useRouter } from 'next/router';
 
 import CompleteChangeEmail from '@@/components/CompleteChangeEmail';

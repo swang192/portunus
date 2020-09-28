@@ -1,5 +1,5 @@
 import getEnv from 'zg_utils/getEnv';
 
-const keys = ['sentry_dsn', 'sentry_environment'];
+const keys = ['sentryDsn', 'sentryEnvironment'];
 
 export default getEnv(keys);

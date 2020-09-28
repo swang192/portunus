@@ -15,7 +15,9 @@ const Layout = ({ children }) => {
         <Spacer v={32} />
         <Spacer v={60} xsDown />
         <Link href="/">
-          <MlpLogo alt="Home" />
+          <a>
+            <MlpLogo alt="Home" />
+          </a>
         </Link>
         <Spacer v={32} />
         <Panel>{children}</Panel>

@@ -43,8 +43,8 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
       return;
     }
     completePasswordReset({
-      new_password: newPassword1,
-      portunus_uuid: uuid,
+      newPassword: newPassword1,
+      portunusUuid: uuid,
       token,
     })
       .then(response => {

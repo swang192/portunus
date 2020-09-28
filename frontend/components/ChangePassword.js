@@ -68,7 +68,7 @@ const ChangePassword = () => {
           : 'Your current password did not match the one we have on file. Try again.';
       setInputErrors({ submitError });
     } else {
-      setInputErrors({ non_field_errors: 'An unknown error has occurred. Please try again.' });
+      setInputErrors({ submitError: 'An unknown error has occurred. Please try again.' });
     }
     setSuccess(false);
   };
@@ -82,7 +82,7 @@ const ChangePassword = () => {
     refresh().then(() => {
       changePassword({
         password,
-        new_password: newPassword,
+        newPassword,
       })
         .then(response => {
           setSuccess(true);

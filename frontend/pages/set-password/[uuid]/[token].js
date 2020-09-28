@@ -1,4 +1,3 @@
-import React from 'react';
 import { observer } from 'mobx-react';
 import { useRouter } from 'next/router';
 
@@ -16,7 +15,7 @@ const SetPassword = () => {
         uuid={uuid}
         token={token}
         action="set"
-        resendEmail={() => sendNewUserEmail({ portunus_uuid: uuid })}
+        resendEmail={() => sendNewUserEmail({ portunusUuid: uuid })}
       />
     </Layout>
   );

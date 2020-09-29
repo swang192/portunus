@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -49,10 +48,21 @@ const useStyles = makeStyles(theme => ({
 const Nav = () => {
   const [menu, toggleMenu] = useToggledState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [homeLink, setHomeLink] = useState('/');
   const store = useGlobalContext();
   const classes = useStyles();
   const menuText = 'My Account';
-  const { query } = useRouter();
+  const router = useRouter();
+  const { home } = router.query;
+
+  useEffect(() => {
+    if (home) {
+      const hostName = new URL(home).hostname;
+      if (hostName.endsWith('.legalplans.com')) {
+        setHomeLink(home);
+      }
+    }
+  }, [home]);
 
   const onClick = e => {
     setMenuAnchor(e.currentTarget);
@@ -72,11 +82,9 @@ const Nav = () => {
     <AppBar position="sticky" className={classes.appBar} elevation={0}>
       <Toolbar className={classes.toolBar}>
         <Grid container direction="row" justify="space-between" alignItems="center">
-          <Link href={{ pathname: '/', query }}>
-            <a aria-label="Home">
-              <MlpLogo alt="Go to the home page" className={classes.logo} />
-            </a>
-          </Link>
+          <a aria-label="Home" href={homeLink}>
+            <MlpLogo alt="Go to the home page" className={classes.logo} />
+          </a>
 
           <Hidden mdUp>
             <IconButton edge="end" aria-label="menu" onClick={onClick}>

@@ -5,4 +5,4 @@ WORKDIR /code
 ADD package.json /code/
 RUN yarn install
 
-CMD yarn dev -p 3001
+CMD yarn dev -p 3000

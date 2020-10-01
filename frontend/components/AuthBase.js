@@ -3,14 +3,19 @@ import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
+import PasswordStrengthBar from 'react-password-strength-bar';
+
 import Button from '@wui/input/button';
 import Form from '@wui/layout/form';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
+import Tooltip from '@wui/layout/tooltip';
+import Grid from '@wui/layout/grid';
 
 import TermsCheckbox from '@@/components/TermsCheckbox';
 import { useGlobalContext, useInputFieldState } from '@@/hooks';
+import { MIN_PASSWORD_LENGTH, MIN_PASSWORD_SCORE, PASSWORD_SCORE_WORDS } from '@@/constants';
 
 const AuthBase = ({
   submitCredentials,
@@ -22,6 +27,7 @@ const AuthBase = ({
 }) => {
   const [email, onChangeEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
+  const [passwordScore, setPasswordScore] = useState(0);
   const [termsOfService, setTermsOfService] = useState(false);
   const [inputErrors, setInputErrors] = useState({});
   const [processing, setProcessing] = useState(false);
@@ -46,6 +52,12 @@ const AuthBase = ({
 
     if (!password) {
       errors.password = 'Please enter your password.';
+    }
+
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      errors.password = 'Password must be at least 8 characters.';
+    } else if (passwordScore < MIN_PASSWORD_SCORE) {
+      errors.password = `Password must be at least '${PASSWORD_SCORE_WORDS[MIN_PASSWORD_SCORE]}'`;
     }
 
     if (showTerms && !termsOfService) {
@@ -93,8 +105,6 @@ const AuthBase = ({
       .catch(handleError);
   };
 
-  const passwordHelp = showTerms ? 'Use 7+ characters with both letters and numbers.' : '';
-
   return (
     <>
       <Typography variant="h4">{headerText}</Typography>
@@ -108,20 +118,43 @@ const AuthBase = ({
           onChange={onChangeEmail}
           error={inputErrors.email}
         />
-        <Textbox
-          name="password"
-          type="password"
-          label="Password"
-          autoComplete={allowAutoComplete ? 'current-password' : 'off'}
-          value={password}
-          onChange={onChangePassword}
-          error={inputErrors.password}
-          helperText={passwordHelp}
-        />
-        {showTerms && (
-          <TermsCheckbox
-            onChange={() => setTermsOfService(!termsOfService)}
-            error={inputErrors.terms}
+        {showTerms ? (
+          <>
+            <Textbox
+              name="password"
+              type="password"
+              label="Password"
+              autoComplete="off"
+              value={password}
+              onChange={onChangePassword}
+              error={inputErrors.password}
+            />
+            <Grid container direction="row" alignItems="center" justify="space-between">
+              <Grid item xs={11}>
+                <PasswordStrengthBar
+                  password={password}
+                  minLength={MIN_PASSWORD_LENGTH}
+                  onChangeScore={setPasswordScore}
+                />
+              </Grid>
+              <Grid item xs={0.5}>
+                <Tooltip title="Use 8+ characters with both letters and numbers" />
+              </Grid>
+            </Grid>
+            <TermsCheckbox
+              onChange={() => setTermsOfService(!termsOfService)}
+              error={inputErrors.terms}
+            />
+          </>
+        ) : (
+          <Textbox
+            name="password"
+            type="password"
+            label="Password"
+            autoComplete="current-password"
+            value={password}
+            onChange={onChangePassword}
+            error={inputErrors.password}
           />
         )}
         <Spacer v={8} />

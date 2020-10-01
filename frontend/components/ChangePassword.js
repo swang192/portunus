@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { observer } from 'mobx-react';
 
+import PasswordStrengthBar from 'react-password-strength-bar';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
@@ -13,6 +15,7 @@ import Typography from '@wui/basics/typography';
 import { useInputFieldState } from '@@/hooks';
 import { changePassword, refresh } from '@@/utils/API';
 import { INVALID_PASSWORD, AUTH_CHANGE_LOCKOUT } from '@@/utils/constants';
+import { MIN_PASSWORD_LENGTH } from '@@/constants';
 
 import Page from '@@/components/Page';
 import Success from '@@/components/Success';
@@ -139,6 +142,7 @@ const ChangePassword = () => {
             onChange={onChangeNewPassword}
             error={inputErrors.newPassword}
           />
+          <PasswordStrengthBar password={newPassword} minLength={MIN_PASSWORD_LENGTH} />
 
           <Textbox
             name="new_password_2"

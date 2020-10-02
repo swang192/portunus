@@ -15,7 +15,7 @@ import Grid from '@wui/layout/grid';
 
 import TermsCheckbox from '@@/components/TermsCheckbox';
 import { useGlobalContext, useInputFieldState } from '@@/hooks';
-import { MIN_PASSWORD_LENGTH, MIN_PASSWORD_SCORE, PASSWORD_SCORE_WORDS } from '@@/constants';
+import { MIN_PASSWORD_LENGTH } from '@@/constants';
 
 const AuthBase = ({
   submitCredentials,
@@ -27,7 +27,6 @@ const AuthBase = ({
 }) => {
   const [email, onChangeEmail] = useInputFieldState('');
   const [password, onChangePassword] = useInputFieldState('');
-  const [passwordScore, setPasswordScore] = useState(0);
   const [termsOfService, setTermsOfService] = useState(false);
   const [inputErrors, setInputErrors] = useState({});
   const [processing, setProcessing] = useState(false);
@@ -56,8 +55,6 @@ const AuthBase = ({
 
     if (password.length < MIN_PASSWORD_LENGTH) {
       errors.password = 'Password must be at least 8 characters.';
-    } else if (passwordScore < MIN_PASSWORD_SCORE) {
-      errors.password = `Password must be at least '${PASSWORD_SCORE_WORDS[MIN_PASSWORD_SCORE]}'`;
     }
 
     if (showTerms && !termsOfService) {
@@ -131,11 +128,7 @@ const AuthBase = ({
             />
             <Grid container direction="row" alignItems="center" justify="space-between">
               <Grid item xs={11}>
-                <PasswordStrengthBar
-                  password={password}
-                  minLength={MIN_PASSWORD_LENGTH}
-                  onChangeScore={setPasswordScore}
-                />
+                <PasswordStrengthBar password={password} minLength={MIN_PASSWORD_LENGTH} />
               </Grid>
               <Grid item xs={0.5}>
                 <Tooltip title="Use 8+ characters with both letters and numbers" />

@@ -17,10 +17,10 @@ import Button from '@wui/input/button';
 import Spacer from '@wui/layout/spacer';
 import Typography from '@wui/basics/typography';
 
-import { useToggledState, useGlobalContext } from '@@/hooks';
-import NavMenu from '@@/components/NavMenu';
-import { SUPPORT_PHONE_NUMBER } from '@@/utils/constants';
-import MlpLogo from '@@/assets/images/mlp-logo.svg';
+import { useToggledState, useGlobalContext } from 'hooks';
+import NavMenu from 'components/NavMenu';
+import { SUPPORT_PHONE_NUMBER } from 'utils/constants';
+import MlpLogo from 'assets/images/mlp-logo.svg';
 
 const useStyles = makeStyles(theme => ({
   appBar: {

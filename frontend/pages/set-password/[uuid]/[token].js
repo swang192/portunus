@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react';
 import { useRouter } from 'next/router';
 
-import CompleteResetPassword from '@@/components/CompleteResetPassword';
-import Layout from '@@/components/Layout';
-import { sendNewUserEmail } from '@@/utils/API';
+import CompleteResetPassword from 'components/CompleteResetPassword';
+import Layout from 'components/Layout';
+import { sendNewUserEmail } from 'utils/API';
 
 const SetPassword = () => {
   const router = useRouter();

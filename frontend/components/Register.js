@@ -2,8 +2,8 @@ import { observer } from 'mobx-react';
 
 import Typography from '@wui/basics/typography';
 
-import { register } from '@@/utils/API';
-import KeepParamsLink from '@@/components/KeepParamsLink';
+import { register } from 'utils/API';
+import KeepParamsLink from 'components/KeepParamsLink';
 import AuthBase from './AuthBase';
 
 const Register = () => {

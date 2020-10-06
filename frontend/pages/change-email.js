@@ -1,3 +1,3 @@
-import ChangeEmail from '@@/components/ChangeEmail';
+import ChangeEmail from 'components/ChangeEmail';
 
 export default ChangeEmail;

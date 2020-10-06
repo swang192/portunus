@@ -7,9 +7,9 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from '@@/hooks';
-import { resetPassword } from '@@/utils/API';
-import KeepParamsLink from '@@/components/KeepParamsLink';
+import { useInputFieldState } from 'hooks';
+import { resetPassword } from 'utils/API';
+import KeepParamsLink from 'components/KeepParamsLink';
 
 const ResetPassword = () => {
   const [email, onChangeEmail] = useInputFieldState('');

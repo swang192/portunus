@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react';
 
-import ResetPasswordForm from '@@/components/ResetPassword';
-import Layout from '@@/components/Layout';
+import ResetPasswordForm from 'components/ResetPassword';
+import Layout from 'components/Layout';
 
-import { useHiddenNav } from '@@/hooks';
+import { useHiddenNav } from 'hooks';
 
 const ResetPassword = () => {
   useHiddenNav();

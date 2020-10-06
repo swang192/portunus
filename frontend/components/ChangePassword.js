@@ -12,12 +12,12 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from '@@/hooks';
-import { changePassword, refresh } from '@@/utils/API';
-import { MIN_PASSWORD_LENGTH, INVALID_PASSWORD, AUTH_CHANGE_LOCKOUT } from '@@/utils/constants';
+import { useInputFieldState } from 'hooks';
+import { changePassword, refresh } from 'utils/API';
+import { MIN_PASSWORD_LENGTH, INVALID_PASSWORD, AUTH_CHANGE_LOCKOUT } from 'utils/constants';
 
-import Page from '@@/components/Page';
-import Success from '@@/components/Success';
+import Page from 'components/Page';
+import Success from 'components/Success';
 
 const useStyles = makeStyles(theme => ({
   root: {

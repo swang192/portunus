@@ -6,7 +6,7 @@ import Grid from '@wui/layout/grid';
 import Spacer from '@wui/layout/spacer';
 import Panel from '@wui/layout/panel';
 
-import MlpLogo from '@@/assets/images/mlp-logo.svg';
+import MlpLogo from 'assets/images/mlp-logo.svg';
 
 const Layout = ({ children }) => {
   return (

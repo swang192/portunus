@@ -1,3 +1,3 @@
-import LoginSettings from '@@/components/LoginSettings';
+import LoginSettings from 'components/LoginSettings';
 
 export default LoginSettings;

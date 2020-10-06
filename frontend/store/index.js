@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 
-import tokenFetcher from '@@/zg_utils/tokens';
-import * as api from '@@/utils/API';
+import tokenFetcher from 'zg_utils/tokens';
+import * as api from 'utils/API';
 
 class Store {
   @observable showNavBar = true;

@@ -9,11 +9,11 @@ import Spacer from '@wui/layout/spacer';
 import Typography from '@wui/basics/typography';
 import Grid from '@wui/layout/grid';
 
-import Page from '@@/components/Page';
-import SettingRow from '@@/components/SettingRow';
-import TableHeader from '@@/components/TableHeader';
-import FileAndStore from '@@/assets/images/file-and-store.png';
-import { getCurrentUserSettings } from '@@/utils/API';
+import Page from 'components/Page';
+import SettingRow from 'components/SettingRow';
+import TableHeader from 'components/TableHeader';
+import FileAndStore from 'assets/images/file-and-store.png';
+import { getCurrentUserSettings } from 'utils/API';
 
 const useStyles = makeStyles(theme => ({
   root: {

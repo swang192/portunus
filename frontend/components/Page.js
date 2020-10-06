@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 
-import BackButton from '@@/components/BackButton';
+import BackButton from 'components/BackButton';
 
 const useStyles = makeStyles({
   root: {

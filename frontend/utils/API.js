@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-import tokenFetcher from '@@/zg_utils/tokens';
+import tokenFetcher from 'zg_utils/tokens';
 
 const apiConfig = {
   baseURL: '/api/',

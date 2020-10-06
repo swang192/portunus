@@ -10,10 +10,10 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from '@@/hooks';
-import { capitalize } from '@@/utils/strings';
-import { completePasswordReset } from '@@/utils/API';
-import { INVALID_PASSWORD, MIN_PASSWORD_LENGTH } from '@@/utils/constants';
+import { useInputFieldState } from 'hooks';
+import { capitalize } from 'utils/strings';
+import { completePasswordReset } from 'utils/API';
+import { INVALID_PASSWORD, MIN_PASSWORD_LENGTH } from 'utils/constants';
 import Resend from './Resend';
 
 const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {

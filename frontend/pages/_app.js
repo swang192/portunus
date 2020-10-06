@@ -10,17 +10,17 @@ import theme from '@wui/theme';
 
 import * as Sentry from '@sentry/react';
 
-import GlobalContextProvider from '@@/global-context';
-import { setupCsrf } from '@@/utils/API';
-import Nav from '@@/components/Nav';
-import ChatWidget from '@@/components/ChatWidget';
-import ProtectedPage from '@@/components/ProtectedPage';
-import { ZENDESK_CHAT_KEY } from '@@/utils/constants/chat';
-import { googleAnalyticsEffect } from '@@/utils/google-analytics';
+import GlobalContextProvider from 'global-context';
+import { setupCsrf } from 'utils/API';
+import Nav from 'components/Nav';
+import ChatWidget from 'components/ChatWidget';
+import ProtectedPage from 'components/ProtectedPage';
+import { ZENDESK_CHAT_KEY } from 'utils/constants/chat';
+import { googleAnalyticsEffect } from 'utils/google-analytics';
 
 import env from 'utils/env';
 
-import '@@/global.css';
+import 'global.css';
 
 const isSsr = typeof window === 'undefined';
 

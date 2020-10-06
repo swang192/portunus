@@ -15,7 +15,7 @@ import Spacer from '@wui/layout/spacer';
 import Button from '@wui/input/button';
 import Typography from '@wui/basics/typography';
 
-import { useScreenSize } from '@@/hooks';
+import { useScreenSize } from 'hooks';
 
 const useStyles = makeStyles(theme => ({
   root: {

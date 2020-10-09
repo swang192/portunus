@@ -13,14 +13,15 @@ import * as Sentry from '@sentry/react';
 import GlobalContextProvider from 'global-context';
 import { setupCsrf } from 'utils/API';
 import Nav from 'components/Nav';
-import ChatWidget from 'components/ChatWidget';
 import ProtectedPage from 'components/ProtectedPage';
-import { ZENDESK_CHAT_KEY } from 'utils/constants/chat';
+import { ZENDESK_WIDGET_URL, setDepartment } from '@@/utils/constants/chat';
 import { googleAnalyticsEffect } from 'utils/google-analytics';
 
 import env from 'utils/env';
 
 import 'global.css';
+
+setDepartment();
 
 const isSsr = typeof window === 'undefined';
 
@@ -83,7 +84,7 @@ const App = ({ Component, pageProps }) => {
           />
 
           <link rel="stylesheet" href="/averta.css" />
-          <ChatWidget apiKey={ZENDESK_CHAT_KEY} />
+          <script id="ze-snippet" src={ZENDESK_WIDGET_URL} async defer />
           <title>MetLife Legal Plans</title>
         </Head>
 

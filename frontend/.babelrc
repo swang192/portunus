@@ -9,5 +9,10 @@
   ],
   "plugins": [
     ["@babel/plugin-proposal-decorators", { "legacy": true }]
-  ]
+  ],
+  "env": {
+    "development": {
+      "plugins": ["istanbul"]
+    }
+  }
 }

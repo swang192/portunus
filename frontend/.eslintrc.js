@@ -1,7 +1,13 @@
 module.exports = {
   parser: 'babel-eslint',
 
-  extends: ['airbnb', 'plugin:jest/recommended', 'prettier', 'prettier/react'],
+  extends: [
+    'airbnb',
+    'plugin:cypress/recommended',
+    'plugin:jest/recommended',
+    'prettier',
+    'prettier/react',
+  ],
 
   plugins: ['react', 'react-hooks', 'prettier'],
 
@@ -85,6 +91,13 @@ module.exports = {
     'no-plusplus': ['off'],
 
     'func-names': ['off'],
+
+    'jest/expect-expect': [
+      'error',
+      {
+        assertFunctionNames: ['expect', 'cy.**.should'],
+      },
+    ],
   },
 
   settings: {

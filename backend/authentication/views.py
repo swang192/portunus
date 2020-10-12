@@ -4,7 +4,8 @@ from calendar import timegm
 
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from rest_framework.generics import ListCreateAPIView, RetrieveDestroyAPIView
+from rest_framework import filters
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveDestroyAPIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
@@ -35,6 +36,10 @@ from .utils import (
 from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL, EMAIL_EXISTS
 from shared.email import PortunusMailer
 from shared.permissions import IsSameUserOrAdmin
+
+SEARCH_FIELDS = ["email"]
+MIN_SEARCH_LENGTH = 5
+MAX_SEARCH_RESULTS = 20
 
 
 def make_auth_view(*serializer_classes, action):
@@ -241,6 +246,32 @@ class ListCreateUsersView(ListCreateAPIView):
                 data["portunus_uuid"] = str(existing_user.portunus_uuid)
                 data["user_exists"] = True
             return make_response(False, data)
+
+
+class SearchUsersView(ListAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = UserSerializer
+    renderer_classes = [JSONRenderer]
+    filter_backends = [
+        filters.SearchFilter,
+    ]
+    search_fields = SEARCH_FIELDS
+
+    def get_queryset(self):
+        search = self.request.query_params.get("search")
+
+        # require a minimum search string length to get results
+        if search and len(search) >= MIN_SEARCH_LENGTH:
+            return User.objects.all()
+
+        return User.objects.none()
+
+    def dispatch(self, request, *args, **kwargs):
+        """ limit the number of results that can be returned """
+        http_response = super().dispatch(request, *args, **kwargs)
+        json_response = http_response.data
+        http_response.data = json_response[:MAX_SEARCH_RESULTS]
+        return http_response
 
 
 class RetrieveDeleteUserView(RetrieveDestroyAPIView):

@@ -12,6 +12,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from authentication.factories import UserFactory, StaffUserFactory
 from authentication.models import User
 from authentication.serializers import UserSerializer
+from authentication.views import MIN_SEARCH_LENGTH, MAX_SEARCH_RESULTS
 from shared import frontend_urls
 from .utils import assert_unauthenticated
 
@@ -222,6 +223,70 @@ class TestListCreateUsersView(APITestCase):
         response = self.client.get(self.endpoint_path)
 
         self.assertEqual(response.status_code, 401)
+
+
+class TestSearchUsersView(APITestCase):
+    @property
+    def endpoint_path(self):
+        return reverse("authentication:search_users")
+
+    @parameterized.expand(
+        [
+            (
+                False,
+                False,
+            ),
+            (
+                True,
+                False,
+            ),
+            (
+                True,
+                True,
+            ),
+        ]
+    )
+    def test_search_email(self, use_email, search_substring):
+        user1 = UserFactory(email="aaa@aaa.aaa")
+        UserFactory(email="bbb@bbb.bbb")  # should not be returned by the search
+        staff_user = StaffUserFactory(email="ccc@ccc.ccc")
+        self.client.force_authenticate(staff_user)
+
+        search_email = user1.email[:-3] if search_substring else user1.email
+        args = {"search": search_email} if use_email else None
+        response = self.client.get(self.endpoint_path, args, format="json")
+        self.assertEqual(response.status_code, 200)
+
+        response_users = [user1] if use_email else User.objects.none()
+        self.assertCountEqual(response.json(), UserSerializer(response_users, many=True).data)
+
+    def test_search_string(self):
+        u = UserFactory(email="aaa@aaa.aaa")
+        staff_user = StaffUserFactory(email="ccc@ccc.ccc")
+        self.client.force_authenticate(staff_user)
+
+        args = {"search": u.email[-MIN_SEARCH_LENGTH + 1 :]}
+        response = self.client.get(self.endpoint_path, args, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 0)
+
+        args = {"search": u.email[-MIN_SEARCH_LENGTH:]}
+        response = self.client.get(self.endpoint_path, args, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+
+    def test_result_limit(self):
+        email_template = "aaa{}@aaa.aaa"
+        for i in range(MAX_SEARCH_RESULTS + 1):
+            UserFactory(email=email_template.format(i))
+
+        staff_user = StaffUserFactory()
+        self.client.force_authenticate(staff_user)
+
+        args = {"search": email_template[-MIN_SEARCH_LENGTH:]}
+        response = self.client.get(self.endpoint_path, args, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), MAX_SEARCH_RESULTS)
 
 
 class TestRetrieveDeleteUserView(APITestCase):

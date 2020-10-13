@@ -65,7 +65,7 @@ class TestRegister:
             "test_password",  # No number
             "837493938481",  # No letter
             "password1",  # Too common
-            "uam38m",  # Too short
+            "uam38m2",  # Too short
         ],
     )
     def test_register_with_bad_password(self, authenticate_and_test, password):

@@ -10,13 +10,13 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from '@@/hooks';
-import { refresh, changeUserEmail } from '@@/utils/API';
+import { useInputFieldState } from 'hooks';
+import { refresh, changeUserEmail } from 'utils/API';
 
-import Page from '@@/components/Page';
-import Success from '@@/components/Success';
+import Page from 'components/Page';
+import Success from 'components/Success';
 
-import { AUTH_FAILURE, AUTH_CHANGE_LOCKOUT, EMAIL_EXISTS } from '@@/utils/constants';
+import { AUTH_FAILURE, AUTH_CHANGE_LOCKOUT, EMAIL_EXISTS } from 'utils/constants';
 
 const useStyles = makeStyles(theme => ({
   root: {

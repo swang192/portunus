@@ -1,9 +1,9 @@
 import { observer } from 'mobx-react';
 
-import Layout from '@@/components/Layout';
-import LoginForm from '@@/components/Login';
+import Layout from 'components/Layout';
+import LoginForm from 'components/Login';
 
-import { useHiddenNav } from '@@/hooks';
+import { useHiddenNav } from 'hooks';
 
 const Login = () => {
   useHiddenNav();

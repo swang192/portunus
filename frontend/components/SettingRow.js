@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     ],
   },
   edit: {
-    color: theme.palette.blue.hover,
+    color: theme.palette.blue.default,
   },
 }));
 

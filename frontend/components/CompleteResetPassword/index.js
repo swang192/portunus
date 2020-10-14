@@ -2,16 +2,18 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 
+import PasswordStrengthBar from 'react-password-strength-bar';
+
 import Form from '@wui/layout/form';
 import Button from '@wui/input/button';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from '@@/hooks';
-import { INVALID_PASSWORD } from '@@/utils/constants';
-import { capitalize } from '@@/utils/strings';
-import { completePasswordReset } from '@@/utils/API';
+import { useInputFieldState } from 'hooks';
+import { capitalize } from 'utils/strings';
+import { completePasswordReset } from 'utils/API';
+import { INVALID_PASSWORD, MIN_PASSWORD_LENGTH } from 'utils/constants';
 import Resend from './Resend';
 
 const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
@@ -67,8 +69,6 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
     return <Resend action={action} resendEmail={resendEmail} />;
   }
 
-  const passwordHelp = 'Use 7+ characters with both letters and numbers.';
-
   return (
     <>
       <Typography variant="h4">Set New Password</Typography>
@@ -80,8 +80,8 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
           value={newPassword1}
           onChange={onChangePassword1}
           error={inputErrors.firstPassword}
-          helperText={passwordHelp}
         />
+        <PasswordStrengthBar password={newPassword1} minLength={MIN_PASSWORD_LENGTH} />
         <Textbox
           name="confirmed_password"
           type="password"

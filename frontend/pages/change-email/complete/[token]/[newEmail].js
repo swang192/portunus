@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-import CompleteChangeEmail from '@@/components/CompleteChangeEmail';
+import CompleteChangeEmail from 'components/CompleteChangeEmail';
 
 const CompleteEmailChange = () => {
   const router = useRouter();

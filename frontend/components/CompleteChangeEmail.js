@@ -8,9 +8,9 @@ import Container from '@material-ui/core/Container';
 import Typography from '@wui/basics/typography';
 import Spacer from '@wui/layout/spacer';
 
-import { completeChangeUserEmail } from '@@/utils/API';
-import Page from '@@/components/Page';
-import Success from '@@/components/Success';
+import { completeChangeUserEmail } from 'utils/API';
+import Page from 'components/Page';
+import Success from 'components/Success';
 
 const useStyles = makeStyles(theme => ({
   root: {

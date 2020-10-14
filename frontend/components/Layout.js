@@ -6,7 +6,7 @@ import Grid from '@wui/layout/grid';
 import Spacer from '@wui/layout/spacer';
 import Panel from '@wui/layout/panel';
 
-import MlpLogo from '@@/assets/images/mlp-logo.svg';
+import MlpLogo from 'assets/images/mlp-logo.svg';
 
 const Layout = ({ children }) => {
   return (
@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
         <Spacer v={32} />
         <Spacer v={60} xsDown />
         <Link href="/">
-          <a>
+          <a aria-label="Home">
             <MlpLogo alt="Home" />
           </a>
         </Link>

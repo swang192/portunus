@@ -6,7 +6,7 @@ import Spacer from '@wui/layout/spacer';
 import Button from '@wui/input/button';
 import Typography from '@wui/basics/typography';
 
-import { capitalize } from '@@/utils/strings';
+import { capitalize } from 'utils/strings';
 
 const Resend = ({ action, resendEmail }) => {
   const [loading, setLoading] = useState(false);

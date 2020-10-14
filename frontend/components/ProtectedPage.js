@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { observer } from 'mobx-react';
 
-import { useGlobalContext } from '@@/hooks';
-import Register from '@@/pages/register';
+import { useGlobalContext } from 'hooks';
+import Register from 'pages/register';
 
 const ProtectedPage = ({ children }) => {
   const store = useGlobalContext();

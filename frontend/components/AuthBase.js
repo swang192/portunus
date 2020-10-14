@@ -3,14 +3,19 @@ import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
+import PasswordStrengthBar from 'react-password-strength-bar';
+
 import Button from '@wui/input/button';
 import Form from '@wui/layout/form';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
+import Tooltip from '@wui/layout/tooltip';
+import Grid from '@wui/layout/grid';
 
-import TermsCheckbox from '@@/components/TermsCheckbox';
-import { useGlobalContext, useInputFieldState } from '@@/hooks';
+import TermsCheckbox from 'components/TermsCheckbox';
+import { useGlobalContext, useInputFieldState } from 'hooks';
+import { MIN_PASSWORD_LENGTH } from 'utils/constants';
 
 const AuthBase = ({
   submitCredentials,
@@ -48,6 +53,10 @@ const AuthBase = ({
       errors.password = 'Please enter your password.';
     }
 
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      errors.password = 'Password must be at least 8 characters.';
+    }
+
     if (showTerms && !termsOfService) {
       errors.terms = 'Please agree to continue.';
     }
@@ -71,7 +80,7 @@ const AuthBase = ({
     if (error.response && error.response.data) {
       setInputErrors(error.response.data);
     } else {
-      setInputErrors({ nonFieldErrors: 'An unknown error has occurred. Please try again.' });
+      setInputErrors({ non_field_errors: 'An unknown error has occurred. Please try again.' });
     }
     setProcessing(false);
   };
@@ -93,12 +102,10 @@ const AuthBase = ({
       .catch(handleError);
   };
 
-  const passwordHelp = showTerms ? 'Use 7+ characters with both letters and numbers.' : '';
-
   return (
     <>
       <Typography variant="h4">{headerText}</Typography>
-      <Form error={inputErrors.nonFieldErrors} onSubmit={handleSubmit} noMargin>
+      <Form error={inputErrors.non_field_errors} onSubmit={handleSubmit} noMargin>
         <Textbox
           name="email"
           type="email"
@@ -108,20 +115,39 @@ const AuthBase = ({
           onChange={onChangeEmail}
           error={inputErrors.email}
         />
-        <Textbox
-          name="password"
-          type="password"
-          label="Password"
-          autoComplete={allowAutoComplete ? 'current-password' : 'off'}
-          value={password}
-          onChange={onChangePassword}
-          error={inputErrors.password}
-          helperText={passwordHelp}
-        />
-        {showTerms && (
-          <TermsCheckbox
-            onChange={() => setTermsOfService(!termsOfService)}
-            error={inputErrors.terms}
+        {showTerms ? (
+          <>
+            <Textbox
+              name="password"
+              type="password"
+              label="Password"
+              autoComplete="off"
+              value={password}
+              onChange={onChangePassword}
+              error={inputErrors.password}
+            />
+            <Grid container direction="row" alignItems="center" justify="space-between">
+              <Grid item xs={11}>
+                <PasswordStrengthBar password={password} minLength={MIN_PASSWORD_LENGTH} />
+              </Grid>
+              <Grid item xs={0.5}>
+                <Tooltip title="Use 8+ characters with both letters and numbers" />
+              </Grid>
+            </Grid>
+            <TermsCheckbox
+              onChange={() => setTermsOfService(!termsOfService)}
+              error={inputErrors.terms}
+            />
+          </>
+        ) : (
+          <Textbox
+            name="password"
+            type="password"
+            label="Password"
+            autoComplete="current-password"
+            value={password}
+            onChange={onChangePassword}
+            error={inputErrors.password}
           />
         )}
         <Spacer v={8} />

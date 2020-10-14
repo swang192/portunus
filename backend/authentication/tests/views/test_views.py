@@ -121,6 +121,13 @@ class TestLogout:
         assert response.url == frontend_urls.LOGIN
         assert_unauthenticated(client)
 
+    def test_unauthenticated_logout(self, client):
+        response = client.get(reverse("logout"))
+
+        assert response.status_code == 302
+        assert response.url == frontend_urls.LOGIN
+        assert_unauthenticated(client)
+
     def test_logout_preserves_query_params(self, client, authenticate_and_test):
         authenticate_and_test("authentication:register", USER_DATA)
         query_params = {"test": "value"}

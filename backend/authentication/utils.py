@@ -98,6 +98,9 @@ def blacklist_tokens_for_request(request):
     """
     token_string = request.session.get(REFRESH_TOKEN_SESSION_KEY)
 
+    if token_string is None:
+        return None
+
     try:
         token = RefreshToken(token_string)
         user = User.objects.get(portunus_uuid=token[simplejwt_settings.USER_ID_CLAIM])

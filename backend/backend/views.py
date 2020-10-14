@@ -32,7 +32,7 @@ def set_csrf(request):
 @api_view(["GET"])
 def logout(request):
     user = blacklist_tokens_for_request(request)
-    log_event("logout", request, extra_data={"user": user.email})
+    log_event("logout", request, extra_data={"user": user.email if user else "None"})
     logout_user(request)
     query_params = request.query_params
 

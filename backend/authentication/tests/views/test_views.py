@@ -9,7 +9,7 @@ from django.urls import reverse
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from authentication.factories import UserFactory, StaffUserFactory
+from authentication.factories import UserFactory, StaffUserFactory, SuperuserFactory
 from authentication.models import User
 from authentication.serializers import UserSerializer
 from authentication.views import MIN_SEARCH_LENGTH, MAX_SEARCH_RESULTS
@@ -328,7 +328,13 @@ class TestRetrieveDeleteUserView(APITestCase):
 
     def test_staff_user(self):
         staff_user = StaffUserFactory()
-        self.check_user(staff_user)
+        self.client.force_authenticate(staff_user)
+        self.check_get(200)
+        self.check_delete(403)
+
+    def test_superuser(self):
+        superuser = SuperuserFactory()
+        self.check_user(superuser)
 
     def test_wrong_user(self):
         other_user = UserFactory()

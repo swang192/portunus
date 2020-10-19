@@ -35,7 +35,7 @@ from .utils import (
 )
 from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL, EMAIL_EXISTS
 from shared.email import PortunusMailer
-from shared.permissions import IsSameUserOrAdmin
+from shared.permissions import IsSameUserOrAdmin, IsSameUserOrSuperuser
 
 SEARCH_FIELDS = ["email"]
 MIN_SEARCH_LENGTH = 5
@@ -275,7 +275,6 @@ class SearchUsersView(ListAPIView):
 
 
 class RetrieveDeleteUserView(RetrieveDestroyAPIView):
-    permission_classes = [IsSameUserOrAdmin]
     serializer_class = UserSerializer
     lookup_field = "portunus_uuid"
     queryset = User.objects.all()
@@ -284,6 +283,11 @@ class RetrieveDeleteUserView(RetrieveDestroyAPIView):
         user = self.get_object()
         blacklist_user_tokens(user)
         return self.destroy(request, *args, **kwargs)
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [IsSameUserOrAdmin()]
+        return [IsSameUserOrSuperuser()]
 
 
 @api_view(["GET"])

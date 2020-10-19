@@ -13,4 +13,4 @@ django-axes==5.4.1
 sentry-sdk==0.16.2
 django-willing-zg==0.2.3
 django-anymail==8.0
-zygoat-django==0.1.6
+zygoat-django==0.2.0

@@ -52,9 +52,10 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "axes.middleware.AxesMiddleware",
-    "backend.proxy.ReverseProxyHandlingMiddleware",
+    "zygoat_django.middleware.ReverseProxyHandlingMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "zygoat_django.middleware.session_expiration_middleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",

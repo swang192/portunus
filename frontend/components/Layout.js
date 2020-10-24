@@ -7,8 +7,9 @@ import Spacer from '@wui/layout/spacer';
 import Panel from '@wui/layout/panel';
 
 import MlpLogo from 'assets/images/mlp-logo.svg';
+import ExperienceBanner from './ExperienceBanner';
 
-const Layout = ({ children }) => {
+const Layout = ({ showBanner, children }) => {
   return (
     <div>
       <Grid container direction="column" alignItems="center" wrap="nowrap">
@@ -20,6 +21,8 @@ const Layout = ({ children }) => {
           </a>
         </Link>
         <Spacer v={32} />
+        {showBanner && <ExperienceBanner />}
+        <Spacer v={32} />
         <Panel>{children}</Panel>
         <Spacer v={92} />
       </Grid>
@@ -28,7 +31,12 @@ const Layout = ({ children }) => {
 };
 
 Layout.propTypes = {
+  showBanner: PropTypes.bool,
   children: PropTypes.node.isRequired,
+};
+
+Layout.defaultProps = {
+  showBanner: false,
 };
 
 export default observer(Layout);

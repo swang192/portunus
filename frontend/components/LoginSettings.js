@@ -12,7 +12,6 @@ import Grid from '@wui/layout/grid';
 import Page from 'components/Page';
 import SettingRow from 'components/SettingRow';
 import TableHeader from 'components/TableHeader';
-import FileAndStore from 'assets/images/file-and-store.png';
 import { getCurrentUserSettings } from 'utils/API';
 
 const useStyles = makeStyles(theme => ({
@@ -49,7 +48,7 @@ const LoginSettings = ({ showBack }) => {
             <Typography variant="h3">Login Settings</Typography>
             <Typography variant="body1">Manage your login settings</Typography>
           </div>
-          <img width={246} src={FileAndStore} alt="File Cabinet" />
+          <img width={246} src="images/file-and-store.png" alt="File Cabinet" />
         </Grid>
 
         <Spacer v={32} />

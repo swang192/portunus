@@ -18,6 +18,7 @@ class Store {
   onError = () => {
     this.authenticated = false;
     this.loading = false;
+    tokenFetcher.clearToken();
   };
 
   startFetching() {

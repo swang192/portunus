@@ -20,7 +20,6 @@ import Typography from '@wui/basics/typography';
 import { useToggledState, useGlobalContext } from 'hooks';
 import NavMenu from 'components/NavMenu';
 import { SUPPORT_PHONE_NUMBER } from 'utils/constants';
-import MlpLogo from 'assets/images/mlp-logo.svg';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -83,7 +82,7 @@ const Nav = () => {
       <Toolbar className={classes.toolBar}>
         <Grid container direction="row" justify="space-between" alignItems="center">
           <a aria-label="Home" href={homeLink}>
-            <MlpLogo alt="Go to the home page" className={classes.logo} />
+            <img src="images/mlp-logo.svg" alt="Go to the home page" className={classes.logo} />
           </a>
 
           <Hidden mdUp>

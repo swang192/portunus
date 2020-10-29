@@ -65,7 +65,7 @@ class TestRegister:
             "test_password",  # No number
             "837493938481",  # No letter
             "password1",  # Too common
-            "uam38m",  # Too short
+            "uam38m2",  # Too short
         ],
     )
     def test_register_with_bad_password(self, authenticate_and_test, password):
@@ -115,6 +115,13 @@ class TestRegister:
 class TestLogout:
     def test_logout(self, client, authenticate_and_test):
         authenticate_and_test("authentication:register", USER_DATA)
+        response = client.get(reverse("logout"))
+
+        assert response.status_code == 302
+        assert response.url == frontend_urls.LOGIN
+        assert_unauthenticated(client)
+
+    def test_unauthenticated_logout(self, client):
         response = client.get(reverse("logout"))
 
         assert response.status_code == 302

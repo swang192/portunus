@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import PhoneIcon from '@material-ui/icons/Phone';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import * as Sentry from '@sentry/react';
 
 import Grid from '@wui/layout/grid';
 import Button from '@wui/input/button';
@@ -56,9 +57,13 @@ const Nav = () => {
 
   useEffect(() => {
     if (home) {
-      const hostName = new URL(home).hostname;
-      if (hostName.endsWith('.legalplans.com')) {
-        setHomeLink(home);
+      try {
+        const hostName = new URL(home).hostname;
+        if (hostName.endsWith('.legalplans.com')) {
+          setHomeLink(home);
+        }
+      } catch {
+        Sentry.captureException(new Error('Invalid home URL'));
       }
     }
   }, [home]);

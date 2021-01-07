@@ -127,6 +127,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "authentication.password_validators.AlphaNumericPasswordValidator",
     },
+    {
+        "NAME": "authentication.password_validators.PasswordStrengthValidator",
+    },
 ]
 
 

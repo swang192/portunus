@@ -13,6 +13,8 @@ def get_partial(task, *args, **kwargs):
         # Have the option to import here to avoid circular dependencies that the tasks are fraught with
         imported_task = getattr(import_module(module), attr)
 
+    imported_task = getattr(imported_task, "delay")
+
     return partial(imported_task, *args, **kwargs)
 
 

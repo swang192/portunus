@@ -48,42 +48,38 @@ const ResetPassword = () => {
     }
   };
 
-  const resetForm = () => {
-    return (
-      <div>
-        <KeepParamsLink href="/login" color="text">
-          <ArrowBackIcon />
-          <sup>Back to login</sup>
-        </KeepParamsLink>
-        <Spacer v={32} />
-        <Typography variant="h4">Reset Password</Typography>
-        <Form error={validationError} onSubmit={handleSubmit} noMargin>
-          <Textbox
-            name="email"
-            type="email"
-            label="Recovery Email"
-            autoComplete="username"
-            value={email}
-            onChange={onChangeEmail}
-            error={inputError}
-          />
-          <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
-            Request Reset
-          </Button>
-        </Form>
-        <Spacer v={8} />
-      </div>
-    );
-  };
+  const resetForm = () => (
+    <div>
+      <KeepParamsLink href="/login" color="text">
+        <ArrowBackIcon />
+        <sup>Back to login</sup>
+      </KeepParamsLink>
+      <Spacer v={32} />
+      <Typography variant="h4">Reset Password</Typography>
+      <Form error={validationError} onSubmit={handleSubmit} noMargin>
+        <Textbox
+          name="email"
+          type="email"
+          label="Recovery Email"
+          autoComplete="username"
+          value={email}
+          onChange={onChangeEmail}
+          error={inputError}
+        />
+        <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
+          Request Reset
+        </Button>
+      </Form>
+      <Spacer v={8} />
+    </div>
+  );
 
-  const successMessage = () => {
-    return (
-      <div>
-        <Typography variant="h4">Reset Password</Typography>
-        <body>Check your email for your password reset link</body>
-      </div>
-    );
-  };
+  const successMessage = () => (
+    <div>
+      <Typography variant="h4">Reset Password</Typography>
+      <body>Check your email for your password reset link</body>
+    </div>
+  );
 
   return success ? successMessage() : resetForm();
 };

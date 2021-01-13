@@ -1,12 +1,17 @@
 services:
   backend:
-    build:
+    build: &build
       context: backend
       dockerfile: Dockerfile.local
-    depends_on:
+    depends_on: &depends_on
       - db
-    volumes:
+      - cache
+    volumes: &volumes
       - ./backend:/code
+  cache:
+    image: redis
+    ports:
+      - 6379:6379
   db:
     environment:
       - POSTGRES_PASSWORD=postgres
@@ -23,9 +28,19 @@ services:
     depends_on:
       - frontend
       - backend
-    image: caddy:2.0.0
+    image: caddy
     ports:
       - 3001:3001
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
+  worker:
+    build: *build
+    command: watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery
+      -A backend worker --loglevel=INFO
+    depends_on: *depends_on
+    volumes: *volumes
 version: '3.4'
+x-backend-app:
+  build: *build
+  depends_on: *depends_on
+  volumes: *volumes

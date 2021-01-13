@@ -1,5 +1,5 @@
 import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 
 import BrowserCompatibilityBanner from 'components/BrowserCompatibilityBanner';
@@ -7,7 +7,7 @@ import BrowserCompatibilityBanner from 'components/BrowserCompatibilityBanner';
 export default class MyDocument extends Document {
   render() {
     return (
-      <html lang="en">
+      <Html lang="en">
         <Head>
           <link rel="stylesheet" href="/averta.css" />
           <link
@@ -30,7 +30,7 @@ export default class MyDocument extends Document {
           />
           <script src="/browserCompatibility.js" />
         </body>
-      </html>
+      </Html>
     );
   }
 }

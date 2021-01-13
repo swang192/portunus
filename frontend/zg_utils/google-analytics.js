@@ -1,6 +1,6 @@
 import ReactGA from 'react-ga';
 import Router from 'next/router';
-import { GOOGLE_ANALYTICS_ID } from 'utils/constants';
+import { GOOGLE_ANALYTICS_ID } from 'utils/constants/google';
 
 export const initializeGoogleAnalytics = () => {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID);

@@ -309,3 +309,5 @@ ZYGOAT_FRONTEND_META_CONFIG = {
     ),
     "sentry_environment": ENVIRONMENT,
 }
+
+CELERY_BROKER_URL = CACHES["default"]["LOCATION"]

@@ -1,10 +1,10 @@
-from zappa.asynchronous import task
+from celery import shared_task
 
 from authentication.models import User
 from shared.email import PortunusMailer
 
 
-@task
+@shared_task
 def force_password_reset(email):
     try:
         user = User.objects.get(email=email)

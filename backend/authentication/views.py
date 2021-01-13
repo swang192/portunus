@@ -21,6 +21,7 @@ from .serializers import (
     RegistrationSerializer,
     LoginSerializer,
     UserSerializer,
+    LoginUsingRegisterSerializer,
 )
 from .models import User
 from .utils import (
@@ -72,7 +73,9 @@ def make_auth_view(*serializer_classes, action):
     return view
 
 
-register = make_auth_view(RegistrationSerializer, LoginSerializer, action="register")
+register = make_auth_view(
+    RegistrationSerializer, LoginUsingRegisterSerializer, action="register"
+)
 login = make_auth_view(LoginSerializer, action="login")
 
 

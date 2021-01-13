@@ -26,6 +26,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.ModelSerializer):
+    bad_credentials_error = _("Invalid username or password")
+
     class Meta:
         model = User
         fields = ("email", "password")
@@ -36,12 +38,20 @@ class LoginSerializer(serializers.ModelSerializer):
             request=self.context["request"], email=data["email"], password=data["password"]
         )
         if not self.user:
-            raise ValidationError(_("Invalid username or password"))
+            raise ValidationError(self.bad_credentials_error)
 
         return data
 
     def save(self):
         return self.user
+
+
+class LoginUsingRegisterSerializer(LoginSerializer):
+    def validate(self, data):
+        if User.objects.filter(email=data["email"]).first() is None:
+            raise ValidationError(self.bad_credentials_error)
+
+        return super().validate(data)
 
 
 class UserSerializer(serializers.ModelSerializer):

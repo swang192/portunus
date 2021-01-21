@@ -75,9 +75,9 @@ def get_valid_redirect_url(url):
 
 def blacklist_token(token_str):
     if token_str:
-        # We don't verify the token so that, no matter what, we blacklist it.
-        token = RefreshToken(token_str, verify=False)
         try:
+            # We don't verify the token so that, no matter what, we blacklist it.
+            token = RefreshToken(token_str, verify=False)
             token.blacklist()
         except TokenError:
             # Token is already blacklisted.
@@ -184,7 +184,7 @@ def generate_axes_lockout_response(request, credentials):
         "authentication.tasks:force_password_reset", get_client_username(request, credentials)
     )
     error_message = (
-        f"Too many failed login attempts, check your email to choose a new password."
+        "Too many failed login attempts, check your email to choose a new password."
     )
     return make_response(data={api_settings.NON_FIELD_ERRORS_KEY: error_message}, status=403)
 

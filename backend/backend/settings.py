@@ -53,6 +53,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "axes.middleware.AxesMiddleware",
     "zygoat_django.middleware.ReverseProxyHandlingMiddleware",
+    "zygoat_django.middleware.SecurityHeaderMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "zygoat_django.middleware.session_expiration_middleware",

@@ -198,9 +198,7 @@ class TestListCreateUsersView(APITestCase):
 
     def test_create_with_existing_user(self):
         user = UserFactory()
-        response = self.check_create(400, {"email": user.email, "password": "asdf"})
-        self.assertEqual(response["portunus_uuid"], user.portunus_uuid)
-        self.assertEqual(response["user_exists"], True)
+        self.check_create(400, {"email": user.email, "password": "asdf"})
 
     @parameterized.expand([(False,), (True,)])
     def test_list_users(self, from_uuid):

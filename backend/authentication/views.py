@@ -43,7 +43,7 @@ MIN_SEARCH_LENGTH = 5
 MAX_SEARCH_RESULTS = 20
 
 
-def make_auth_view(*serializer_classes, action):
+def make_auth_view(*serializer_classes, action, show_errors=True):
     """
     Creates a view from an ordered list of serializers. If any serializer is valid with the
     given data, log the user in and redirect them to the given URL.
@@ -63,6 +63,16 @@ def make_auth_view(*serializer_classes, action):
             first_serializer = serializer_classes[0](data=data, context={"request": request})
             first_serializer.is_valid()
             first_errors = {k: v[0] for k, v in first_serializer.errors.items()}
+
+            if not show_errors and "email" in first_errors:
+                del first_errors["email"]
+
+                # If that's the only problem with the form, give a generic response
+                if len(first_errors.keys()) == 0:
+                    first_errors = {
+                        "non_field_errors": "An unknown error has occurred. Please try again."
+                    }
+
             return make_response(False, first_errors)
 
         user = serializer.save()
@@ -74,7 +84,7 @@ def make_auth_view(*serializer_classes, action):
 
 
 register = make_auth_view(
-    RegistrationSerializer, LoginUsingRegisterSerializer, action="register"
+    RegistrationSerializer, LoginUsingRegisterSerializer, action="register", show_errors=False
 )
 login = make_auth_view(LoginSerializer, action="login")
 
@@ -256,6 +266,7 @@ class ListCreateUsersView(ListCreateAPIView):
             if existing_user:
                 data["portunus_uuid"] = str(existing_user.portunus_uuid)
                 data["user_exists"] = True
+
             return make_response(False, data)
 
 

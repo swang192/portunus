@@ -272,7 +272,8 @@ SIGNING_KEY = f"""-----BEGIN RSA PRIVATE KEY-----
 # Override the values set by willing-zg simple jwt plugin
 SIMPLE_JWT["USER_ID_FIELD"] = "portunus_uuid"
 SIMPLE_JWT["SIGNING_KEY"] = SIGNING_KEY
-SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"] = timedelta(hours=1)
+SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"] = timedelta(minutes=30)
+SIMPLE_JWT["ROTATE_REFRESH_TOKENS"] = True
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 CORS_ALLOW_CREDENTIALS = True

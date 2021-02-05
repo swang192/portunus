@@ -200,7 +200,8 @@ def reset_password(request):
 class TokenRefreshView(SimpleJWTTokenRefreshView):
     """
     Pulls the refresh type JSON web token from the user session and returns an
-    access type JSON web token if the refresh token is valid.
+    access type JSON web token if the refresh token is valid. Also updates the
+    refresh token in the user session if ROTATE_REFRESH_TOKENS is True.
     """
 
     def get_serializer(self, *args, **kwargs):
@@ -220,6 +221,13 @@ class TokenRefreshView(SimpleJWTTokenRefreshView):
                     capture_exception(e)
 
         return super().post(request, *args, **kwargs)
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        if "refresh" in response.data:
+            self.request.session[REFRESH_TOKEN_SESSION_KEY] = response.data["refresh"]
+            del response.data["refresh"]
+
+        return super().finalize_response(request, response, *args, **kwargs)
 
 
 class ListCreateUsersView(ListCreateAPIView):

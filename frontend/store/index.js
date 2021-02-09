@@ -1,14 +1,14 @@
-import { observable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 
 import tokenFetcher from 'zg_utils/tokens';
 import * as api from 'utils/API';
 
 class Store {
-  @observable showNavBar = true;
+  showNavBar = true;
 
-  @observable loading = true;
+  loading = true;
 
-  @observable authenticated = false;
+  authenticated = false;
 
   onSuccess = token => {
     this.authenticated = Boolean(token);
@@ -26,6 +26,7 @@ class Store {
   }
 
   constructor() {
+    makeAutoObservable(this);
     const isSsr = typeof window === 'undefined';
     if (!isSsr) {
       this.startFetching();

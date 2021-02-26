@@ -5,7 +5,7 @@ djangorestframework==3.12.2
 django-environ==0.4.5
 djangorestframework-camel-case==1.2.0
 djangorestframework-simplejwt==4.6.0
-cryptography==3.3.1
+cryptography==3.3.2
 simplejwt-extensions==0.2.4
 zappa==0.51.0
 requests==2.23.0

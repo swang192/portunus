@@ -67,6 +67,7 @@ class TestRegister:
             "837493938481",  # No letter
             "password1",  # Too common
             "uam38m2",  # Too short
+            f"{USER_DATA['email']}123",  # includes user email
         ],
     )
     def test_register_with_bad_password(self, authenticate_and_test, password):

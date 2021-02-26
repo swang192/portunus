@@ -33,7 +33,9 @@ class PasswordStrengthValidator:
                   Try making it longer or adding in numeric and special characters to make it stronger."""
 
     def validate(self, password, user=None):
-        score_data = zxcvbn(password)
+        user_inputs = [user.email] if user else []
+        score_data = zxcvbn(password, user_inputs=user_inputs)
+
         score = score_data.get("score")
         if score < MIN_SCORE:
             raise ValidationError(self.help_string)

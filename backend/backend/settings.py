@@ -53,6 +53,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "axes.middleware.AxesMiddleware",
     "zygoat_django.middleware.ReverseProxyHandlingMiddleware",
+    "zygoat_django.middleware.SecurityHeaderMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "zygoat_django.middleware.session_expiration_middleware",
@@ -126,6 +127,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "authentication.password_validators.AlphaNumericPasswordValidator",
+    },
+    {
+        "NAME": "authentication.password_validators.PasswordStrengthValidator",
     },
 ]
 
@@ -309,3 +313,5 @@ ZYGOAT_FRONTEND_META_CONFIG = {
     ),
     "sentry_environment": ENVIRONMENT,
 }
+
+CELERY_BROKER_URL = CACHES["default"]["LOCATION"]

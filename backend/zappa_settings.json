@@ -21,9 +21,9 @@
     "extends": "base",
     "domain": "api-qa.login.legalplans.com"
   },
-  "primeon": {
+  "test": {
     "extends": "base",
-    "domain": "api-primeon.login.legalplans.com"
+    "domain": "api-test.login.legalplans.com"
   },
   "staging": {
     "extends": "base",
@@ -37,5 +37,15 @@
        "SecurityGroupIds": ["sg-0bf776e3ee76bd3d0"]
      },
     "certificate_arn": "arn:aws:acm:us-east-1:818831340115:certificate/45742008-a602-4f1b-8dbf-56b044e3409e"
+  },
+  "dr": {
+    "extends": "base",
+    "domain": "api-dr.login.legalplans.com",
+    "aws_region": "us-west-2",
+    "s3_bucket": "mlp-dr-portunus-zappa-deployments",
+    "vpc_config": {
+      "SubnetIds": ["subnet-0cc3df1268c8f3404", "subnet-0d16e241833bb7e37"],
+      "SecurityGroupIds": ["sg-041ef9f554a3cbb81"]
+    }
   }
 }

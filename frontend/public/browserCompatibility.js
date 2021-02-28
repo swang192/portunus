@@ -1,3 +1,4 @@
+/* eslint-disable */
 function addLoadEvent(func) {
   const oldonload = window.onload;
   if (typeof window.onload !== 'function') {

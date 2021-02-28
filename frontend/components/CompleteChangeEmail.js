@@ -43,31 +43,25 @@ const ChangeEmailComplete = ({ token, newEmail }) => {
     setLoading(false);
   };
 
-  const successMessage = () => {
-    return (
-      <Page>
-        <Container maxWidth="md" className={classes.root}>
-          <Spacer v={32} />
-          <Success header="Change Email" message="Your email address has been changed!" />
-        </Container>
-      </Page>
-    );
-  };
+  const successMessage = () => (
+    <Page>
+      <Container maxWidth="md" className={classes.root}>
+        <Spacer v={32} />
+        <Success header="Change Email" message="Your email address has been changed!" />
+      </Container>
+    </Page>
+  );
 
-  const errorMessage = () => {
-    return (
-      <Page>
-        <Container maxWidth="md" className={classes.root}>
-          <Typography variant="h4">Change Email Error</Typography>
-          <Typography variant="body1">{validationError}</Typography>
-        </Container>
-      </Page>
-    );
-  };
+  const errorMessage = () => (
+    <Page>
+      <Container maxWidth="md" className={classes.root}>
+        <Typography variant="h4">Change Email Error</Typography>
+        <Typography variant="body1">{validationError}</Typography>
+      </Container>
+    </Page>
+  );
 
-  const onLoading = () => {
-    return <div>Loading...</div>;
-  };
+  const onLoading = () => <div>Loading...</div>;
 
   useEffect(() => {
     handleNewEmail();

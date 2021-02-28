@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
 import PasswordStrengthBar from 'react-password-strength-bar';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Button from '@wui/input/button';
 import Form from '@wui/layout/form';
@@ -17,6 +18,11 @@ import TermsCheckbox from 'components/TermsCheckbox';
 import { useGlobalContext, useInputFieldState } from 'hooks';
 import { MIN_PASSWORD_LENGTH } from 'utils/constants';
 
+const useStyles = makeStyles({
+  form: {
+    maxWidth: 550,
+  },
+});
 const AuthBase = ({
   submitCredentials,
   submitText,
@@ -35,6 +41,7 @@ const AuthBase = ({
     query: { next, localNext },
   } = router;
   const store = useGlobalContext();
+  const classes = useStyles();
 
   useEffect(() => {
     if (store.authenticated) {
@@ -105,7 +112,12 @@ const AuthBase = ({
   return (
     <>
       <Typography variant="h4">{headerText}</Typography>
-      <Form error={inputErrors.non_field_errors} onSubmit={handleSubmit} noMargin>
+      <Form
+        error={inputErrors.non_field_errors}
+        onSubmit={handleSubmit}
+        noMargin
+        className={classes.form}
+      >
         <Textbox
           name="email"
           type="email"

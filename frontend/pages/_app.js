@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { configure } from 'mobx';
 import { observer, useStaticRendering } from 'mobx-react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
@@ -34,6 +35,8 @@ if (!isSsr) {
     })
     .catch(() => null);
 }
+
+configure({ enforceActions: 'never' });
 
 /**
  * Accessibility tool - outputs to devtools console on dev only and client-side only.

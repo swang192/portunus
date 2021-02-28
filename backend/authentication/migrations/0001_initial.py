@@ -105,6 +105,8 @@ class Migration(migrations.Migration):
                 "verbose_name_plural": "users",
                 "abstract": False,
             },
-            managers=[("objects", authentication.managers.UserManager()),],
+            managers=[
+                ("objects", authentication.managers.UserManager()),
+            ],
         ),
     ]

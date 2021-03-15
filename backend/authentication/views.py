@@ -70,7 +70,7 @@ def make_auth_view(*serializer_classes, action, show_errors=True):
                 # If that's the only problem with the form, give a generic response
                 if len(first_errors.keys()) == 0:
                     first_errors = {
-                        "non_field_errors": "An unknown error has occurred. Please try again."
+                        "non_field_errors": LoginSerializer.bad_credentials_error,
                     }
 
             return make_response(False, first_errors)

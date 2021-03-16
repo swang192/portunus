@@ -1,14 +1,17 @@
 import json
+from contextlib import suppress
 from datetime import datetime
 from calendar import timegm
 
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from rest_framework import filters
+from rest_framework import filters, status
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveDestroyAPIView
 from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, api_view
 from django.core.validators import validate_email
@@ -226,18 +229,29 @@ class TokenRefreshView(SimpleJWTTokenRefreshView):
                 RefreshToken(refresh)
             except Exception as e:
                 with configure_scope() as scope:
-                    scope.set_extra("token_payload", repr(RefreshToken(refresh, verify=False)))
-                    scope.set_extra("now_timestamp", timegm(datetime.utcnow().utctimetuple()))
+                    with suppress(Exception):
+                        scope.set_extra(
+                            "token_payload", repr(RefreshToken(refresh, verify=False))
+                        )
+                        scope.set_extra(
+                            "now_timestamp", timegm(datetime.utcnow().utctimetuple())
+                        )
                     capture_exception(e)
 
-        return super().post(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
 
-    def finalize_response(self, request, response, *args, **kwargs):
-        if "refresh" in response.data:
-            self.request.session[REFRESH_TOKEN_SESSION_KEY] = response.data["refresh"]
-            del response.data["refresh"]
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
 
-        return super().finalize_response(request, response, *args, **kwargs)
+        if "refresh" in serializer.validated_data:
+            self.request.session[REFRESH_TOKEN_SESSION_KEY] = serializer.validated_data[
+                "refresh"
+            ]
+            del serializer.validated_data["refresh"]
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class ListCreateUsersView(ListCreateAPIView):

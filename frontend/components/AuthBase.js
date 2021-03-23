@@ -74,6 +74,14 @@ const AuthBase = ({
   };
 
   const handleSuccess = response => {
+    if (response.data.mfaRequired) {
+      store.ephemeralMfaToken = response.data.ephemeralToken;
+      store.mfaMethod = response.data.mfaMethod;
+      store.loginEmail = email;
+      router.push('/login/mfa');
+      return;
+    }
+
     // Always prefer using the next parameter when it is present
     if (!next && localNext) {
       store.login();

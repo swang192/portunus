@@ -13,6 +13,9 @@ export const EMAIL_EXISTS = 'email_exists';
 
 export const MIN_PASSWORD_LENGTH = 8;
 
+export const MAX_MFA_RESENDS = 5;
+export const MAX_MFA_ATTEMPTS = 5;
+
 // This correlates to the score from zxcvbn, which can be 0-4, with 4 being the best.
 export const MIN_PASSWORD_SCORE = 3;
 

@@ -58,3 +58,19 @@ export const completeChangeUserEmail = payload => API.post('auth/change-email/co
 export const changePassword = payload => API.post('auth/change-password/', payload);
 
 export const getCurrentUserSettings = () => API.get('auth/users/settings/');
+
+export const sendMfaCode = method => API.post(`mfa/${method}/send-code/`);
+
+export const sendMfaCodeUsingToken = (method, payload) =>
+  unauthenticatedAPI.post(`mfa/${method}/send-code-using-token/`, payload);
+
+export const activateMfa = method => API.post(`mfa/${method}/activate/`);
+
+export const completeActivateMfa = (method, payload) =>
+  API.post(`mfa/${method}/activate/confirm/`, payload);
+
+export const completeDeactivateMfa = method => API.post(`mfa/${method}/deactivate/confirm/`);
+
+export const submitMFACode = payload => unauthenticatedAPI.post('auth/login/code/', payload);
+
+export const getMfaMethods = () => API.get('mfa/methods/');

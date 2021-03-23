@@ -17,6 +17,7 @@ import Grid from '@wui/layout/grid';
 import TermsCheckbox from 'components/TermsCheckbox';
 import { useGlobalContext, useInputFieldState } from 'hooks';
 import { MIN_PASSWORD_LENGTH } from 'utils/constants';
+import { UNKNOWN_ERROR } from 'utils/constants/errors';
 
 const useStyles = makeStyles({
   form: {
@@ -95,7 +96,7 @@ const AuthBase = ({
     if (error.response && error.response.data) {
       setInputErrors(error.response.data);
     } else {
-      setInputErrors({ non_field_errors: 'An unknown error has occurred. Please try again.' });
+      setInputErrors({ nonFieldErrors: UNKNOWN_ERROR });
     }
     setProcessing(false);
   };
@@ -107,7 +108,6 @@ const AuthBase = ({
     }
 
     setProcessing(true);
-
     submitCredentials({
       email: email.toLowerCase(),
       password,
@@ -121,7 +121,7 @@ const AuthBase = ({
     <>
       <Typography variant="h4">{headerText}</Typography>
       <Form
-        error={inputErrors.non_field_errors}
+        error={inputErrors.nonFieldErrors}
         onSubmit={handleSubmit}
         noMargin
         className={classes.form}

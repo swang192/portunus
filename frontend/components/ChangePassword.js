@@ -15,6 +15,7 @@ import Typography from '@wui/basics/typography';
 import { useInputFieldState } from 'hooks';
 import { changePassword, refresh } from 'utils/API';
 import { MIN_PASSWORD_LENGTH, INVALID_PASSWORD, AUTH_CHANGE_LOCKOUT } from 'utils/constants';
+import { UNKNOWN_ERROR } from 'utils/constants/errors';
 
 import Page from 'components/Page';
 import Success from 'components/Success';
@@ -70,7 +71,7 @@ const ChangePassword = () => {
           : 'Your current password did not match the one we have on file. Try again.';
       setInputErrors({ submitError });
     } else {
-      setInputErrors({ submitError: 'An unknown error has occurred. Please try again.' });
+      setInputErrors({ submitError: UNKNOWN_ERROR });
     }
     setSuccess(false);
   };

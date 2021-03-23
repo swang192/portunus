@@ -1,0 +1,12 @@
+Hello,
+
+Thank you for choosing MetLife Legal Plans. As requested, here's your security code for the account associated with {{ user.email }}.
+
+Security Code: {{ code }}
+
+Do not reply to this email.
+
+If you need more assistance, please feel free to reach us at {{ support_phone_number }} or {{ support_email_address }}.
+
+Regards,
+MetLife Legal Plans Team

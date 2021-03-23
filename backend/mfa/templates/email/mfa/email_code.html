@@ -1,0 +1,46 @@
+<div style="font-family: Helvetica, Arial, sans-serif;">
+  <img
+    width="200"
+    src="https://www.metlife.com/content/dam/metlifecom/us/icons-header/MetLife.png"
+    alt="MetLife Logo"
+  />
+  <br /><br /><br>
+  Hello{% if user.first_name %} {{ user.first_name }}{% endif %},
+  <br /><br />
+  Thank you for choosing MetLife Legal Plans. As requested, here's your security code for the account associated with {{ user.email }}.
+  <br /><br />
+
+
+  <table
+    cellspacing="0"
+    cellpadding="10"
+    border="0"
+    width="100%"
+    style="text-align: center; border-radius: 5px; overflow: hidden; border: 1px solid #DBDCE2;"
+  >
+    <thead>
+      <tr>
+        <td style="font-size: 14px; font-weight: bold; letter-spacing: 1px; background-color: #2992DB; color: white; text-transform: uppercase; border-radius: 5px 5px 0 0; border-bottom: 1px solid #DBDCE2;">
+          Security Code
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-size: 32px; letter-spacing: 6px; line-height:64px; border-bottom: 1px solid #DBDCE2;"><b>{{ code }}</b></td>
+      </tr>
+      <tr>
+        <td style="font-size: 14px">
+          Do not reply to this email.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br /><br />
+  If you need more assistance, please feel free to reach us at {{ support_phone_number }} or {{ support_email_address }}.
+  <br /><br />
+  Regards,
+  <br />
+  MetLife Legal Plans Team
+</div>

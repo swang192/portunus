@@ -18,6 +18,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings as simplejwt_settings
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
+from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 
 from shared.utils.tasks import enqueue
 from .models import User
@@ -31,11 +32,16 @@ REFRESH_TOKEN_SESSION_KEY = "refresh_token"
 FROM_EMAIL = "Willing <hello@willing.com>"
 
 
-def make_response(success=True, data=None, status=None):
+def make_response(success=True, data=None, status=None, renderer=None):
     if not status:
         status = status_codes.HTTP_200_OK if success else status_codes.HTTP_400_BAD_REQUEST
 
-    response = HttpResponse(json.dumps(data), content_type="application/json", status=status)
+    if not renderer:
+        renderer = CamelCaseJSONRenderer
+
+    data = renderer().render(data)
+
+    response = HttpResponse(data, content_type="application/json", status=status)
     patch_cache_control(response, no_cache=True, no_store=True)
     return response
 
@@ -186,7 +192,11 @@ def generate_axes_lockout_response(request, credentials):
     error_message = (
         "Too many failed login attempts, check your email to choose a new password."
     )
-    return make_response(data={api_settings.NON_FIELD_ERRORS_KEY: error_message}, status=403)
+    data = {
+        api_settings.NON_FIELD_ERRORS_KEY: error_message,
+        "auth_lockout": True,
+    }
+    return make_response(data=data, status=403)
 
 
 def check_change_email_token(token_str, user):

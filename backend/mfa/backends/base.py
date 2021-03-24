@@ -11,9 +11,7 @@ class BaseMfaBackend:
     def __init__(self, mfa_method):
         self.user = mfa_method.user
         self.mfa_method = mfa_method
-        self.timeout = (
-            getattr(settings, "MFA_CODE_TIMEOUT", None) or self.DEFAULT_TIMEOUT_SECONDS
-        )
+        self.timeout = getattr(settings, "MFA_CODE_TIMEOUT", self.DEFAULT_TIMEOUT_SECONDS)
 
     def send_code(self):
         raise NotImplementedError()

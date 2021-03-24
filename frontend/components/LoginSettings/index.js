@@ -30,6 +30,8 @@ const mfaLabel = 'Two-Factor Authentication';
 
 const LoginSettings = ({ showBack }) => {
   const [error, setError] = useState('');
+  // We initialize mfaActive to null to indicate that we haven't yet received
+  // the data from the server.
   const [mfaActive, setMfaActive] = useState(null);
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
   const { user } = useGlobalContext();

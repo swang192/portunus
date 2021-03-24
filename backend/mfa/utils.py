@@ -19,9 +19,7 @@ class MfaTokenGenerator(PasswordResetTokenGenerator):
     DEFAULT_TIMEOUT_SECONDS = 15 * 60
 
     def __init__(self):
-        self.timeout = (
-            getattr(settings, "MFA_TOKEN_TIMEOUT", None) or self.DEFAULT_TIMEOUT_SECONDS
-        )
+        self.timeout = getattr(settings, "MFA_TOKEN_TIMEOUT", self.DEFAULT_TIMEOUT_SECONDS)
         super().__init__()
 
     def check_token(self, token):
@@ -38,17 +36,17 @@ class MfaTokenGenerator(PasswordResetTokenGenerator):
             return None
 
         try:
-            ts = base36_to_int(ts_b36)
+            timestamp = base36_to_int(ts_b36)
             user = User.objects.get(pk=user_pk)
         except (ValueError, User.DoesNotExist):
             return None
 
         # Check that the timestamp/uid has not been tampered with
-        if not constant_time_compare(self._make_token_with_timestamp(user, ts), token):
+        if not constant_time_compare(self._make_token_with_timestamp(user, timestamp), token):
             return None
 
         # Check the timestamp is within limit.
-        if (self._num_seconds(self._now()) - ts) > self.timeout:
+        if (self._num_seconds(self._now()) - timestamp) > self.timeout:
             return None
 
         return user

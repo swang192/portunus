@@ -33,7 +33,7 @@ class CodeLoginSerializer(serializers.Serializer):
 
 
 class RequestMfaActivationSerializer(serializers.Serializer):
-    mfa_method = serializers.CharField()
+    mfa_method = serializers.ChoiceField(choices=MfaMethod.MFA_TYPE_CHOICES)
 
     default_error_messages = default_error_messages
 
@@ -42,10 +42,9 @@ class RequestMfaActivationSerializer(serializers.Serializer):
         self.user = self.context["request"].user
 
     def validate_mfa_method(self, value):
-        if value not in [choice[0] for choice in MfaMethod.MFA_TYPE_CHOICES]:
-            self.fail("mfa_method_does_not_exist")
-
         self.mfa_method = MfaMethod.objects.filter(user=self.user, type=value).first()
+        # We cannot activate a method that is already active. If the method
+        # does not exist then it is considered inactive.
         if self.mfa_method and self.mfa_method.is_active:
             self.fail("mfa_method_already_active")
 
@@ -63,7 +62,7 @@ class RequestMfaActivationSerializer(serializers.Serializer):
 
 
 class MfaActivationConfirmationSerializer(serializers.Serializer):
-    mfa_method = serializers.CharField()
+    mfa_method = serializers.ChoiceField(choices=MfaMethod.MFA_TYPE_CHOICES)
     code = serializers.CharField()
 
     default_error_messages = default_error_messages

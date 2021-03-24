@@ -46,6 +46,11 @@ def make_response(success=True, data=None, status=None, renderer=None):
     return response
 
 
+def make_authenticated_response(data):
+    next_url = get_valid_redirect_url(data.get("next"))
+    return make_response(True, {"next": next_url})
+
+
 def login_user(request, user):
     User.objects.filter(pk=user.pk).update(auth_change_failures=0)
     user.auth_change_failures = 0

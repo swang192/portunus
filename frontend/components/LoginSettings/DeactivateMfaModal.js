@@ -16,11 +16,9 @@ const DeactivateMfaModal = ({ open, onClose, onConfirm }) => {
   const handleConfirm = () => {
     setLoading(true);
     onConfirm()
+      .then(onClose)
       .catch(() => setError(true))
-      .finally(() => {
-        setLoading(false);
-        onClose();
-      });
+      .finally(() => setLoading(false));
   };
 
   return (

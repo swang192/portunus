@@ -19,7 +19,7 @@ from rest_framework.decorators import permission_classes, api_view
 from django.core.validators import validate_email
 from sentry_sdk import capture_exception, configure_scope
 
-from authentication.utils import blacklist_user_tokens
+from authentication.utils import blacklist_user_tokens, make_authenticated_response
 from mfa.serializers import CodeLoginSerializer
 from mfa.utils import mfa_token_generator
 from shared.utils.logging import log_event, log_view_outcome
@@ -38,7 +38,6 @@ from .utils import (
     check_onetime_token,
     check_change_email_token,
     make_response,
-    get_valid_redirect_url,
     check_password_for_auth_change,
 )
 from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL, EMAIL_EXISTS
@@ -69,8 +68,7 @@ def login_with_mfa_code(request):
         return make_response(False, first_errors)
 
     login_user(request, serializer.user)
-    next_url = get_valid_redirect_url(data.get("next"))
-    return make_response(True, {"next": next_url})
+    return make_authenticated_response(data)
 
 
 def make_auth_view(*serializer_classes, action, show_errors=True):
@@ -107,7 +105,7 @@ def make_auth_view(*serializer_classes, action, show_errors=True):
 
         user = serializer.save()
 
-        mfa_method = user.mfa_methods.filter(is_primary=True, is_active=True).first()
+        mfa_method = user.mfa_methods.filter(is_primary=True).first()
         if mfa_method:
             mfa_method.send_code()
             data = {
@@ -118,8 +116,7 @@ def make_auth_view(*serializer_classes, action, show_errors=True):
             return make_response(True, data)
 
         login_user(request, user)
-        next_url = get_valid_redirect_url(data.get("next"))
-        return make_response(True, {"next": next_url})
+        return make_authenticated_response(data)
 
     return view
 
@@ -319,7 +316,7 @@ class ListCreateUsersView(ListCreateAPIView):
                 data["portunus_uuid"] = str(existing_user.portunus_uuid)
                 data["user_exists"] = True
 
-            return make_response(False, data)
+            return make_response(False, data, renderer=JSONRenderer)
 
 
 class SearchUsersView(ListAPIView):

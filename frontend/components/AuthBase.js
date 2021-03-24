@@ -140,7 +140,11 @@ const AuthBase = ({
             />
             <Grid container direction="row" alignItems="center" justify="space-between">
               <Grid item xs={11}>
-                <PasswordStrengthBar password={password} minLength={MIN_PASSWORD_LENGTH} />
+                <PasswordStrengthBar
+                  password={password}
+                  minLength={MIN_PASSWORD_LENGTH}
+                  userInputs={email}
+                />
               </Grid>
               <Grid item xs={0.5}>
                 <Tooltip title="Use 8+ characters with both letters and numbers" />

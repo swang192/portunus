@@ -18,6 +18,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
         validate_password(value)
         return value
 
+    def validate(self, data):
+        # We validate the password again here because we can create a valid
+        # user object using the field-validated data. The field level
+        # validate_password method is still useful because it assigns the
+        # error to the correct field.
+        user = User(**data)
+        validate_password(data.get("password"), user)
+
+        return super().validate(data)
+
     def create(self, validated_data):
         return User.objects.create_user(
             email=validated_data["email"],

@@ -129,7 +129,7 @@ def check_password_for_auth_change(request, user, password):
 
 def check_and_change_password(request, user, new_password):
     try:
-        validate_password(new_password)
+        validate_password(new_password, user)
     except ValidationError as e:
         return make_response(
             False,

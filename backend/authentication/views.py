@@ -1,14 +1,17 @@
 import json
+from contextlib import suppress
 from datetime import datetime
 from calendar import timegm
 
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
-from rest_framework import filters
+from rest_framework import filters, status
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveDestroyAPIView
 from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes, api_view
 from django.core.validators import validate_email
@@ -43,7 +46,7 @@ MIN_SEARCH_LENGTH = 5
 MAX_SEARCH_RESULTS = 20
 
 
-def make_auth_view(*serializer_classes, action):
+def make_auth_view(*serializer_classes, action, show_errors=True):
     """
     Creates a view from an ordered list of serializers. If any serializer is valid with the
     given data, log the user in and redirect them to the given URL.
@@ -63,6 +66,16 @@ def make_auth_view(*serializer_classes, action):
             first_serializer = serializer_classes[0](data=data, context={"request": request})
             first_serializer.is_valid()
             first_errors = {k: v[0] for k, v in first_serializer.errors.items()}
+
+            if not show_errors and "email" in first_errors:
+                del first_errors["email"]
+
+                # If that's the only problem with the form, give a generic response
+                if len(first_errors.keys()) == 0:
+                    first_errors = {
+                        "non_field_errors": LoginSerializer.bad_credentials_error,
+                    }
+
             return make_response(False, first_errors)
 
         user = serializer.save()
@@ -74,7 +87,7 @@ def make_auth_view(*serializer_classes, action):
 
 
 register = make_auth_view(
-    RegistrationSerializer, LoginUsingRegisterSerializer, action="register"
+    RegistrationSerializer, LoginUsingRegisterSerializer, action="register", show_errors=False
 )
 login = make_auth_view(LoginSerializer, action="login")
 
@@ -200,7 +213,8 @@ def reset_password(request):
 class TokenRefreshView(SimpleJWTTokenRefreshView):
     """
     Pulls the refresh type JSON web token from the user session and returns an
-    access type JSON web token if the refresh token is valid.
+    access type JSON web token if the refresh token is valid. Also updates the
+    refresh token in the user session if ROTATE_REFRESH_TOKENS is True.
     """
 
     def get_serializer(self, *args, **kwargs):
@@ -215,11 +229,29 @@ class TokenRefreshView(SimpleJWTTokenRefreshView):
                 RefreshToken(refresh)
             except Exception as e:
                 with configure_scope() as scope:
-                    scope.set_extra("token_payload", repr(RefreshToken(refresh, verify=False)))
-                    scope.set_extra("now_timestamp", timegm(datetime.utcnow().utctimetuple()))
+                    with suppress(Exception):
+                        scope.set_extra(
+                            "token_payload", repr(RefreshToken(refresh, verify=False))
+                        )
+                        scope.set_extra(
+                            "now_timestamp", timegm(datetime.utcnow().utctimetuple())
+                        )
                     capture_exception(e)
 
-        return super().post(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        if "refresh" in serializer.validated_data:
+            self.request.session[REFRESH_TOKEN_SESSION_KEY] = serializer.validated_data[
+                "refresh"
+            ]
+            del serializer.validated_data["refresh"]
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class ListCreateUsersView(ListCreateAPIView):
@@ -248,6 +280,7 @@ class ListCreateUsersView(ListCreateAPIView):
             if existing_user:
                 data["portunus_uuid"] = str(existing_user.portunus_uuid)
                 data["user_exists"] = True
+
             return make_response(False, data)
 
 

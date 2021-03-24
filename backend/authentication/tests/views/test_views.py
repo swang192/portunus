@@ -67,6 +67,7 @@ class TestRegister:
             "837493938481",  # No letter
             "password1",  # Too common
             "uam38m2",  # Too short
+            f"{USER_DATA['email']}123",  # includes user email
         ],
     )
     def test_register_with_bad_password(self, authenticate_and_test, password):
@@ -197,9 +198,7 @@ class TestListCreateUsersView(APITestCase):
 
     def test_create_with_existing_user(self):
         user = UserFactory()
-        response = self.check_create(400, {"email": user.email, "password": "asdf"})
-        self.assertEqual(response["portunus_uuid"], user.portunus_uuid)
-        self.assertEqual(response["user_exists"], True)
+        self.check_create(400, {"email": user.email, "password": "asdf"})
 
     @parameterized.expand([(False,), (True,)])
     def test_list_users(self, from_uuid):

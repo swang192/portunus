@@ -7,6 +7,7 @@ extras:
   - willing_zg:google_analytics
   - willing_zg:django_willing_zg
   - willing_zg:get_env_util
+  - willing_zg:idle_session_handler
 
 exclude:
   - Frontend__Proxy

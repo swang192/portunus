@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 
 import { useGlobalContext } from 'hooks';
 import Register from 'pages/register';
+import IdleSessionHandler from '../zg_utils/IdleSessionHandler';
 
 const ProtectedPage = ({ children }) => {
   const store = useGlobalContext();
@@ -27,7 +28,16 @@ const ProtectedPage = ({ children }) => {
     return <Register />;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <IdleSessionHandler
+        expirationHandler={() => {
+          router.push('/api/logout/');
+        }}
+      />
+      {children}
+    </>
+  );
 };
 
 ProtectedPage.propTypes = {

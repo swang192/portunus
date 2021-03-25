@@ -36,17 +36,33 @@ class CodeLoginSerializer(serializers.Serializer):
         self.fail("invalid_code")
 
 
-class RequestMfaActivationSerializer(serializers.Serializer):
+class MfaSerializer(serializers.Serializer):
     mfa_method = serializers.ChoiceField(choices=MfaMethod.MFA_TYPE_CHOICES)
 
     default_error_messages = default_error_messages
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.user = self.context["request"].user
+        self.user = self.get_user()
+        self.mfa_method = self.get_mfa_method()
+
+    def get_user(self):
+        return self.context["request"].user
+
+    def get_mfa_method(self):
+        mfa_type = self.initial_data.get("mfa_method")
+        if mfa_type:
+            return MfaMethod.objects.filter(user=self.user, type=mfa_type).first()
+        return None
 
     def validate_mfa_method(self, value):
-        self.mfa_method = MfaMethod.objects.filter(user=self.user, type=value).first()
+        if self.mfa_method is None:
+            self.fail("mfa_method_does_not_exist")
+        return value
+
+
+class RequestMfaActivationSerializer(MfaSerializer):
+    def validate_mfa_method(self, value):
         # We cannot activate a method that is already active. If the method
         # does not exist then it is considered inactive.
         if self.mfa_method and self.mfa_method.is_active:
@@ -65,20 +81,11 @@ class RequestMfaActivationSerializer(serializers.Serializer):
         return self.mfa_method
 
 
-class MfaActivationConfirmationSerializer(serializers.Serializer):
-    mfa_method = serializers.ChoiceField(choices=MfaMethod.MFA_TYPE_CHOICES)
+class MfaActivationConfirmationSerializer(MfaSerializer):
     code = serializers.CharField()
 
-    default_error_messages = default_error_messages
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.user = self.context["request"].user
-
     def validate_mfa_method(self, value):
-        self.mfa_method = MfaMethod.objects.filter(user=self.user, type=value).first()
-        if self.mfa_method is None:
-            self.fail("mfa_method_does_not_exist")
+        super().validate_mfa_method(value)
         if self.mfa_method.is_active:
             self.fail("mfa_method_already_active")
         return value
@@ -101,57 +108,32 @@ class MfaActivationConfirmationSerializer(serializers.Serializer):
         return self.mfa_method
 
 
-class SendMfaCodeSerializer(serializers.Serializer):
-    mfa_method = serializers.CharField()
-
-    default_error_messages = default_error_messages
-
-    def validate_mfa_method(self, value):
-        self.mfa_method = MfaMethod.objects.filter(
-            user=self.context["request"].user, type=value
-        ).first()
-        if self.mfa_method is None:
-            self.fail("mfa_method_does_not_exist")
-        return value
-
+class SendMfaCodeSerializer(MfaSerializer):
     def save(self):
         self.mfa_method.send_code()
 
 
-class SendMfaCodeUsingTokenSerializer(serializers.Serializer):
-    mfa_method = serializers.CharField()
+class SendMfaCodeUsingTokenSerializer(MfaSerializer):
     mfa_token = serializers.CharField()
 
-    def validate(self, data):
-        user = mfa_token_generator.check_token(data.get("mfa_token"))
-        if not user:
+    def get_user(self):
+        return mfa_token_generator.check_token(self.initial_data.get("mfa_token"))
+
+    def validate_token(self):
+        if not self.user:
             self.fail("invalid_token")
-
-        self.mfa_method = MfaMethod.objects.filter(
-            user=user, type=data.get("mfa_method")
-        ).first()
-        if self.mfa_method is None:
-            self.fail("mfa_method_does_not_exist")
-
-        return data
 
     def save(self):
         self.mfa_method.send_code()
 
 
-class MfaDeactivationConfirmationSerializer(serializers.Serializer):
-    mfa_method = serializers.CharField()
-
-    default_error_messages = default_error_messages
-
+class MfaDeactivationConfirmationSerializer(MfaSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = self.context["request"].user
 
     def validate_mfa_method(self, value):
-        self.mfa_method = MfaMethod.objects.filter(user=self.user, type=value).first()
-        if self.mfa_method is None:
-            self.fail("mfa_method_does_not_exist")
+        super().validate_mfa_method(value)
         if not self.mfa_method.is_active:
             self.fail("mfa_method_already_inactive")
         return value

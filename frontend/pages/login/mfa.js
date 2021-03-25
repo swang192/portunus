@@ -18,7 +18,7 @@ import ResendError from 'components/mfa/ResendError';
 const LoginMFA = () => {
   useHiddenNav();
   const [attemptsLocked, setAttemptsLocked] = useState(false);
-  const [resendsLocked, setResendsLocked] = useState(false);
+  const [sendCodeLocked, setSendCodeLocked] = useState(false);
   const store = useGlobalContext();
 
   const router = useRouter();
@@ -49,46 +49,34 @@ const LoginMFA = () => {
     }
   };
 
-  if (attemptsLocked) {
-    return (
-      <Layout slim>
-        <AttemptError forLogin />
-      </Layout>
-    );
-  }
-
-  if (resendsLocked) {
-    return (
-      <Layout slim>
-        <ResendError forLogin />
-      </Layout>
-    );
-  }
-
   return (
     <Layout slim>
-      <Container disableGutters maxWidth="sm">
-        <Button variant="text" onClick={() => router.push('/login')}>
-          <ArrowBackIcon />
-          <Spacer h={8} />
-          <Typography variant="caption">Back to Login</Typography>
-        </Button>
-        <Spacer v={16} />
-        <Typography variant="h4">Verify Your Account</Typography>
-        <Typography variant="body2">
-          Enter the 6-digit code sent to{' '}
-          {store.loginEmail ? <strong>{store.loginEmail}</strong> : 'your email'}.
-        </Typography>
-        <MfaCodeForm
-          submitCode={submitCode}
-          onSuccess={onSuccess}
-          sendCode={() =>
-            sendMfaCodeUsingToken(store.mfaMethod, { mfaToken: store.ephemeralMfaToken })
-          }
-          onAttemptLimit={() => setAttemptsLocked(true)}
-          onResendLimit={() => setResendsLocked(true)}
-        />
-      </Container>
+      {attemptsLocked && <AttemptError forLogin />}
+      {sendCodeLocked && <ResendError forLogin />}
+      {!attemptsLocked && !sendCodeLocked && (
+        <Container disableGutters maxWidth="sm">
+          <Button variant="text" onClick={() => router.push('/login')}>
+            <ArrowBackIcon />
+            <Spacer h={8} />
+            <Typography variant="caption">Back to Login</Typography>
+          </Button>
+          <Spacer v={16} />
+          <Typography variant="h4">Verify Your Account</Typography>
+          <Typography variant="body2">
+            Enter the 6-digit code sent to{' '}
+            {store.loginEmail ? <strong>{store.loginEmail}</strong> : 'your email'}.
+          </Typography>
+          <MfaCodeForm
+            submitCode={submitCode}
+            onSuccess={onSuccess}
+            sendCode={() =>
+              sendMfaCodeUsingToken(store.mfaMethod, { mfaToken: store.ephemeralMfaToken })
+            }
+            onAttemptLimit={() => setAttemptsLocked(true)}
+            onResendLimit={() => setSendCodeLocked(true)}
+          />
+        </Container>
+      )}
     </Layout>
   );
 };

@@ -62,7 +62,7 @@ const MfaCodeForm = ({ submitCode, onSuccess, sendCode, onAttemptLimit, onResend
     }
   };
 
-  const handleSecurityCode = async e => {
+  const handleSecurityCode = e => {
     e.preventDefault();
     if (processing) {
       return;
@@ -78,7 +78,7 @@ const MfaCodeForm = ({ submitCode, onSuccess, sendCode, onAttemptLimit, onResend
       .finally(() => setProcessing(false));
   };
 
-  const resendCode = () => {
+  const resendCode = async () => {
     if (processing) {
       return;
     }
@@ -92,20 +92,22 @@ const MfaCodeForm = ({ submitCode, onSuccess, sendCode, onAttemptLimit, onResend
 
     setInputErrors({});
 
-    sendCode()
-      .then(() => {
-        setResendSuccess(true);
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-        const id = setTimeout(() => {
-          setResendSuccess(false);
-          setTimeoutId(null);
-        }, 3000);
-        setTimeoutId(id);
-      })
-      .catch(() => setInputErrors({ nonFieldErrors: UNKNOWN_ERROR }))
-      .finally(() => setProcessing(false));
+    try {
+      await sendCode();
+      setResendSuccess(true);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      const id = setTimeout(() => {
+        setResendSuccess(false);
+        setTimeoutId(null);
+      }, 3000);
+      setTimeoutId(id);
+    } catch {
+      setInputErrors({ nonFieldErrors: UNKNOWN_ERROR });
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (

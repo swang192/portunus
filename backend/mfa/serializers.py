@@ -17,6 +17,10 @@ class CodeLoginSerializer(serializers.Serializer):
 
     default_error_messages = default_error_messages
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        self.user = None
+
     def validate(self, data):
         mfa_token = data.get("mfa_token")
         code = data.get("code")
@@ -25,9 +29,9 @@ class CodeLoginSerializer(serializers.Serializer):
         if not self.user:
             self.fail("invalid_token")
 
-        for mfa_method in self.user.mfa_methods.filter(is_active=True):
-            if mfa_method.verify_code(code):
-                return data
+        primary_mfa_method = self.user.mfa_methods.filter(is_primary=True).first()
+        if primary_mfa_method.verify_code(code):
+            return data
 
         self.fail("invalid_code")
 

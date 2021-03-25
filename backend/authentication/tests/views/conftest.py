@@ -4,6 +4,7 @@ import pytest
 from django.urls import reverse
 from rest_framework.test import APIClient
 
+from mfa.factories import MfaMethodFactory
 from .utils import (
     assert_successful_response,
     assert_authenticated,
@@ -37,3 +38,13 @@ def authenticate_and_test(client, post):
             assert_unauthenticated(client)
 
     return test
+
+
+@pytest.fixture
+def get_first_step_mfa_token(post):
+    def get_token(user, user_data):
+        MfaMethodFactory(user=user, is_primary=True)
+        response = post(reverse("authentication:login"), data=user_data)
+        return response.json().get("ephemeralToken")
+
+    return get_token

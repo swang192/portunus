@@ -1,4 +1,3 @@
-from unittest.mock import Mock
 from urllib import parse
 from parameterized import parameterized
 
@@ -13,6 +12,8 @@ from authentication.factories import UserFactory, StaffUserFactory, SuperuserFac
 from authentication.models import User
 from authentication.serializers import UserSerializer
 from authentication.views import MIN_SEARCH_LENGTH, MAX_SEARCH_RESULTS
+from mfa.factories import MfaMethodFactory
+from mfa.utils import mfa_token_generator
 from shared import frontend_urls
 from .utils import assert_unauthenticated
 
@@ -28,22 +29,6 @@ USER_DATA = {
     "password": VALID_PASSWORD,
 }
 
-GOOGLE_USER_DATA = {
-    "email": USER_EMAIL,
-    "token": TEST_TOKEN,
-    "provider": User.PROVIDER_GOOGLE,
-}
-
-FACEBOOK_USER_DATA = {
-    **GOOGLE_USER_DATA,
-    "provider": User.PROVIDER_FACEBOOK,
-}
-
-SUCCESSFUL_FACEBOOK_RESPONSE = Mock(
-    json=lambda: {"access_token": "test_access_token", "email": USER_EMAIL}, ok=True
-)
-FAILED_FACEBOOK_RESPONSE = Mock(json=lambda: {"error": "bad_token"}, ok=False)
-
 
 class TestLogin:
     def test_login(self, authenticate_and_test):
@@ -57,6 +42,52 @@ class TestLogin:
             "password": INVALID_PASSWORD,
         }
         authenticate_and_test("authentication:login", data, success=False)
+
+    def test_login_mfa_active(self, client, post):
+        user = UserFactory(**USER_DATA)
+        MfaMethodFactory(user=user, is_active=True, is_primary=True)
+        response = post(reverse("authentication:login"), USER_DATA)
+        assert_unauthenticated(client)
+        assert response.status_code == 200
+        assert mfa_token_generator.check_token(response.json().get("ephemeralToken")) == user
+
+    def test_login_mfa_active_wrong_password(self, authenticate_and_test):
+        user = UserFactory(**USER_DATA)
+        MfaMethodFactory(user=user, is_active=True, is_primary=True)
+        data = {
+            **USER_DATA,
+            "password": INVALID_PASSWORD,
+        }
+        authenticate_and_test("authentication:login", data, success=False)
+
+    def test_submit_mfa_code(self, get_first_step_mfa_token, authenticate_and_test):
+        user = UserFactory(**USER_DATA)
+        token = get_first_step_mfa_token(user, USER_DATA)
+        data = {
+            "mfa_token": token,
+            "code": user.mfa_methods.filter(is_primary=True).first().current_code,
+        }
+        authenticate_and_test("authentication:login_with_mfa_code", data)
+
+    def test_submit_mfa_code_wrong_code(self, get_first_step_mfa_token, authenticate_and_test):
+        user = UserFactory(**USER_DATA)
+        token = get_first_step_mfa_token(user, USER_DATA)
+        current_code = user.mfa_methods.filter(is_primary=True).first().current_code
+        bad_code = f"{int(current_code) + 1 % 1000000:06d}"
+        data = {
+            "mfa_token": token,
+            "code": bad_code,
+        }
+        authenticate_and_test("authentication:login_with_mfa_code", data, False)
+
+    def test_submit_mfa_code_bad_token(self, get_first_step_mfa_token, authenticate_and_test):
+        user = UserFactory(**USER_DATA)
+        _ = get_first_step_mfa_token(user, USER_DATA)
+        data = {
+            "mfa_token": "bad_token",
+            "code": user.mfa_methods.filter(is_primary=True).first().current_code,
+        }
+        authenticate_and_test("authentication:login_with_mfa_code", data, False)
 
 
 class TestRegister:

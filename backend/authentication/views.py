@@ -307,7 +307,9 @@ class ListCreateUsersView(ListCreateAPIView):
 
         if serializer.is_valid():
             user = serializer.create(request.data)
-            return make_response(True, {"portunus_uuid": str(user.portunus_uuid)})
+            return make_response(
+                True, {"portunus_uuid": str(user.portunus_uuid)}, renderer=JSONRenderer
+            )
         else:
             existing_user = User.objects.filter(email=request.data["email"]).first()
             data = serializer.errors

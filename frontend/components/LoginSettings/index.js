@@ -66,7 +66,7 @@ const LoginSettings = ({ showBack }) => {
       />
     ) : (
       <SettingRow
-        value="Add an extra layer of security in case your password is stolen. Sign in using your password and a security code sent to your email."
+        value="Sign in using your password and a security code sent to your email. Once enabled a code will be required every time you log in."
         label={mfaLabel}
         routeTo="/mfa/activate/email"
         actionName="Activate"

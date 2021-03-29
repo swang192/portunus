@@ -62,14 +62,14 @@ const LoginSettings = ({ showBack }) => {
         value="Two-factor authentication is enabled. You will sign in using your password and a security code sent to your email."
         label={mfaLabel}
         action={() => setShowDeactivateModal(true)}
-        actionName="Deactivate"
+        actionName="Disable"
       />
     ) : (
       <SettingRow
         value="Sign in using your password and a security code sent to your email. Once enabled a code will be required every time you log in."
         label={mfaLabel}
         routeTo="/mfa/activate/email"
-        actionName="Activate"
+        actionName="Enable"
       />
     );
   }

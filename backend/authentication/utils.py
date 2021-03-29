@@ -1,4 +1,5 @@
 import json
+from contextlib import suppress
 from fnmatch import fnmatchcase
 from urllib.parse import urlparse
 
@@ -20,9 +21,9 @@ from rest_framework_simplejwt.settings import api_settings as simplejwt_settings
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 
-from shared.utils.tasks import enqueue
 from .models import User
 from .errors import INVALID_PASSWORD, AUTH_FAILURE, AUTH_CHANGE_LOCKOUT
+from .tasks import force_password_reset
 from .token import ResetToken
 from .change_email_token import ChangeEmailToken
 
@@ -191,9 +192,9 @@ def get_username(request, credentials):
 
 
 def generate_axes_lockout_response(request, credentials):
-    enqueue(
-        "authentication.tasks:force_password_reset", get_client_username(request, credentials)
-    )
+    with suppress(Exception):
+        force_password_reset(get_client_username(request, credentials))
+
     error_message = (
         "Too many failed login attempts, check your email to choose a new password."
     )

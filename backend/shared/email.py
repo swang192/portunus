@@ -2,16 +2,15 @@ from urllib import parse
 
 from willing_zg.mailer import Mailer
 from authentication.utils import ResetToken, ChangeEmailToken
-from backend.settings import SUPPORT_PHONE_NUMBER, BASE_URL, SUPPORT_EMAIL_ADDRESS
+from backend.settings import BASE_URL, SUPPORT_EMAIL_ADDRESS
 
 
 class PortunusMailer(Mailer):
     @classmethod
-    def send_email(cls, to, subject, template, context, bcc=None, attachments=None):
-        email_context = {"support_phone_number": SUPPORT_PHONE_NUMBER}
+    def send_email(cls, to, subject, template, context, **kwargs):
         email_context = {"support_email_address": SUPPORT_EMAIL_ADDRESS}
         email_context.update(context)
-        Mailer.send_email(to, subject, template, context, bcc, attachments)
+        Mailer.send_email(to, subject, template, context, **kwargs)
 
     @classmethod
     def generate_password_reset_url(cls, user):

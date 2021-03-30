@@ -87,7 +87,7 @@ const Nav = () => {
       <Toolbar className={classes.toolBar}>
         <Grid container direction="row" justify="space-between" alignItems="center">
           <a aria-label="Home" href={homeLink}>
-            <img src="images/mlp-logo.svg" alt="Go to the home page" className={classes.logo} />
+            <img src="/images/mlp-logo.svg" alt="Go to the home page" className={classes.logo} />
           </a>
 
           <Hidden mdUp>

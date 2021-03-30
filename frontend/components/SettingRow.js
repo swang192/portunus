@@ -22,9 +22,12 @@ const useStyles = makeStyles(theme => ({
   edit: {
     color: theme.palette.blue.default,
   },
+  value: {
+    padding: [[0, 16]],
+  },
 }));
 
-const AccountSettingRow = ({ value, label, routeTo, hidden }) => {
+const AccountSettingRow = ({ value, label, routeTo, hidden, action, actionName }) => {
   const router = useRouter();
   const classes = useStyles();
 
@@ -33,7 +36,7 @@ const AccountSettingRow = ({ value, label, routeTo, hidden }) => {
       container
       direction="row"
       justify="space-between"
-      alignItems="center"
+      alignItems="flex-start"
       className={classes.root}
     >
       <Grid item xs={8} sm={4}>
@@ -44,14 +47,14 @@ const AccountSettingRow = ({ value, label, routeTo, hidden }) => {
       </Grid>
 
       <Hidden xsDown>
-        <Grid item xs={1} sm={6}>
+        <Grid item xs={1} sm={6} className={classes.value}>
           {hidden ? '****************' : value}
         </Grid>
       </Hidden>
 
       <Grid item xs={3} sm={2}>
-        <Button className={classes.edit} onClick={() => router.push(routeTo)}>
-          Change
+        <Button className={classes.edit} onClick={action || (() => router.push(routeTo))}>
+          {actionName}
         </Button>
       </Grid>
     </Grid>
@@ -61,13 +64,18 @@ const AccountSettingRow = ({ value, label, routeTo, hidden }) => {
 AccountSettingRow.propTypes = {
   value: PropTypes.string,
   label: PropTypes.string.isRequired,
-  routeTo: PropTypes.string.isRequired,
+  routeTo: PropTypes.string,
   hidden: PropTypes.bool,
+  action: PropTypes.func,
+  actionName: PropTypes.string,
 };
 
 AccountSettingRow.defaultProps = {
   value: '',
   hidden: false,
+  actionName: 'Change',
+  routeTo: null,
+  action: null,
 };
 
 export default observer(AccountSettingRow);

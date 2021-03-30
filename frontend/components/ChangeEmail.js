@@ -12,11 +12,10 @@ import Typography from '@wui/basics/typography';
 
 import { useInputFieldState } from 'hooks';
 import { refresh, changeUserEmail } from 'utils/API';
-
 import Page from 'components/Page';
 import Success from 'components/Success';
-
 import { AUTH_FAILURE, AUTH_CHANGE_LOCKOUT, EMAIL_EXISTS } from 'utils/constants';
+import { UNKNOWN_ERROR } from 'utils/constants/errors';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,7 +65,7 @@ const ChangeEmail = () => {
       }
       setInputErrors({ submitError });
     } else {
-      setInputErrors({ submitError: 'An unknown error has occurred. Please try again.' });
+      setInputErrors({ submitError: UNKNOWN_ERROR });
     }
     setSuccess(false);
   };

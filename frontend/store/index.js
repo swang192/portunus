@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx';
 
 import tokenFetcher from 'zg_utils/tokens';
 import * as api from 'utils/API';
+import UserStore from './user';
 
 class Store {
   showNavBar = true;
@@ -9,6 +10,12 @@ class Store {
   loading = true;
 
   authenticated = false;
+
+  ephemeralMfaToken = null;
+
+  mfaMethod = null;
+
+  loginEmail = null;
 
   onSuccess = token => {
     this.authenticated = Boolean(token);
@@ -31,6 +38,7 @@ class Store {
     if (!isSsr) {
       this.startFetching();
     }
+    this.user = new UserStore();
   }
 
   login() {

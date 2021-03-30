@@ -1,11 +1,9 @@
-from celery import shared_task
-
 from authentication.models import User
-from shared.email import PortunusMailer
 
 
-@shared_task
 def force_password_reset(email):
+    from shared.email import PortunusMailer
+
     try:
         user = User.objects.get(email=email)
     except User.DoesNotExist:

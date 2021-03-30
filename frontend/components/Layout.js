@@ -8,20 +8,22 @@ import Panel from '@wui/layout/panel';
 
 import ExperienceBanner from './ExperienceBanner';
 
-const Layout = ({ showBanner, children }) => (
+const Layout = ({ showBanner, showLogo, children, slim }) => (
   <div>
     <Grid container direction="column" alignItems="center" wrap="nowrap">
       <Spacer v={32} />
       <Spacer v={60} xsDown />
-      <Link href="/">
-        <a aria-label="Home">
-          <img src="images/mlp-logo.svg" alt="Home" />
-        </a>
-      </Link>
+      {showLogo && (
+        <Link href="/">
+          <a aria-label="Home">
+            <img src="/images/mlp-logo.svg" alt="Home" />
+          </a>
+        </Link>
+      )}
       <Spacer v={32} />
       {showBanner && <ExperienceBanner />}
       <Spacer v={32} />
-      <Panel>{children}</Panel>
+      <Panel lessPadding={slim}>{children}</Panel>
       <Spacer v={92} />
     </Grid>
   </div>
@@ -29,11 +31,15 @@ const Layout = ({ showBanner, children }) => (
 
 Layout.propTypes = {
   showBanner: PropTypes.bool,
+  showLogo: PropTypes.bool,
   children: PropTypes.node.isRequired,
+  slim: PropTypes.bool,
 };
 
 Layout.defaultProps = {
   showBanner: false,
+  showLogo: true,
+  slim: false,
 };
 
 export default observer(Layout);

@@ -3,12 +3,14 @@ from contextlib import suppress
 from datetime import datetime
 from calendar import timegm
 
+from django.contrib.auth.signals import user_login_failed
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from rest_framework import filters, status
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveDestroyAPIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView as SimpleJWTTokenRefreshView
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
@@ -17,7 +19,9 @@ from rest_framework.decorators import permission_classes, api_view
 from django.core.validators import validate_email
 from sentry_sdk import capture_exception, configure_scope
 
-from authentication.utils import blacklist_user_tokens
+from authentication.utils import blacklist_user_tokens, make_authenticated_response
+from mfa.serializers import CodeLoginSerializer
+from mfa.utils import mfa_token_generator
 from shared.utils.logging import log_event, log_view_outcome
 
 from .serializers import (
@@ -34,7 +38,6 @@ from .utils import (
     check_onetime_token,
     check_change_email_token,
     make_response,
-    get_valid_redirect_url,
     check_password_for_auth_change,
 )
 from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL, EMAIL_EXISTS
@@ -44,6 +47,28 @@ from shared.permissions import IsSameUserOrAdmin, IsSameUserOrSuperuser
 SEARCH_FIELDS = ["email"]
 MIN_SEARCH_LENGTH = 5
 MAX_SEARCH_RESULTS = 20
+
+
+@log_view_outcome()
+@require_POST
+def login_with_mfa_code(request):
+    data = json.loads(request.body)
+    serializer = CodeLoginSerializer(data=data)
+
+    if not serializer.is_valid():
+        # If the request is invalid, we need to send this signal so that axes
+        # can lock the user out after five failed attempts. The user property
+        # on the serializer will always be set if the mfa_token is valid - if
+        # it is not valid, then the code is not checked so we don't need to
+        # send the signal.
+        if serializer.user:
+            credentials = {"email": serializer.user.email, "code": data.get("code")}
+            user_login_failed.send(sender=__name__, credentials=credentials, request=request)
+        first_errors = {k: v[0] for k, v in serializer.errors.items()}
+        return make_response(False, first_errors)
+
+    login_user(request, serializer.user)
+    return make_authenticated_response(data)
 
 
 def make_auth_view(*serializer_classes, action, show_errors=True):
@@ -73,15 +98,25 @@ def make_auth_view(*serializer_classes, action, show_errors=True):
                 # If that's the only problem with the form, give a generic response
                 if len(first_errors.keys()) == 0:
                     first_errors = {
-                        "non_field_errors": LoginSerializer.bad_credentials_error,
+                        api_settings.NON_FIELD_ERRORS_KEY: LoginSerializer.bad_credentials_error,
                     }
 
             return make_response(False, first_errors)
 
         user = serializer.save()
+
+        mfa_method = user.mfa_methods.filter(is_primary=True).first()
+        if mfa_method:
+            mfa_method.send_code()
+            data = {
+                "mfa_required": True,
+                "mfa_method": mfa_method.type,
+                "ephemeral_token": mfa_token_generator.make_token(user),
+            }
+            return make_response(True, data)
+
         login_user(request, user)
-        next_url = get_valid_redirect_url(data.get("next"))
-        return make_response(True, {"next": next_url})
+        return make_authenticated_response(data)
 
     return view
 
@@ -272,7 +307,9 @@ class ListCreateUsersView(ListCreateAPIView):
 
         if serializer.is_valid():
             user = serializer.create(request.data)
-            return make_response(True, {"portunus_uuid": str(user.portunus_uuid)})
+            return make_response(
+                True, {"portunus_uuid": str(user.portunus_uuid)}, renderer=JSONRenderer
+            )
         else:
             existing_user = User.objects.filter(email=request.data["email"]).first()
             data = serializer.errors
@@ -281,7 +318,7 @@ class ListCreateUsersView(ListCreateAPIView):
                 data["portunus_uuid"] = str(existing_user.portunus_uuid)
                 data["user_exists"] = True
 
-            return make_response(False, data)
+            return make_response(False, data, renderer=JSONRenderer)
 
 
 class SearchUsersView(ListAPIView):

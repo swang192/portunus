@@ -1,4 +1,5 @@
 import json
+from contextlib import suppress
 from fnmatch import fnmatchcase
 from urllib.parse import urlparse
 
@@ -18,10 +19,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.settings import api_settings as simplejwt_settings
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
+from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 
-from shared.utils.tasks import enqueue
 from .models import User
 from .errors import INVALID_PASSWORD, AUTH_FAILURE, AUTH_CHANGE_LOCKOUT
+from .tasks import force_password_reset
 from .token import ResetToken
 from .change_email_token import ChangeEmailToken
 
@@ -31,13 +33,23 @@ REFRESH_TOKEN_SESSION_KEY = "refresh_token"
 FROM_EMAIL = "Willing <hello@willing.com>"
 
 
-def make_response(success=True, data=None, status=None):
+def make_response(success=True, data=None, status=None, renderer=None):
     if not status:
         status = status_codes.HTTP_200_OK if success else status_codes.HTTP_400_BAD_REQUEST
 
-    response = HttpResponse(json.dumps(data), content_type="application/json", status=status)
+    if not renderer:
+        renderer = CamelCaseJSONRenderer
+
+    data = renderer().render(data)
+
+    response = HttpResponse(data, content_type="application/json", status=status)
     patch_cache_control(response, no_cache=True, no_store=True)
     return response
+
+
+def make_authenticated_response(data):
+    next_url = get_valid_redirect_url(data.get("next"))
+    return make_response(True, {"next": next_url})
 
 
 def login_user(request, user):
@@ -180,13 +192,17 @@ def get_username(request, credentials):
 
 
 def generate_axes_lockout_response(request, credentials):
-    enqueue(
-        "authentication.tasks:force_password_reset", get_client_username(request, credentials)
-    )
+    with suppress(Exception):
+        force_password_reset(get_client_username(request, credentials))
+
     error_message = (
         "Too many failed login attempts, check your email to choose a new password."
     )
-    return make_response(data={api_settings.NON_FIELD_ERRORS_KEY: error_message}, status=403)
+    data = {
+        api_settings.NON_FIELD_ERRORS_KEY: error_message,
+        "auth_lockout": True,
+    }
+    return make_response(data=data, status=403)
 
 
 def check_change_email_token(token_str, user):

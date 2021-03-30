@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "axes",
     "zygoat_django",
+    "mfa",
 ]
 
 MIDDLEWARE = [
@@ -195,7 +196,7 @@ if "DJANGO_EMAIL_HOST_PASSWORD" in os.environ:
 
 EMAIL_USE_TLS = True
 
-SUPPORT_PHONE_NUMBER = "+1 (855) 943-4177"
+SUPPORT_PHONE_NUMBER = "+1 (800) 821-6400"
 SUPPORT_EMAIL_ADDRESS = "clientservice@legalplans.com"
 PANEL_EMAIL_ADDRESS = "panel@legalplans.com"
 

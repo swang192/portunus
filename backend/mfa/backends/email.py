@@ -10,7 +10,7 @@ class PortunusEmailBackend(BaseMfaBackend):
         }
         PortunusMailer.send_email(
             [self.user.email],
-            "Your MetLife Legal Plan Security Code",
+            "Your MetLife Legal Plans Security Code",
             "mfa/email_code",
             context,
             from_email="MetLife Legal Plans <noreply@legalplans.com>",

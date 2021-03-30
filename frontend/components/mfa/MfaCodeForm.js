@@ -67,10 +67,11 @@ const MfaCodeForm = ({ submitCode, onSuccess, sendCode, onAttemptLimit, onResend
     if (processing) {
       return;
     }
-    setProcessing(true);
     if (!validateCodeForm()) {
       return;
     }
+
+    setProcessing(true);
 
     submitCode(securityCode)
       .then(onSuccess)

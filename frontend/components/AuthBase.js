@@ -154,7 +154,7 @@ const AuthBase = ({
                   userInputs={email}
                 />
               </Grid>
-              <Grid item xs={0.5}>
+              <Grid item>
                 <Tooltip title="Use 8+ characters with both letters and numbers" />
               </Grid>
             </Grid>

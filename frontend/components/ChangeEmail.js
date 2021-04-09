@@ -19,6 +19,7 @@ import {
   AUTH_CHANGE_LOCKOUT,
   EMAIL_EXISTS,
   LOCKED_OUT_CHANGE_EMAIL,
+  STAFF_RESTRICTED_ACTION,
 } from 'utils/constants';
 import { UNKNOWN_ERROR } from 'utils/constants/errors';
 
@@ -67,6 +68,8 @@ const ChangeEmail = () => {
         submitError = 'A user with that email address already exists. Try again.';
       } else if (error.response.data.error === AUTH_FAILURE) {
         submitError = 'Your password did not match the one we have for your account. Try again.';
+      } else if (error.response.data.error === STAFF_RESTRICTED_ACTION) {
+        submitError = 'OAP users cannot change their email.';
       } else {
         submitError = 'The email you entered was not valid.';
       }

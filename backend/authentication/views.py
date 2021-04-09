@@ -40,7 +40,13 @@ from .utils import (
     make_response,
     check_password_for_auth_change,
 )
-from .errors import AUTH_FAILURE, INVALID_TOKEN, INVALID_EMAIL, EMAIL_EXISTS
+from .errors import (
+    AUTH_FAILURE,
+    INVALID_TOKEN,
+    INVALID_EMAIL,
+    EMAIL_EXISTS,
+    STAFF_RESTRICTED_ACTION,
+)
 from shared.email import PortunusMailer
 from shared.permissions import IsSameUserOrAdmin, IsSameUserOrSuperuser
 
@@ -149,6 +155,9 @@ def request_email_change(request):
     user = request.user
     password = request.data.get("password")
     new_email = request.data.get("new_email")
+
+    if user.is_staff:
+        return make_response(False, {"error": STAFF_RESTRICTED_ACTION})
 
     response = check_password_for_auth_change(request, user, password)
     if response is not None:

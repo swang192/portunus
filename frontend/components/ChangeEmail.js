@@ -14,7 +14,12 @@ import { useInputFieldState } from 'hooks';
 import { refresh, changeUserEmail } from 'utils/API';
 import Page from 'components/Page';
 import Success from 'components/Success';
-import { AUTH_FAILURE, AUTH_CHANGE_LOCKOUT, EMAIL_EXISTS } from 'utils/constants';
+import {
+  AUTH_FAILURE,
+  AUTH_CHANGE_LOCKOUT,
+  EMAIL_EXISTS,
+  LOCKED_OUT_CHANGE_EMAIL,
+} from 'utils/constants';
 import { UNKNOWN_ERROR } from 'utils/constants/errors';
 
 const useStyles = makeStyles(theme => ({
@@ -52,7 +57,9 @@ const ChangeEmail = () => {
   const handleError = error => {
     if (error.response && error.response.data) {
       if (error.response.data.error === AUTH_CHANGE_LOCKOUT) {
-        window.location = '/';
+        const params = new URLSearchParams();
+        params.append('errorType', LOCKED_OUT_CHANGE_EMAIL);
+        window.location = `/?${params.toString()}`;
         return;
       }
       let submitError;

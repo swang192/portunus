@@ -16,7 +16,15 @@ const unauthenticatedAPI = axios.create(apiConfig);
 
 const API = axios.create(apiConfig);
 
-const addCsrfToken = config => {
+export const setupCsrf = () => unauthenticatedAPI.get('set_csrf/', { skipCsrf: true });
+
+const addCsrfToken = async config => {
+  if (config.skipCsrf) {
+    return config;
+  }
+  if (!Cookies.get('csrftoken')) {
+    await setupCsrf();
+  }
   const token = Cookies.get('csrftoken');
   if (token) {
     config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
@@ -34,8 +42,6 @@ API.interceptors.request.use(async config => {
   }
   return config;
 });
-
-export const setupCsrf = () => unauthenticatedAPI.get('set_csrf/');
 
 export const register = payload => unauthenticatedAPI.post('auth/register/', payload);
 

@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { observer } from 'mobx-react';
 
-import PasswordStrengthBar from 'react-password-strength-bar';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
@@ -12,17 +10,13 @@ import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
 
-import { useInputFieldState } from 'hooks';
+import { useGlobalContext, useInputFieldState } from 'hooks';
 import { changePassword, refresh } from 'utils/API';
-import {
-  MIN_PASSWORD_LENGTH,
-  INVALID_PASSWORD,
-  AUTH_CHANGE_LOCKOUT,
-  LOCKED_OUT_CHANGE_PASSWORD,
-} from 'utils/constants';
+import { INVALID_PASSWORD, AUTH_CHANGE_LOCKOUT, LOCKED_OUT_CHANGE_PASSWORD } from 'utils/constants';
 import { UNKNOWN_ERROR } from 'utils/constants/errors';
 import Page from 'components/Page';
 import Success from 'components/Success';
+import PasswordStrengthBar from 'components/PasswordStrengthBar';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,6 +34,7 @@ const ChangePassword = () => {
   const [inputErrors, setInputErrors] = useState({});
   const [success, setSuccess] = useState(false);
   const [next, setNext] = useState(null);
+  const { user } = useGlobalContext();
   const classes = useStyles();
 
   const validateForm = () => {
@@ -148,7 +143,7 @@ const ChangePassword = () => {
             onChange={onChangeNewPassword}
             error={inputErrors.newPassword}
           />
-          <PasswordStrengthBar password={newPassword} minLength={MIN_PASSWORD_LENGTH} />
+          <PasswordStrengthBar password={newPassword} userInputs={user.email ? [user.email] : []} />
 
           <Textbox
             name="new_password_2"

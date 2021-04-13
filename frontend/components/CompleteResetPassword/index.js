@@ -2,8 +2,6 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 
-import PasswordStrengthBar from 'react-password-strength-bar';
-
 import Form from '@wui/layout/form';
 import Button from '@wui/input/button';
 import Spacer from '@wui/layout/spacer';
@@ -13,7 +11,8 @@ import Typography from '@wui/basics/typography';
 import { useInputFieldState } from 'hooks';
 import { capitalize } from 'utils/strings';
 import { completePasswordReset } from 'utils/API';
-import { INVALID_PASSWORD, MIN_PASSWORD_LENGTH } from 'utils/constants';
+import { INVALID_PASSWORD } from 'utils/constants';
+import PasswordStrengthBar from 'components/PasswordStrengthBar';
 import Resend from './Resend';
 
 const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
@@ -81,7 +80,7 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
           onChange={onChangePassword1}
           error={inputErrors.firstPassword}
         />
-        <PasswordStrengthBar password={newPassword1} minLength={MIN_PASSWORD_LENGTH} />
+        <PasswordStrengthBar password={newPassword1} />
         <Textbox
           name="confirmed_password"
           type="password"

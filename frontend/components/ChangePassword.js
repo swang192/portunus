@@ -73,7 +73,7 @@ const ChangePassword = () => {
 
       const submitError =
         error.response.data.error === INVALID_PASSWORD
-          ? error.response.data.validation_error
+          ? error.response.data.validationError
           : 'Your current password did not match the one we have on file. Try again.';
       setInputErrors({ submitError });
     } else {

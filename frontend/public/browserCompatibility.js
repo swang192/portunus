@@ -23,4 +23,10 @@ addLoadEvent(function handleOutdatedBrowsers() {
     lowerThan: 'object-fit',
     languagePath: '',
   });
+  window.setTimeout(function () {
+    const outdated = document.getElementById('outdated');
+    if (outdated.style.display === 'block') {
+      window.document.body.style.display = 'block';
+    }
+  }, 100);
 });

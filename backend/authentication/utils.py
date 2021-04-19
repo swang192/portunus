@@ -12,6 +12,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import user_logged_in, logout
 from django.contrib.auth.password_validation import validate_password
 from django.middleware.csrf import rotate_token
+from django.utils import timezone
 from django.utils.cache import patch_cache_control
 from rest_framework import status as status_codes
 from rest_framework.settings import api_settings
@@ -97,7 +98,11 @@ def blacklist_token(token_str):
 
 
 def blacklist_user_tokens(user):
-    user_tokens = OutstandingToken.objects.filter(user__portunus_uuid=user.portunus_uuid)
+    user_tokens = OutstandingToken.objects.filter(
+        user__portunus_uuid=user.portunus_uuid,
+        blacklistedtoken__isnull=True,
+        expires_at__gte=timezone.now(),
+    )
     [blacklist_token(t.token) for t in user_tokens]
 
 

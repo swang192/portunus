@@ -62,7 +62,7 @@ const ChangePassword = () => {
       if (error.response.data.error === AUTH_CHANGE_LOCKOUT) {
         const params = new URLSearchParams();
         params.append('errorType', LOCKED_OUT_CHANGE_PASSWORD);
-        window.location = `/?${params.toString()}`;
+        window.location = `/register?${params.toString()}`;
         return;
       }
 

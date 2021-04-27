@@ -349,7 +349,7 @@ class SearchUsersView(ListAPIView):
         return User.objects.none()
 
     def dispatch(self, request, *args, **kwargs):
-        """ limit the number of results that can be returned """
+        """limit the number of results that can be returned"""
         http_response = super().dispatch(request, *args, **kwargs)
         json_response = http_response.data
         http_response.data = json_response[:MAX_SEARCH_RESULTS]

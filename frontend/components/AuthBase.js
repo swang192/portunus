@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-
-import PasswordStrengthBar from 'react-password-strength-bar';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Button from '@wui/input/button';
@@ -15,6 +13,7 @@ import Tooltip from '@wui/layout/tooltip';
 import Grid from '@wui/layout/grid';
 
 import TermsCheckbox from 'components/TermsCheckbox';
+import PasswordStrengthBar from 'components/PasswordStrengthBar';
 import { useGlobalContext, useInputFieldState } from 'hooks';
 import { MIN_PASSWORD_LENGTH } from 'utils/constants';
 import { UNKNOWN_ERROR } from 'utils/constants/errors';
@@ -148,13 +147,9 @@ const AuthBase = ({
             />
             <Grid container direction="row" alignItems="center" justify="space-between">
               <Grid item xs={11}>
-                <PasswordStrengthBar
-                  password={password}
-                  minLength={MIN_PASSWORD_LENGTH}
-                  userInputs={email}
-                />
+                <PasswordStrengthBar password={password} userInputs={[email]} />
               </Grid>
-              <Grid item xs={0.5}>
+              <Grid item>
                 <Tooltip title="Use 8+ characters with both letters and numbers" />
               </Grid>
             </Grid>

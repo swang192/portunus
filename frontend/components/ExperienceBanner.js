@@ -35,10 +35,10 @@ const ExperienceBanner = () => {
     <div className={classes.root}>
       <ExperienceModal open={showModal} onClose={() => setShowModal(false)} />
       <div>
-        <Typography variant="subheader1" bold component="span" className={classes.bannerText}>
+        <Typography bold component="span" className={classes.bannerText}>
           Welcome to the new MetLife Legal Plans website.
         </Typography>
-        <Typography display="inline" variant="subheader1" className={classes.bannerText}>
+        <Typography display="inline" className={classes.bannerText}>
           If you have not created a new account since <b>August 1, 2020</b>, please follow the
           prompt below to create an online account.{' '}
           <button type="button" className={classes.button} onClick={() => setShowModal(true)}>

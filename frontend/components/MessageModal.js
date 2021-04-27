@@ -18,12 +18,12 @@ const MessageModal = ({ open, onClose, errorType }) => {
   errorMessages[LOCKED_OUT_CHANGE_PASSWORD] = {
     displayTitle: 'Change Password Failed',
     displayMessage:
-      'You have exceeded the maximum attempts allowed to change your password. For security purposes we have disabled your account.',
+      'You have exceeded the maximum attempts allowed to change your password. For security purposes we have logged you out of your account.',
   };
   errorMessages[LOCKED_OUT_CHANGE_EMAIL] = {
     displayTitle: 'Change Email Failed',
     displayMessage:
-      'You have exceeded the maximum attempts allowed to change your email. For security purposes we have disabled your account.',
+      'You have exceeded the maximum attempts allowed to change your email. For security purposes we have logged you out of your account.',
   };
 
   if (!errorType || !errorMessages[errorType]) {

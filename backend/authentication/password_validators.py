@@ -7,10 +7,11 @@ from zxcvbn import zxcvbn
 
 has_alphabetic = re.compile(r"[a-zA-Z]")
 has_numeric = re.compile(r"[\d]")
+has_special = re.compile(r"[#?!@$%^&*-]")
 MIN_SCORE = 3
 
 
-class AlphaNumericPasswordValidator:
+class AlphaNumericSpecialPasswordValidator:
     def validate(self, password, user=None):
         if not has_alphabetic.search(password):
             raise ValidationError(
@@ -20,11 +21,15 @@ class AlphaNumericPasswordValidator:
             raise ValidationError(
                 _("This password must contain at least one numeric character!")
             )
+        if not has_special.search(password):
+            raise ValidationError(
+                _("This password must contain at least one special character!")
+            )
 
     def get_help_text(self):
         return _(
-            "Your password must contain at least 1 numeric character and 1 alphabetic "
-            "character"
+            "Your password must contain at least 1 numeric character, 1 alphabetic "
+            "character, and one special character"
         )
 
 

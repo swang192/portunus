@@ -20,7 +20,7 @@ from .utils import assert_unauthenticated
 pytestmark = [pytest.mark.django_db]
 
 USER_EMAIL = "user@test.com"
-VALID_PASSWORD = "test_password123"
+VALID_PASSWORD = "test_password123!"
 INVALID_PASSWORD = "wrong_password123"
 TEST_TOKEN = "test_token"
 

@@ -150,7 +150,7 @@ const AuthBase = ({
                 <PasswordStrengthBar password={password} userInputs={[email]} />
               </Grid>
               <Grid item>
-                <Tooltip title="Use 8+ characters with both letters and numbers" />
+                <Tooltip title="Use 8+ characters with letters, numbers, and special characters" />
               </Grid>
             </Grid>
             <TermsCheckbox

@@ -9,7 +9,7 @@ const Login = () => {
   useHiddenNav();
 
   return (
-    <Layout showBanner>
+    <Layout>
       <LoginForm />
     </Layout>
   );

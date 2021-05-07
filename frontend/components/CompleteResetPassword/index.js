@@ -53,7 +53,7 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
       })
       .catch(error => {
         if (error.response.data.error === INVALID_PASSWORD) {
-          setValidationError(error.response.data.validation_error);
+          setValidationError(error.response.data.validationError);
         } else if (resendEmail) {
           setShowResendLink(true);
         } else {

@@ -9,7 +9,7 @@ const Register = () => {
   useHiddenNav();
 
   return (
-    <Layout showBanner>
+    <Layout>
       <RegisterForm />
     </Layout>
   );

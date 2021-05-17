@@ -6,9 +6,7 @@ import Grid from '@wui/layout/grid';
 import Spacer from '@wui/layout/spacer';
 import Panel from '@wui/layout/panel';
 
-import ExperienceBanner from './ExperienceBanner';
-
-const Layout = ({ showBanner, showLogo, children, slim }) => (
+const Layout = ({ showLogo, children, slim }) => (
   <div>
     <Grid container direction="column" alignItems="center" wrap="nowrap">
       <Spacer v={32} />
@@ -21,8 +19,6 @@ const Layout = ({ showBanner, showLogo, children, slim }) => (
         </Link>
       )}
       <Spacer v={32} />
-      {showBanner && <ExperienceBanner />}
-      <Spacer v={32} />
       <Panel lessPadding={slim}>{children}</Panel>
       <Spacer v={92} />
     </Grid>
@@ -30,14 +26,12 @@ const Layout = ({ showBanner, showLogo, children, slim }) => (
 );
 
 Layout.propTypes = {
-  showBanner: PropTypes.bool,
   showLogo: PropTypes.bool,
   children: PropTypes.node.isRequired,
   slim: PropTypes.bool,
 };
 
 Layout.defaultProps = {
-  showBanner: false,
   showLogo: true,
   slim: false,
 };

@@ -1,9 +1,28 @@
 {% if user.name %}
 Hello {{ user.name }},
+We are delighted to have you as a member of MetLife Legal Plans!
 
 {% endif %}
-You are receiving this message because an account has been created for you at MetLife Legal Plans.
+We've created an account for you so that you can access our services online.
+All that you need to do is to create your password and log into your account.
 
-Use this link to sign in to your new account: {{ new_account_url }}
+Go ahead and get started by clicking the link below to create your password.
 
-Thank you for using MetLife Legal Plans!
+{% if user.email %} Username: {{ user.email }}
+Password: Not created
+{% endif %}
+
+Use this link to create password: {{ new_account_url }}
+
+Once you've created your account, you can access your Digital Estate Planning service by following these steps:
+
+1. Choose the "Wills and Estates" category in the types of legal services.
+2. Select "Estate Plan Bundle" and answer the qualifying questions.
+3. Choose the "Do it Online" or "Make an estate plan" option when asked how you'd like to complete your Estate Plan.
+4. You will then be taken to complete your Estate Plan online. This process can be done in as little as 15 minutes and is built to be simple!
+
+If you have any questions or need any assistance, please give us a call at {{ support_phone_number }} or send an email to {{ support_email_address }}.
+Representatives are available 8am to 8pm, Eastern time, Monday through Friday.
+
+Regards,
+MetLife Legal Plans Team

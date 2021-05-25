@@ -1,7 +1,38 @@
-{% if user.name %} Hello {{ user.name }}, <br /><br />
-{% endif %} You are receiving this message because an account has been created for you at MetLife
-Legal Plans.
+<img
+  width="200"
+  src="https://www.metlife.com/content/dam/metlifecom/us/icons-header/MetLife.png"
+  alt="MetLife Logo"
+/>
 <br /><br />
-Use this link to sign in to your new account:
-<a href="{{ new_account_url }}">{{ new_account_url }}</a> <br /><br />
-Thank you for using MetLife Legal Plans!
+<span style="font-size: medium; font-family: sans-serif;">
+{% if user.name %}
+Hello {{ user.name }},
+<br /><br />
+{% endif %}
+We are delighted to have you as a member of MetLife Legal Plans!
+<br /><br />
+We've created an account for you so that you can access our services online. <br />
+All that you need to do is to create your password and log into your account.
+<br /><br />
+Go ahead and get started by clicking the link below to create your password.
+<br /><br />
+{% if user.email %} <b>Username:</b> {{ user.email }}
+<br />
+<b>Password:</b> <i>Not created</i>
+{% endif %}
+<br /><br />
+<a href="{{ new_account_url }}"><button style="background-color: #3C59BA; color: #ffffff; border-radius: 2px; padding: 0 26px; font-weight: 500; border: none; line-height: 36px;">Create Password</button></a>
+<br /><br />
+Once you've created your account, you can access your Digital Estate Planning service by following these steps: <br />
+<ol>
+<li>Choose the "Wills and Estates" category in the types of legal services.</li>
+<li>Select "Estate Plan Bundle" and answer the qualifying questions.</li>
+<li>Choose the "Do it Online" or "Make an estate plan" option when asked how you'd like to complete your Estate Plan.</li>
+<li>You will then be taken to complete your Estate Plan online. This process can be done in as little as 15 minutes and is built to be simple!</li>
+</ol>
+If you have any questions or need any assistance, please give us a call at {{ support_phone_number }} or send an email to {{ support_email_address }}. <br>
+Representatives are available 8am to 8pm, Eastern time, Monday through Friday.
+<br /><br />
+<p>Regards, <br />
+MetLife Legal Plans Team</p>
+<br /><br /></span>

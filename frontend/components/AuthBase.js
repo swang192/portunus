@@ -83,7 +83,7 @@ const AuthBase = ({
     }
 
     // Always prefer using the next parameter when it is present
-    if (!next && localNext) {
+    if (!response.data.next && localNext) {
       store.login();
       router.push(localNext);
     } else {

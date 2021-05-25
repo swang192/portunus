@@ -7,18 +7,12 @@ import Button from '@wui/input/button';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
-import Tooltip from '@wui/layout/tooltip';
-import Grid from '@wui/layout/grid';
 
 import { useInputFieldState } from 'hooks';
 import { capitalize } from 'utils/strings';
 import { completePasswordReset } from 'utils/API';
-import {
-  INVALID_PASSWORD,
-  MIN_PASSWORD_LENGTH,
-  PASSWORD_SPECIAL_CHARACTERS,
-} from 'utils/constants';
-import PasswordStrengthBar from 'components/PasswordStrengthBar';
+import { INVALID_PASSWORD } from 'utils/constants';
+import PasswordHelp from 'components/PasswordHelp';
 import Resend from './Resend';
 
 const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
@@ -86,16 +80,7 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
           onChange={onChangePassword1}
           error={inputErrors.firstPassword}
         />
-        <Grid container direction="row" alignItems="center" justify="space-between">
-          <Grid item xs={10}>
-            <PasswordStrengthBar password={newPassword1} />
-          </Grid>
-          <Grid item>
-            <Tooltip
-              title={`Use ${MIN_PASSWORD_LENGTH}+ characters with at least one letter, one number, and one of the following special characters: ${PASSWORD_SPECIAL_CHARACTERS}`}
-            />
-          </Grid>
-        </Grid>
+        <PasswordHelp password={newPassword1} />
         <Textbox
           name="confirmed_password"
           type="password"
@@ -103,6 +88,7 @@ const ResetPasswordComplete = ({ uuid, token, action, resendEmail }) => {
           value={newPassword2}
           onChange={onChangePassword2}
           error={inputErrors.secondPassword}
+          InputProps={{ 'aria-describedby': 'password-help' }}
         />
         <Spacer v={8} />
         <Button variant="contained" color="primary" type="submit" noMinWidth size="large">

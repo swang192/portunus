@@ -9,13 +9,11 @@ import Form from '@wui/layout/form';
 import Spacer from '@wui/layout/spacer';
 import Textbox from '@wui/input/textbox';
 import Typography from '@wui/basics/typography';
-import Tooltip from '@wui/layout/tooltip';
-import Grid from '@wui/layout/grid';
 
 import TermsCheckbox from 'components/TermsCheckbox';
-import PasswordStrengthBar from 'components/PasswordStrengthBar';
+import PasswordHelp from 'components/PasswordHelp';
 import { useGlobalContext, useInputFieldState } from 'hooks';
-import { MIN_PASSWORD_LENGTH, PASSWORD_SPECIAL_CHARACTERS } from 'utils/constants';
+import { MIN_PASSWORD_LENGTH } from 'utils/constants';
 import { UNKNOWN_ERROR } from 'utils/constants/errors';
 import validateEmail from 'utils/validation';
 
@@ -151,17 +149,9 @@ const AuthBase = ({
               value={password}
               onChange={onChangePassword}
               error={inputErrors.password}
+              InputProps={{ 'aria-describedby': 'password-help' }}
             />
-            <Grid container direction="row" alignItems="center" justify="space-between">
-              <Grid item xs={11}>
-                <PasswordStrengthBar password={password} userInputs={[email]} />
-              </Grid>
-              <Grid item>
-                <Tooltip
-                  title={`Use ${MIN_PASSWORD_LENGTH}+ characters with at least one letter, one number, and one of the following special characters: ${PASSWORD_SPECIAL_CHARACTERS}`}
-                />
-              </Grid>
-            </Grid>
+            <PasswordHelp password={password} userInputs={[email]} />
             <TermsCheckbox
               onChange={() => setTermsOfService(!termsOfService)}
               error={inputErrors.terms}

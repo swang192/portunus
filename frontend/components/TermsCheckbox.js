@@ -38,8 +38,11 @@ const TermsCheckbox = ({ onChange, error }) => {
         label={label}
         onChange={updateState}
         checked={Boolean(termsOfService)}
+        aria-describedby="helperText"
       />
-      <FormHelperText error>{error || <span>&nbsp;</span>}</FormHelperText>
+      <FormHelperText error id="helperText" aria-live="assertive">
+        {error || <span>&nbsp;</span>}
+      </FormHelperText>
     </>
   );
 };

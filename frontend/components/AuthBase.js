@@ -17,6 +17,7 @@ import PasswordStrengthBar from 'components/PasswordStrengthBar';
 import { useGlobalContext, useInputFieldState } from 'hooks';
 import { MIN_PASSWORD_LENGTH, PASSWORD_SPECIAL_CHARACTERS } from 'utils/constants';
 import { UNKNOWN_ERROR } from 'utils/constants/errors';
+import validateEmail from 'utils/validation';
 
 const useStyles = makeStyles({
   form: {
@@ -54,6 +55,8 @@ const AuthBase = ({
 
     if (!email) {
       errors.email = 'Please enter your email';
+    } else {
+      errors.email = validateEmail(email);
     }
 
     if (!password) {
@@ -124,6 +127,7 @@ const AuthBase = ({
         onSubmit={handleSubmit}
         noMargin
         className={classes.form}
+        noValidate
       >
         <Textbox
           name="email"

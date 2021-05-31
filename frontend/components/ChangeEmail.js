@@ -22,6 +22,7 @@ import {
   STAFF_RESTRICTED_ACTION,
 } from 'utils/constants';
 import { UNKNOWN_ERROR } from 'utils/constants/errors';
+import validateEmail from 'utils/validation';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,6 +49,8 @@ const ChangeEmail = () => {
 
     if (!newEmail) {
       errors.newEmail = 'Please enter your email address.';
+    } else {
+      errors.newEmail = validateEmail(newEmail);
     }
 
     setInputErrors(errors);
@@ -115,7 +118,7 @@ const ChangeEmail = () => {
       <Container maxWidth="md" className={classes.root}>
         <Typography variant="h4">Change Email</Typography>
 
-        <Form error={inputErrors.submitError} onSubmit={handleSubmit} noMargin>
+        <Form error={inputErrors.submitError} onSubmit={handleSubmit} noMargin noValidate>
           <Textbox
             name="new_email"
             type="email"

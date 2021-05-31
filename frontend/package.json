@@ -14,13 +14,14 @@
     "test-coverage": "jest --coverage"
   },
   "dependencies": {
-    "@bequestinc/wui": "^1.0.12",
+    "@bequestinc/wui": "1.5.0",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@sentry/react": "^6.1.0",
     "axios": "^0.21.1",
     "express": "^4.17.1",
     "express-http-proxy": "^1.6.0",
+    "frontend": "file:",
     "js-cookie": "^2.2.1",
     "mobx": "^6.1.5",
     "mobx-react": "^7.1.0",

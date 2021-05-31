@@ -979,10 +979,28 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bequestinc/wui@^1.0.12":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@bequestinc/wui/-/wui-1.4.2.tgz#b91c4e92641714a4b724c9e50dc4522f2fe4470f"
-  integrity sha512-EN0cQf0nFR38bB63BD7vlkcqfls/dg++WsCwVv6V4uxecB+jPjWrwtjML/LrSd4LVJDaYDpT9K45k4XkW19HtQ==
+"@bequestinc/wui@1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@bequestinc/wui/-/wui-1.0.12.tgz#8ae1d1330e6dd9c0adb39c79404990b2da858107"
+  integrity sha512-sRCUd+K8hJAQdsyAHccemQzv/PqEUaOcWP3MwXmV+vhxaL53SEuYSzY6esVFAfGM8kbkZbtfiT1UDNf54m6U8g==
+  dependencies:
+    "@date-io/date-fns" "^1.3.11"
+    "@material-ui/core" "^4.6.1"
+    "@material-ui/icons" "^4.5.1"
+    "@material-ui/styles" "^4.6.0"
+    classnames "^2.2.6"
+    core-js "2"
+    date-fns "^2.8.0"
+    deepmerge "^4.2.2"
+    downshift "2.0.9"
+    material-ui-pickers "^2.2.4"
+    prop-types "^15.7.2"
+    react-slick "^0.25.2"
+
+"@bequestinc/wui@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@bequestinc/wui/-/wui-1.5.0.tgz#3caada591bdf5c2b9a904300d1d787622e1481b9"
+  integrity sha512-MOJizpKNyiO9pqlvtEyH53Hw3dwIDZ2Eo2spjKRHvtV+7rebm6tk088nWHsooaL1cKYYctLLCgqvGuMhzwsYVg==
   dependencies:
     "@date-io/date-fns" "^1.3.11"
     "@material-ui/core" "^4.9.12"
@@ -1245,7 +1263,7 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@material-ui/core@^4.11.3", "@material-ui/core@^4.9.12":
+"@material-ui/core@^4.11.3":
   version "4.11.3"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.11.3.tgz#f22e41775b0bd075e36a7a093d43951bf7f63850"
   integrity sha512-Adt40rGW6Uds+cAyk3pVgcErpzU/qxc7KBR94jFHBYretU4AtWZltYcNsbeMn9tXL86jjVL1kuGcIHsgLgFGRw==
@@ -1263,14 +1281,32 @@
     react-is "^16.8.0 || ^17.0.0"
     react-transition-group "^4.4.0"
 
-"@material-ui/icons@^4.11.2", "@material-ui/icons@^4.9.1":
+"@material-ui/core@^4.6.1", "@material-ui/core@^4.9.12":
+  version "4.11.4"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.11.4.tgz#4fb9fe5dec5dcf780b687e3a40cff78b2b9640a4"
+  integrity sha512-oqb+lJ2Dl9HXI9orc6/aN8ZIAMkeThufA5iZELf2LQeBn2NtjVilF5D2w7e9RpntAzDb4jK5DsVhkfOvFY/8fg==
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+    "@material-ui/styles" "^4.11.4"
+    "@material-ui/system" "^4.11.3"
+    "@material-ui/types" "5.1.0"
+    "@material-ui/utils" "^4.11.2"
+    "@types/react-transition-group" "^4.2.0"
+    clsx "^1.0.4"
+    hoist-non-react-statics "^3.3.2"
+    popper.js "1.16.1-lts"
+    prop-types "^15.7.2"
+    react-is "^16.8.0 || ^17.0.0"
+    react-transition-group "^4.4.0"
+
+"@material-ui/icons@^4.11.2", "@material-ui/icons@^4.5.1", "@material-ui/icons@^4.9.1":
   version "4.11.2"
   resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.11.2.tgz#b3a7353266519cd743b6461ae9fdfcb1b25eb4c5"
   integrity sha512-fQNsKX2TxBmqIGJCSi3tGTO/gZ+eJgWmMJkgDiOfyNaunNaxcklJQFaFogYcFl0qFuaEz1qaXYXboa/bUXVSOQ==
   dependencies:
     "@babel/runtime" "^7.4.4"
 
-"@material-ui/styles@^4.11.3", "@material-ui/styles@^4.9.10":
+"@material-ui/styles@^4.11.3":
   version "4.11.3"
   resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-4.11.3.tgz#1b8d97775a4a643b53478c895e3f2a464e8916f2"
   integrity sha512-HzVzCG+PpgUGMUYEJ2rTEmQYeonGh41BYfILNFb/1ueqma+p1meSdu4RX6NjxYBMhf7k+jgfHFTTz+L1SXL/Zg==
@@ -1278,6 +1314,28 @@
     "@babel/runtime" "^7.4.4"
     "@emotion/hash" "^0.8.0"
     "@material-ui/types" "^5.1.0"
+    "@material-ui/utils" "^4.11.2"
+    clsx "^1.0.4"
+    csstype "^2.5.2"
+    hoist-non-react-statics "^3.3.2"
+    jss "^10.5.1"
+    jss-plugin-camel-case "^10.5.1"
+    jss-plugin-default-unit "^10.5.1"
+    jss-plugin-global "^10.5.1"
+    jss-plugin-nested "^10.5.1"
+    jss-plugin-props-sort "^10.5.1"
+    jss-plugin-rule-value-function "^10.5.1"
+    jss-plugin-vendor-prefixer "^10.5.1"
+    prop-types "^15.7.2"
+
+"@material-ui/styles@^4.11.4", "@material-ui/styles@^4.6.0", "@material-ui/styles@^4.9.10":
+  version "4.11.4"
+  resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-4.11.4.tgz#eb9dfccfcc2d208243d986457dff025497afa00d"
+  integrity sha512-KNTIZcnj/zprG5LW0Sao7zw+yG3O35pviHzejMdcSGCdWbiO8qzRgOYL8JAxAsWBKOKYwVZxXtHWaB5T2Kvxew==
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+    "@emotion/hash" "^0.8.0"
+    "@material-ui/types" "5.1.0"
     "@material-ui/utils" "^4.11.2"
     clsx "^1.0.4"
     csstype "^2.5.2"
@@ -1302,7 +1360,7 @@
     csstype "^2.5.2"
     prop-types "^15.7.2"
 
-"@material-ui/types@^5.1.0":
+"@material-ui/types@5.1.0", "@material-ui/types@^5.1.0":
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@material-ui/types/-/types-5.1.0.tgz#efa1c7a0b0eaa4c7c87ac0390445f0f88b0d88f2"
   integrity sha512-7cqRjrY50b8QzRSYyhSpx4WRw2YuO0KKIGQEVk5J8uoz2BanawykgZGoWEqKm7pVIbzFDN0SpPcVV4IhOFkl8A==
@@ -2842,9 +2900,9 @@ component-emitter@^1.2.1:
   integrity sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg==
 
 compute-scroll-into-view@^1.0.14:
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.16.tgz#5b7bf4f7127ea2c19b750353d7ce6776a90ee088"
-  integrity sha512-a85LHKY81oQnikatZYA90pufpZ6sQx++BoCxOEMsjpZx+ZnaKGQnCyCehTRr/1p9GBIAHTjcU9k71kSYWloLiQ==
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.17.tgz#6a88f18acd9d42e9cf4baa6bec7e0522607ab7ab"
+  integrity sha512-j4dx+Fb0URmzbwwMUrhqWM2BEWHdFGx+qZ9qqASHRPqvTYdqvWnHg0H1hIbcyLnvgnoNAVMlwkepyqM3DaIFUg==
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -3465,6 +3523,13 @@ domutils@^2.4.2:
     dom-serializer "^1.0.1"
     domelementtype "^2.0.1"
     domhandler "^4.0.0"
+
+downshift@2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-2.0.9.tgz#e65a22196e1c4b3c5d47c7a622cf97dfdebe30ef"
+  integrity sha512-zBQhuolMWJnyc0b5v5Z7AvVeeQ1BPK6d/xczpPb691gHAwbnf/AZCV0PvbHtbU0+/Xe7calcEcST7fZUTDzDng==
+  dependencies:
+    prop-types "^15.6.0"
 
 downshift@^5.2.4:
   version "5.4.7"
@@ -4276,6 +4341,32 @@ fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
+
+"frontend@file:.":
+  version "0.1.0"
+  dependencies:
+    "@bequestinc/wui" "1.0.12"
+    "@material-ui/core" "^4.11.3"
+    "@material-ui/icons" "^4.11.2"
+    "@sentry/react" "^6.1.0"
+    axios "^0.21.1"
+    express "^4.17.1"
+    express-http-proxy "^1.6.0"
+    frontend "file:../usr/local/share/.cache/yarn/v6/npm-frontend-0.1.0-6c3ba2aa-2d50-4c83-a04a-a97676baf302-1622495761921/node_modules/frontend"
+    js-cookie "^2.2.1"
+    mobx "^6.1.5"
+    mobx-react "^7.1.0"
+    next "^10.0.6"
+    next-compose-plugins "^2.2.1"
+    next-images "^1.7.0"
+    next-svgr "^0.0.2"
+    prop-types "^15.7.2"
+    react "17.0.1"
+    react-axe "^3.5.4"
+    react-dom "17.0.1"
+    react-ga "^3.3.0"
+    react-password-strength-bar "^0.3.2"
+    window-or-global "^1.0.1"
 
 fs-constants@^1.0.0:
   version "1.0.0"

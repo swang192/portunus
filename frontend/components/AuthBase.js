@@ -15,7 +15,7 @@ import Grid from '@wui/layout/grid';
 import TermsCheckbox from 'components/TermsCheckbox';
 import PasswordStrengthBar from 'components/PasswordStrengthBar';
 import { useGlobalContext, useInputFieldState } from 'hooks';
-import { MIN_PASSWORD_LENGTH } from 'utils/constants';
+import { MIN_PASSWORD_LENGTH, PASSWORD_SPECIAL_CHARACTERS } from 'utils/constants';
 import { UNKNOWN_ERROR } from 'utils/constants/errors';
 
 const useStyles = makeStyles({
@@ -61,7 +61,7 @@ const AuthBase = ({
     }
 
     if (password.length < MIN_PASSWORD_LENGTH) {
-      errors.password = 'Password must be at least 8 characters.';
+      errors.password = `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
     }
 
     if (showTerms && !termsOfService) {
@@ -150,7 +150,9 @@ const AuthBase = ({
                 <PasswordStrengthBar password={password} userInputs={[email]} />
               </Grid>
               <Grid item>
-                <Tooltip title="Use 8+ characters with letters, numbers, and special characters" />
+                <Tooltip
+                  title={`Use ${MIN_PASSWORD_LENGTH}+ characters with at least one letter, one number, and one of the following special characters: ${PASSWORD_SPECIAL_CHARACTERS}`}
+                />
               </Grid>
             </Grid>
             <TermsCheckbox

@@ -5,9 +5,10 @@ from django.utils.translation import gettext as _
 from zxcvbn import zxcvbn
 
 
+special_characters = "#?!@$%^&*-"
 has_alphabetic = re.compile(r"[a-zA-Z]")
 has_numeric = re.compile(r"[\d]")
-has_special = re.compile(r"[#?!@$%^&*-]")
+has_special = re.compile(rf"[{special_characters}]")
 MIN_SCORE = 3
 
 
@@ -23,7 +24,9 @@ class AlphaNumericSpecialPasswordValidator:
             )
         if not has_special.search(password):
             raise ValidationError(
-                _("This password must contain at least one special character!")
+                _(
+                    f"This password must contain at least one of the following special characters: {special_characters}"
+                )
             )
 
     def get_help_text(self):

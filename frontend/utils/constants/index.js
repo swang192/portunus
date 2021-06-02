@@ -11,6 +11,7 @@ export const EMAIL_EXISTS = 'email_exists';
 export const STAFF_RESTRICTED_ACTION = 'staff_restricted_action';
 
 export const MIN_PASSWORD_LENGTH = 8;
+export const PASSWORD_SPECIAL_CHARACTERS = '#?!@$%^&*-';
 
 export const MAX_MFA_RESENDS = 5;
 export const MAX_MFA_ATTEMPTS = 5;

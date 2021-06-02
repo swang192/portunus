@@ -23,7 +23,7 @@ const ResetPassword = () => {
     if (!email) {
       error = 'Please enter your email.';
     } else {
-      error.email = validateEmail(email);
+      error = validateEmail(email);
     }
 
     setInputError(error);
@@ -69,11 +69,12 @@ const ResetPassword = () => {
           onChange={onChangeEmail}
           error={inputError}
         />
+        <Spacer v={16} />
+
         <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
           Request Reset
         </Button>
       </Form>
-      <Spacer v={8} />
     </div>
   );
 

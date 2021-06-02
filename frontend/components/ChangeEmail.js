@@ -50,7 +50,10 @@ const ChangeEmail = () => {
     if (!newEmail) {
       errors.newEmail = 'Please enter your email address.';
     } else {
-      errors.newEmail = validateEmail(newEmail);
+      const emailError = validateEmail(newEmail);
+      if (emailError) {
+        errors.newEmail = emailError;
+      }
     }
 
     setInputErrors(errors);
@@ -137,12 +140,12 @@ const ChangeEmail = () => {
             onChange={onChangePassword}
             error={inputErrors.password}
           />
+          <Spacer v={16} />
 
           <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
             Change Email
           </Button>
         </Form>
-        <Spacer v={8} />
       </Container>
     </Page>
   );

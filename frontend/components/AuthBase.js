@@ -56,7 +56,10 @@ const AuthBase = ({
     if (!email) {
       errors.email = 'Please enter your email';
     } else {
-      errors.email = validateEmail(email);
+      const emailError = validateEmail(email);
+      if (emailError) {
+        errors.email = emailError;
+      }
     }
 
     if (!password) {

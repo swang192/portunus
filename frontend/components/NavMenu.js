@@ -20,7 +20,7 @@ import { useScreenSize } from 'hooks';
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    justify: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   button: {

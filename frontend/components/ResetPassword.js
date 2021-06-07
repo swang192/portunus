@@ -10,6 +10,7 @@ import Typography from '@wui/basics/typography';
 import { useInputFieldState } from 'hooks';
 import { resetPassword } from 'utils/API';
 import KeepParamsLink from 'components/KeepParamsLink';
+import validateEmail from 'utils/validation';
 
 const ResetPassword = () => {
   const [email, onChangeEmail] = useInputFieldState('');
@@ -21,6 +22,8 @@ const ResetPassword = () => {
     let error = '';
     if (!email) {
       error = 'Please enter your email.';
+    } else {
+      error = validateEmail(email);
     }
 
     setInputError(error);
@@ -56,7 +59,7 @@ const ResetPassword = () => {
       </KeepParamsLink>
       <Spacer v={32} />
       <Typography variant="h4">Reset Password</Typography>
-      <Form error={validationError} onSubmit={handleSubmit} noMargin>
+      <Form error={validationError} onSubmit={handleSubmit} noMargin noValidate>
         <Textbox
           name="email"
           type="email"
@@ -66,11 +69,12 @@ const ResetPassword = () => {
           onChange={onChangeEmail}
           error={inputError}
         />
+        <Spacer v={16} />
+
         <Button variant="contained" color="primary" type="submit" noMinWidth size="large">
           Request Reset
         </Button>
       </Form>
-      <Spacer v={8} />
     </div>
   );
 

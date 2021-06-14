@@ -16,7 +16,7 @@ import { INVALID_PASSWORD, AUTH_CHANGE_LOCKOUT, LOCKED_OUT_CHANGE_PASSWORD } fro
 import { UNKNOWN_ERROR } from 'utils/constants/errors';
 import Page from 'components/Page';
 import Success from 'components/Success';
-import PasswordStrengthBar from 'components/PasswordStrengthBar';
+import PasswordHelp from 'components/PasswordHelp';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -142,8 +142,9 @@ const ChangePassword = () => {
             value={newPassword}
             onChange={onChangeNewPassword}
             error={inputErrors.newPassword}
+            InputProps={{ 'aria-describedby': 'password-help' }}
           />
-          <PasswordStrengthBar password={newPassword} userInputs={user.email ? [user.email] : []} />
+          <PasswordHelp password={password} userInputs={user.email ? [user.email] : []} />
 
           <Textbox
             name="new_password_2"

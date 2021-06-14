@@ -5,6 +5,9 @@ import ExternalPasswordStrengthBar from 'react-password-strength-bar';
 
 import { MIN_PASSWORD_LENGTH } from 'utils/constants';
 
+const withAriaLive = word => <span aria-live="polite">{word}</span>;
+const defaultScoreWords = ['weak', 'weak', 'okay', 'good', 'strong'];
+
 const PasswordStrengthBar = ({ userInputs, password }) => {
   const theme = useTheme();
   return (
@@ -13,6 +16,8 @@ const PasswordStrengthBar = ({ userInputs, password }) => {
       minLength={MIN_PASSWORD_LENGTH}
       userInputs={userInputs}
       scoreWordStyle={{ color: theme.palette.text.secondary }}
+      scoreWords={defaultScoreWords.map(withAriaLive)}
+      shortScoreWord={withAriaLive('too short')}
     />
   );
 };

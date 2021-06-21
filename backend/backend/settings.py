@@ -293,7 +293,7 @@ DEFAULT_REDIRECT_URL = prod_required_env(
 VALID_REDIRECT_HOSTNAMES = ["*.willing.com", "*.legalplans.com"]
 
 if not PRODUCTION:
-    VALID_REDIRECT_HOSTNAMES.append("localhost")
+    VALID_REDIRECT_HOSTNAMES.extend(["localhost", "*.legalplans.technology"])
 
 SESSION_COOKIE_SAMESITE = None
 
